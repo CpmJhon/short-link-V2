@@ -1,0 +1,100 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: #f5f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* WRAPPER */
+.main-wrapper {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+}
+
+/* CARD */
+.form-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* FORM GROUP */
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #2f72fd;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #2f72fd;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  background: #1f5ce0;
+}
+
+/* RESULT BOX */
+#result-box {
+  margin-top: 20px;
+}
+
+#resultUrl {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+}
+
+/* ERROR */
+#errorMsg {
+  background: #ffe5e5;
+  color: #cc0000;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
