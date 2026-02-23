@@ -9,11 +9,13 @@
     
     <style>
         :root {
+            /* TEMA JHON API SaaS */
             --bg-main: #ffffff;
             --text-main: #1a1a1a;
             --text-muted: #555555;
             --brand-blue: #2F72FD;
             --brand-blue-hover: #1e5dd6;
+            --badge-bg: #f3f4f6;
             --border-light: #e5e7eb;
             --radius-btn: 100px;
             --radius-card: 24px;
@@ -40,7 +42,7 @@
             flex-direction: column;
         }
 
-        /* Navbar */
+        /* --- NAVBAR MENGAMBANG & BLUR --- */
         .navbar {
             padding: 15px 24px;
             display: flex;
@@ -53,6 +55,7 @@
             z-index: 1000;
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
@@ -80,7 +83,7 @@
             padding: 8px;
         }
 
-        /* Sidebar */
+        /* --- SIDEBAR MENU --- */
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.4); z-index: 1001;
@@ -104,7 +107,7 @@
         .sidebar-link { font-size: 1.1rem; font-weight: 600; color: var(--text-main); text-decoration: none; padding: 12px 0; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 12px; }
         .sidebar-link:hover { color: var(--brand-blue); }
 
-        /* Main Wrapper */
+        /* --- MAIN WRAPPER --- */
         .main-wrapper {
             max-width: 800px;
             margin: 0 auto;
@@ -113,7 +116,7 @@
             width: 100%;
         }
 
-        /* Hero */
+        /* --- HERO VISUAL (BANNER IMAGE) --- */
         .hero-visual-wrapper {
             margin-bottom: 24px;
             display: flex;
@@ -124,6 +127,7 @@
         .hero-image-container {
             width: 100%;
             max-width: 320px;
+            position: relative;
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(47, 114, 253, 0.15);
@@ -138,52 +142,15 @@
             display: block;
         }
 
-        .hero-title { 
-            font-size: 2.5rem; 
-            font-weight: 800; 
-            line-height: 1.2; 
-            margin-bottom: 16px; 
-            color: #000; 
-        }
-        
-        .hero-desc { 
-            font-size: 1.05rem; 
-            color: var(--text-muted); 
-            line-height: 1.6; 
-            margin-bottom: 25px; 
-            max-width: 600px; 
-            margin-left: auto; 
-            margin-right: auto; 
-        }
+        /* --- HERO TEXT --- */
+        .hero-title { font-size: 2.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 16px; color: #000; }
+        .hero-desc { font-size: 1.05rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
-        .badges-container { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            flex-wrap: wrap; 
-            margin-bottom: 35px; 
-        }
-        
-        .badge { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            background: #fff; 
-            border: 1px solid var(--border-light); 
-            padding: 8px 16px; 
-            border-radius: 50px; 
-            font-size: 0.9rem; 
-            font-weight: 500; 
-            color: var(--text-main); 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
-        }
-        
-        .badge i { 
-            color: #22c55e; 
-            font-size: 1.1rem; 
-        }
+        .badges-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 35px; }
+        .badge { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; color: var(--text-main); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .badge i { color: #22c55e; font-size: 1.1rem; }
 
-        /* Tab Navigation */
+        /* --- TAB NAVIGATION --- */
         .tab-container {
             display: flex;
             gap: 10px;
@@ -204,10 +171,6 @@
             cursor: pointer;
             transition: all 0.2s;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
         
         .tab-btn.active {
@@ -216,8 +179,8 @@
             box-shadow: 0 4px 10px rgba(47, 114, 253, 0.3);
         }
 
-        /* Form Card (untuk semua section) */
-        .form-card, .upload-container, .qr-container {
+        /* --- FORM STYLING (Shortener) --- */
+        .form-card {
             background: #fff;
             padding: 24px;
             border-radius: 24px;
@@ -227,9 +190,7 @@
             margin-bottom: 40px;
         }
 
-        .form-group { 
-            margin-bottom: 1.2rem; 
-        }
+        .form-group { margin-bottom: 1.2rem; }
         
         label {
             display: block;
@@ -249,6 +210,7 @@
             color: var(--text-main);
             transition: 0.2s;
             outline: none;
+            -webkit-appearance: none;
         }
 
         textarea {
@@ -280,19 +242,10 @@
             gap: 10px;
         }
 
-        .btn-saas:hover { 
-            background-color: var(--brand-blue-hover); 
-            transform: translateY(-2px); 
-        }
-        
-        .btn-saas:disabled { 
-            background: #cbd5e1; 
-            cursor: not-allowed; 
-            transform: none; 
-            box-shadow: none; 
-        }
+        .btn-saas:hover { background-color: var(--brand-blue-hover); transform: translateY(-2px); }
+        .btn-saas:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* Shortener Result */
+        /* --- RESULT BOX (Shortener) --- */
         #result-box {
             display: none;
             margin-top: 1.5rem;
@@ -303,30 +256,24 @@
             animation: slideUp 0.4s ease;
         }
 
-        .result-group { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 10px; 
-        }
-        
-        .result-input { 
-            background: #fff !important; 
-            font-weight: 700; 
-            color: #15803d !important; 
-            border-color: #86efac !important; 
-        }
-        
+        .result-group { display: flex; gap: 10px; margin-top: 10px; }
+        .result-input { background: #fff !important; font-weight: 700; color: #15803d !important; border-color: #86efac !important; }
         .btn-copy {
-            background: #15803d; 
-            color: white; 
-            border: none; 
-            padding: 0 20px;
-            border-radius: 12px; 
-            font-weight: 600; 
-            cursor: pointer;
+            background: #15803d; color: white; border: none; padding: 0 20px;
+            border-radius: 12px; font-weight: 600; cursor: pointer;
         }
 
-        /* Upload Styles */
+        /* --- UPLOAD SECTION STYLES --- */
+        .upload-container {
+            background: #fff;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-light);
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
         .drop-zone {
             border: 2px dashed var(--border-light);
             border-radius: 16px;
@@ -382,7 +329,7 @@
             line-height: 8px;
         }
 
-        /* Upload Result */
+        /* Perbaikan untuk hasil upload */
         #result {
             margin-top: 20px;
             word-break: break-all;
@@ -425,6 +372,10 @@
             word-break: break-all;
             color: var(--brand-blue);
             text-decoration: none;
+        }
+
+        .result-link:hover {
+            text-decoration: underline;
         }
 
         .result-code {
@@ -476,6 +427,10 @@
             margin-bottom: 20px;
         }
 
+        .success-badge i {
+            font-size: 1rem;
+        }
+
         .note-text {
             font-size: 0.8rem;
             color: var(--text-muted);
@@ -486,7 +441,7 @@
             text-align: center;
         }
 
-        /* Action Buttons */
+        /* Tombol untuk kembali/reset */
         .action-buttons {
             display: flex;
             gap: 10px;
@@ -514,6 +469,7 @@
         .upload-new-btn:hover {
             background: var(--brand-blue-hover);
             transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(47, 114, 253, 0.3);
         }
 
         .clear-btn {
@@ -537,12 +493,26 @@
             border-color: var(--text-muted);
         }
 
-        /* QR Styles */
+        .clear-btn i, .upload-new-btn i {
+            font-size: 1rem;
+        }
+
+        /* --- QR GENERATOR STYLES --- */
+        .qr-container {
+            background: #fff;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-light);
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
         .qr-options {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
 
         .qr-option-item {
@@ -551,9 +521,14 @@
             gap: 5px;
         }
 
-        .qr-option-item input[type="color"] {
-            height: 50px;
-            padding: 5px;
+        .qr-option-item label {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        .qr-option-item input, .qr-option-item select {
+            padding: 12px;
+            border-radius: 10px;
         }
 
         .qr-preview {
@@ -566,7 +541,6 @@
             background: #f8fafc;
             border-radius: 20px;
             border: 1px solid var(--border-light);
-            min-height: 300px;
         }
 
         #qrCodeImage {
@@ -622,126 +596,41 @@
             text-decoration: none;
         }
 
+        .qr-download-btn:hover {
+            background: var(--brand-blue-hover);
+            transform: translateY(-2px);
+        }
+
         .qr-download-btn.secondary {
             background: #10b981;
         }
 
-        .qr-download-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
+        .qr-download-btn.secondary:hover {
+            background: #059669;
         }
 
-        /* Sections */
-        .section-heading { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            margin-bottom: 20px; 
-            color: #000; 
-            text-align: center; 
-            margin-top: 40px; 
-        }
-        
-        .review-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 20px; 
-            margin-bottom: 60px; 
-            text-align: left; 
-        }
-        
-        .review-card { 
-            background: #F9FAFB; 
-            padding: 24px; 
-            border-radius: 20px; 
-            border: 1px solid var(--border-light); 
-        }
-        
-        .stars { 
-            color: var(--star-color); 
-            margin-bottom: 12px; 
-            font-size: 0.9rem; 
-        }
-        
-        .review-text { 
-            font-size: 0.95rem; 
-            line-height: 1.5; 
-            color: var(--text-main); 
-            margin-bottom: 12px; 
-            font-weight: 500; 
-        }
-        
-        .reviewer-name { 
-            font-size: 0.85rem; 
-            color: var(--text-muted); 
-            font-weight: 600; 
-        }
+        /* --- SECTIONS --- */
+        .section-heading { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: #000; text-align: center; margin-top: 40px; }
+        .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 60px; text-align: left; }
+        .review-card { background: #F9FAFB; padding: 24px; border-radius: 20px; border: 1px solid var(--border-light); }
+        .stars { color: var(--star-color); margin-bottom: 12px; font-size: 0.9rem; }
+        .review-text { font-size: 0.95rem; line-height: 1.5; color: var(--text-main); margin-bottom: 12px; font-weight: 500; }
+        .reviewer-name { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
 
-        /* Footer */
-        .mega-footer { 
-            background-color: #f9fafb; 
-            border-top: 1px solid var(--border-light); 
-            padding: 60px 20px 30px; 
-            margin-top: auto; 
-        }
-        
-        .footer-content { 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            display: grid; 
-            grid-template-columns: 2fr 1fr 1fr 1fr; 
-            gap: 40px; 
-            text-align: left; 
-        }
-        
-        .footer-brand h3 { 
-            font-size: 1.2rem; 
-            font-weight: 800; 
-            margin-bottom: 15px; 
-        }
-        
-        .footer-brand p { 
-            color: var(--text-muted); 
-            font-size: 0.9rem; 
-            line-height: 1.6; 
-            max-width: 250px; 
-        }
-        
-        .footer-col h4 { 
-            font-size: 0.95rem; 
-            font-weight: 700; 
-            margin-bottom: 20px; 
-            color: #000; 
-        }
-        
-        .footer-col ul { 
-            list-style: none; 
-        }
-        
-        .footer-col ul li { 
-            margin-bottom: 12px; 
-        }
-        
-        .footer-col ul li a { 
-            color: var(--text-muted); 
-            text-decoration: none; 
-            font-size: 0.9rem; 
-            transition: color 0.2s; 
-        }
-        
-        .footer-col ul li a:hover { 
-            color: var(--brand-blue); 
-        }
+        /* --- FOOTER --- */
+        .mega-footer { background-color: #f9fafb; border-top: 1px solid var(--border-light); padding: 60px 20px 30px; margin-top: auto; }
+        .footer-content { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; text-align: left; }
+        .footer-brand h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; }
+        .footer-brand p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; max-width: 250px; }
+        .footer-col h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 20px; color: #000; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .footer-col ul li a:hover { color: var(--brand-blue); }
         
         .footer-bottom {
-            max-width: 1000px; 
-            margin: 40px auto 0; 
-            padding-top: 30px; 
-            border-top: 1px solid #e5e7eb;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            color: #9ca3af; 
-            font-size: 0.85rem;
+            max-width: 1000px; margin: 40px auto 0; padding-top: 30px; border-top: 1px solid #e5e7eb;
+            display: flex; justify-content: space-between; align-items: center; color: #9ca3af; font-size: 0.85rem;
         }
 
         .social-icons i {
@@ -755,37 +644,12 @@
         }
 
         /* Utilities */
-        .error-msg { 
-            background: #fee2e2; 
-            color: #991b1b; 
-            padding: 12px; 
-            border-radius: 12px; 
-            margin-bottom: 1rem; 
-            display: none; 
-            font-size: 0.9rem; 
-            text-align: center; 
-            border: 1px solid #fecaca; 
-        }
-        
-        .spinner { 
-            width: 18px; 
-            height: 18px; 
-            border: 2px solid rgba(255,255,255,0.3); 
-            border-radius: 50%; 
-            border-top-color: #fff; 
-            animation: spin 1s infinite linear; 
-        }
-        
-        @keyframes spin { 
-            to { transform: rotate(360deg); } 
-        }
-        
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        .error-msg { background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 12px; margin-bottom: 1rem; display: none; font-size: 0.9rem; text-align: center; border: 1px solid #fecaca; }
+        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Toast */
+        /* Toast Container */
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -816,19 +680,42 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero-title { font-size: 2rem; }
             .review-grid { grid-template-columns: 1fr; }
             .footer-content { grid-template-columns: 1fr; text-align: center; gap: 30px; }
             .footer-brand p { margin: 0 auto; }
-            .qr-options { grid-template-columns: 1fr; }
-            .result-content { flex-direction: column; }
-            .copy-btn { width: 100%; }
-            .action-buttons { flex-direction: column; }
-            .upload-new-btn, .clear-btn { width: 100%; justify-content: center; }
+            .hero-title { font-size: 2rem; }
+            
+            .result-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+            
+            .result-link, .result-code {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .upload-new-btn, .clear-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .qr-options {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
         <div class="navbar-inner">
             <a href="#" class="logo">JHONLink</a>
@@ -845,10 +732,12 @@
     </div>
 
     <div class="main-wrapper">
-        <!-- Hero Section -->
+        
         <div class="hero-visual-wrapper">
             <div class="hero-image-container">
-                <img src="https://cdn.odzre.my.id/2ow.jpg" alt="Hero" class="hero-img">
+                <img src="https://cdn.odzre.my.id/2ow.jpg" 
+                     alt="Simulasi Shortlink di HP" 
+                     class="hero-img">
             </div>
         </div>
 
@@ -874,11 +763,13 @@
         <div id="shortenerSection">
             <div class="form-card">
                 <div id="errorMsg" class="error-msg"></div>
+
                 <form id="shortenForm">
                     <div class="form-group">
                         <label>URL Panjang Tujuan</label>
-                        <input type="text" id="urlInput" placeholder="https://example.com/link-sangat-panjang" required>
+                        <input type="text" id="urlInput" placeholder="https://example.com/link-sangat-panjang" required autocomplete="off">
                     </div>
+
                     <div class="form-group">
                         <label>Pilih Provider</label>
                         <select id="providerSelect">
@@ -886,15 +777,18 @@
                             <option value="tinyurl">TinyURL (Bisa Custom Nama)</option>
                         </select>
                     </div>
+
                     <div class="form-group" id="aliasGroup" style="display: none;">
                         <label>Custom Nama (Opsional)</label>
                         <input type="text" id="aliasInput" placeholder="contoh: diskon-spesial" maxlength="30">
                     </div>
+
                     <button type="submit" class="btn-saas" id="submitBtn">
                         <span id="btnText">Shorten URL</span>
                         <span class="spinner" id="loadingSpinner" style="display: none;"></span>
                     </button>
                 </form>
+
                 <div id="result-box">
                     <label style="color: #166534;">Berhasil Dibuat!</label>
                     <div class="result-group">
@@ -905,56 +799,65 @@
             </div>
         </div>
 
-        <!-- UPLOAD SECTION -->
+        <!-- UPLOAD SECTION (CLOUDINARY) -->
         <div id="uploadSection" style="display: none;">
             <div class="upload-container">
                 <div class="form-group">
                     <label>Custom Nama File (Opsional)</label>
                     <input type="text" id="fileNameInput" placeholder="nama-file-anda" maxlength="50">
                 </div>
+
                 <div class="drop-zone" id="dropZone">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <p>Drag & drop gambar atau klik untuk memilih</p>
                     <input type="file" id="fileInput" accept="image/*" style="display: none;">
                 </div>
+
                 <div id="previewContainer" class="preview-container hidden">
                     <img id="previewImage" src="" alt="Preview">
                 </div>
+
                 <div class="progress-container" id="progressContainer">
                     <div class="progress-bar" id="progressBar">0%</div>
                 </div>
+
                 <button class="btn-saas" id="uploadBtn">
                     <i class="fas fa-upload"></i> Upload ke Cloudinary
                 </button>
+
                 <div id="result"></div>
             </div>
         </div>
 
-        <!-- QR SECTION -->
+        <!-- QR GENERATOR SECTION -->
         <div id="qrSection" style="display: none;">
             <div class="qr-container">
                 <div class="form-group">
                     <label><i class="fas fa-font"></i> Teks / URL untuk QR Code</label>
                     <textarea id="qrTextInput" placeholder="https://example.com atau teks apapun..." rows="3">https://example.com</textarea>
                 </div>
+
                 <div class="qr-options">
                     <div class="qr-option-item">
                         <label>Ukuran QR</label>
                         <select id="qrSize">
-                            <option value="100">Kecil (100px)</option>
-                            <option value="150">Sedang (150px)</option>
-                            <option value="200" selected>Besar (200px)</option>
-                            <option value="250">Extra Besar (250px)</option>
+                            <option value="100">Kecil (100x100)</option>
+                            <option value="150">Sedang (150x150)</option>
+                            <option value="200" selected>Besar (200x200)</option>
+                            <option value="250">Extra Besar (250x250)</option>
                         </select>
                     </div>
+
                     <div class="qr-option-item">
                         <label>Warna QR</label>
                         <input type="color" id="qrColor" value="#2F72FD">
                     </div>
+
                     <div class="qr-option-item">
                         <label>Warna Background</label>
                         <input type="color" id="qrBgColor" value="#FFFFFF">
                     </div>
+
                     <div class="qr-option-item">
                         <label>Error Correction</label>
                         <select id="qrECC">
@@ -965,9 +868,11 @@
                         </select>
                     </div>
                 </div>
+
                 <button class="btn-saas" id="generateQRBtn">
                     <i class="fas fa-qrcode"></i> Generate QR Code
                 </button>
+
                 <div class="qr-preview">
                     <div id="qrPlaceholder" class="qr-placeholder">
                         <i class="fas fa-qrcode"></i>
@@ -975,6 +880,7 @@
                     </div>
                     <img id="qrCodeImage" src="" alt="QR Code" style="display: none;">
                 </div>
+
                 <div id="qrActions" style="display: none;">
                     <div class="qr-download-buttons">
                         <a id="downloadPNG" class="qr-download-btn" download="qrcode.png">
@@ -993,37 +899,28 @@
             </div>
         </div>
 
-        <!-- Testimonials -->
         <div id="testimoni"></div>
         <h2 class="section-heading">Apa Kata Mereka?</h2>
         <div class="review-grid">
             <div class="review-card">
-                <div class="stars">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                </div>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                 <p class="review-text">"Website shortlink paling bersih dan cepat yang pernah saya pakai. Gak ada iklan samasekali!"</p>
                 <p class="reviewer-name">Rina Marlina - Content Creator</p>
             </div>
             <div class="review-card">
-                <div class="stars">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                </div>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                 <p class="review-text">"Fitur QR Generator sangat membantu untuk membuat QR code menu restoran saya."</p>
                 <p class="reviewer-name">Dimas Anggara - Seller</p>
             </div>
         </div>
 
-        <!-- Explanation -->
         <div id="penjelasan" style="padding-top: 20px;">
-            <h2 class="section-heading">Mengapa JHONLink?</h2>
-            <p class="hero-desc">Kami menyediakan layanan pemendek URL, image hosting, dan QR generator yang fokus pada kecepatan dan kemudahan pengguna.</p>
-            <img src="https://cdn.odzre.my.id/x1o.jpg" style="width: 100%; border-radius: 20px; margin-top: 20px;" alt="Analytics">
+             <h2 class="section-heading">Mengapa JHONLink?</h2>
+             <p class="hero-desc">Kami menyediakan layanan pemendek URL, image hosting, dan QR generator yang fokus pada kecepatan dan kemudahan pengguna.</p>
+             <img src="https://cdn.odzre.my.id/x1o.jpg" style="width: 100%; border-radius: 20px; margin-top: 20px;" alt="Analytics">
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="mega-footer">
         <div class="footer-content">
             <div class="footer-brand">
@@ -1069,7 +966,7 @@
     <!-- Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Audio -->
+    <!-- Audio untuk notifikasi (opsional) -->
     <audio id="soundSuccess" preload="auto" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTG9uZG9uU291bmRzLmNvbQAAVFJBTkNSQUZUSU9OUgAAADFJQ1dEUlRYWFgAAAAtAAAAAAAQZGVzY3JpcHRpb24AAAAAAAANVW5rbm93biBFcnJvcgAAAAAA"></audio>
     <audio id="soundError" preload="auto" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTG9uZG9uU291bmRzLmNvbQAAVFJBTkNSQUZUSU9OUgAAADFJQ1dEUlRYWFgAAAAtAAAAAAAQZGVzY3JpcHRpb24AAAAAAAANVW5rbm93biBFcnJvcgAAAAAA"></audio>
     <audio id="soundWarning" preload="auto" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTG9uZG9uU291bmRzLmNvbQAAVFJBTkNSQUZUSU9OUgAAADFJQ1dEUlRYWFgAAAAtAAAAAAAQZGVzY3JpcHRpb24AAAAAAAANVW5rbm93biBFcnJvcgAAAAAA"></audio>
@@ -1078,7 +975,7 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
     <script>
-        // Sidebar
+        // UI Interaction Script (Sidebar)
         const menuBtn = document.getElementById('menuBtn');
         const sidebar = document.getElementById('sidebarMenu');
         const overlay = document.getElementById('sidebarOverlay');
@@ -1100,33 +997,39 @@
         const uploadSection = document.getElementById('uploadSection');
         const qrSection = document.getElementById('qrSection');
 
-        function showTab(tab) {
-            tabShortener.classList.remove('active');
+        tabShortener.addEventListener('click', () => {
+            tabShortener.classList.add('active');
             tabUpload.classList.remove('active');
             tabQR.classList.remove('active');
-            shortenerSection.style.display = 'none';
+            shortenerSection.style.display = 'block';
             uploadSection.style.display = 'none';
             qrSection.style.display = 'none';
+        });
 
-            if (tab === 'shortener') {
-                tabShortener.classList.add('active');
-                shortenerSection.style.display = 'block';
-            } else if (tab === 'upload') {
-                tabUpload.classList.add('active');
-                uploadSection.style.display = 'block';
-            } else if (tab === 'qr') {
-                tabQR.classList.add('active');
-                qrSection.style.display = 'block';
-                // Generate QR default if empty
-                if (!qrCodeImage.src) setTimeout(generateQR, 100);
+        tabUpload.addEventListener('click', () => {
+            tabUpload.classList.add('active');
+            tabShortener.classList.remove('active');
+            tabQR.classList.remove('active');
+            shortenerSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+            qrSection.style.display = 'none';
+        });
+
+        tabQR.addEventListener('click', () => {
+            tabQR.classList.add('active');
+            tabShortener.classList.remove('active');
+            tabUpload.classList.remove('active');
+            shortenerSection.style.display = 'none';
+            uploadSection.style.display = 'none';
+            qrSection.style.display = 'block';
+            
+            // Generate QR default jika kosong
+            if (!qrCodeImage.src) {
+                setTimeout(generateQR, 100);
             }
-        }
+        });
 
-        tabShortener.addEventListener('click', () => showTab('shortener'));
-        tabUpload.addEventListener('click', () => showTab('upload'));
-        tabQR.addEventListener('click', () => showTab('qr'));
-
-        // SHORTENER
+        // --- SHORTENER LOGIC (ORIGINAL - TIDAK BERUBAH) ---
         const form = document.getElementById('shortenForm');
         const providerSelect = document.getElementById('providerSelect');
         const aliasGroup = document.getElementById('aliasGroup');
@@ -1137,12 +1040,15 @@
         const btnText = document.getElementById('btnText');
         const spinner = document.getElementById('loadingSpinner');
 
+        // Toggle Custom Alias hanya untuk TinyURL
         providerSelect.addEventListener('change', () => {
             aliasGroup.style.display = providerSelect.value === 'tinyurl' ? 'block' : 'none';
         });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Reset State
             errorMsg.style.display = 'none';
             resultBox.style.display = 'none';
             submitBtn.disabled = true;
@@ -1161,14 +1067,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+
                 const res = await req.json();
 
                 if (res.status) {
                     resultUrl.value = res.result;
                     resultBox.style.display = 'block';
                 } else {
-                    throw new Error(res.error || 'Gagal');
+                    throw new Error(res.error || 'Gagal terhubung ke server.');
                 }
+
             } catch (err) {
                 errorMsg.textContent = err.message;
                 errorMsg.style.display = 'block';
@@ -1181,20 +1089,25 @@
 
         window.copyResult = function() {
             resultUrl.select();
+            resultUrl.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(resultUrl.value);
             alert('Link berhasil disalin!');
         };
 
-        // UPLOAD
+        // --- CLOUDINARY UPLOAD LOGIC ---
+        // Cloudinary config
         const CLOUD_NAME = "ddbqhpuoz";
         const UPLOAD_PRESET = "upload_Jhon";
+
         let selectedFile = null;
         const soundEnabled = true;
 
+        // Audio elements
         const soundSuccess = document.getElementById('soundSuccess');
         const soundError = document.getElementById('soundError');
         const soundWarning = document.getElementById('soundWarning');
 
+        // DOM Elements
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const fileNameInput = document.getElementById('fileNameInput');
@@ -1205,18 +1118,28 @@
         const progressBar = document.getElementById('progressBar');
         const resultDiv = document.getElementById('result');
 
+        // === FUNGSI RESET UPLOAD SECTION ===
         function resetUploadSection() {
+            // Reset form
             fileInput.value = "";
             fileNameInput.value = "";
             previewContainer.classList.add("hidden");
             previewImage.src = "";
             selectedFile = null;
+            
+            // Reset progress
             progressContainer.style.display = "none";
             progressBar.style.width = "0%";
             progressBar.textContent = "0%";
+            
+            // Hapus hasil upload
             resultDiv.innerHTML = "";
+            
+            // Scroll ke atas section upload
+            uploadSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        // === TOAST FUNCTION ===
         function showToast(message, type = "success") {
             const toast = document.createElement("div");
             let bgColor = "bg-green-600";
@@ -1226,7 +1149,8 @@
             if (type === "error") { bgColor = "bg-red-600"; icon = "✖"; sound = soundError; }
             if (type === "warning") { bgColor = "bg-yellow-500 text-black"; icon = "⚠"; sound = soundWarning; }
 
-            toast.className = `flex items-center gap-2 px-4 py-2 rounded shadow text-sm animate-slideInRight text-white ${bgColor}`;
+            toast.className =
+                `flex items-center gap-2 px-4 py-2 rounded shadow text-sm animate-slideInRight text-white ${bgColor}`;
             toast.innerHTML = `<span>${icon}</span> <span>${message}</span> <button class="ml-3 text-lg leading-none">✖</button>`;
 
             const closeBtn = toast.querySelector("button");
@@ -1250,6 +1174,7 @@
             }, 3000);
         }
 
+        // === UPLOAD HANDLER ===
         function showPreview(file) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -1260,6 +1185,7 @@
         }
 
         dropZone.addEventListener("click", () => fileInput.click());
+        
         fileInput.addEventListener("change", () => {
             if (fileInput.files.length > 0) {
                 selectedFile = fileInput.files[0];
@@ -1336,40 +1262,54 @@
                         <div class="success-badge">
                             <i class="fas fa-check-circle"></i> Upload Berhasil!
                         </div>
+
                         <div class="result-item">
-                            <div class="result-label"><i class="fas fa-link"></i> Direct URL</div>
+                            <div class="result-label">
+                                <i class="fas fa-link"></i> Direct URL
+                            </div>
                             <div class="result-content">
                                 <a href="${directUrl}" target="_blank" class="result-link">${directUrl}</a>
                                 <button class="copy-btn" data-text="${encDirect}">Copy</button>
                             </div>
                         </div>
+
                         <div class="result-item">
-                            <div class="result-label"><i class="fas fa-code"></i> BBCode</div>
+                            <div class="result-label">
+                                <i class="fas fa-code"></i> BBCode
+                            </div>
                             <div class="result-content">
                                 <code class="result-code">${bbCode}</code>
                                 <button class="copy-btn" data-text="${encBb}">Copy</button>
                             </div>
                         </div>
+
                         <div class="result-item">
-                            <div class="result-label"><i class="fab fa-markdown"></i> Markdown</div>
+                            <div class="result-label">
+                                <i class="fab fa-markdown"></i> Markdown
+                            </div>
                             <div class="result-content">
                                 <code class="result-code">${markdown}</code>
                                 <button class="copy-btn" data-text="${encMd}">Copy</button>
                             </div>
                         </div>
+
                         <div class="result-item">
-                            <div class="result-label"><i class="fab fa-html5"></i> HTML</div>
+                            <div class="result-label">
+                                <i class="fab fa-html5"></i> HTML &lt;img&gt;
+                            </div>
                             <div class="result-content">
                                 <code class="result-code">${htmlTagDisplay}</code>
                                 <button class="copy-btn" data-text="${encHtml}">Copy</button>
                             </div>
                         </div>
+
                         <div class="note-text">
-                            <i class="fas fa-info-circle"></i> Direct URL sudah dicopy
+                            <i class="fas fa-info-circle"></i> Direct URL sudah otomatis dicopy ke clipboard
                         </div>
+
                         <div class="action-buttons">
                             <button class="upload-new-btn" id="uploadNewBtn">
-                                <i class="fas fa-plus-circle"></i> Upload Baru
+                                <i class="fas fa-plus-circle"></i> Upload Gambar Baru
                             </button>
                             <button class="clear-btn" id="clearResultBtn">
                                 <i class="fas fa-times-circle"></i> Bersihkan
@@ -1377,13 +1317,17 @@
                         </div>
                     `;
 
+                    // Copy button functionality
                     document.querySelectorAll(".copy-btn").forEach(btn => {
                         btn.addEventListener("click", async () => {
                             const encoded = btn.getAttribute("data-text");
                             const text = decodeURIComponent(encoded);
                             await navigator.clipboard.writeText(text);
+                            
+                            const originalText = btn.textContent;
                             btn.textContent = "Copied!";
                             btn.classList.add("copied");
+                            
                             setTimeout(() => {
                                 btn.textContent = "Copy";
                                 btn.classList.remove("copied");
@@ -1391,29 +1335,70 @@
                         });
                     });
 
-                    document.getElementById('uploadNewBtn').addEventListener('click', resetUploadSection);
-                    document.getElementById('clearResultBtn').addEventListener('click', () => {
-                        resultDiv.innerHTML = "";
-                        showToast("Hasil dibersihkan", "success");
+                    // Upload New button
+                    document.getElementById('uploadNewBtn').addEventListener('click', () => {
+                        resetUploadSection();
                     });
 
-                    showToast("Upload berhasil", "success");
-                    setTimeout(() => progressContainer.style.display = "none", 1000);
+                    // Clear button
+                    document.getElementById('clearResultBtn').addEventListener('click', () => {
+                        resultDiv.innerHTML = "";
+                        showToast("Hasil upload dibersihkan", "success");
+                    });
+
+                    showToast("Upload berhasil & link dicopy", "success");
+
+                    // Auto-hide progress bar (tapi hasil tetap ada)
+                    setTimeout(() => {
+                        progressContainer.style.display = "none";
+                    }, 1000);
+
                 } else {
-                    resultDiv.innerHTML = `<p class="text-red-500 text-center">❌ Upload gagal!</p>`;
+                    resultDiv.innerHTML = `
+                        <p class="text-red-500 mt-4 text-center">❌ Upload gagal!</p>
+                        <div class="action-buttons">
+                            <button class="upload-new-btn" id="retryUploadBtn">
+                                <i class="fas fa-redo"></i> Coba Upload Lagi
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.getElementById('retryUploadBtn').addEventListener('click', () => {
+                        resetUploadSection();
+                    });
+                    
                     showToast("Upload gagal", "error");
                 }
             };
 
             xhr.onerror = () => {
-                resultDiv.innerHTML = `<p class="text-red-500 text-center">⚠️ Error</p>`;
-                showToast("Error upload", "warning");
+                resultDiv.innerHTML = `
+                    <p class="text-red-500 mt-4 text-center">⚠️ Terjadi error saat upload.</p>
+                    <div class="action-buttons">
+                        <button class="upload-new-btn" id="retryUploadBtn">
+                            <i class="fas fa-redo"></i> Coba Lagi
+                        </button>
+                        <button class="clear-btn" id="clearResultBtn">
+                            <i class="fas fa-times-circle"></i> Tutup
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('retryUploadBtn').addEventListener('click', () => {
+                    resetUploadSection();
+                });
+                
+                document.getElementById('clearResultBtn').addEventListener('click', () => {
+                    resultDiv.innerHTML = "";
+                });
+                
+                showToast("Terjadi error saat upload", "warning");
             };
 
             xhr.send(formData);
         });
 
-        // QR GENERATOR
+        // --- QR GENERATOR LOGIC ---
         const qrTextInput = document.getElementById('qrTextInput');
         const qrSize = document.getElementById('qrSize');
         const qrColor = document.getElementById('qrColor');
@@ -1427,44 +1412,62 @@
         const downloadSVG = document.getElementById('downloadSVG');
         const clearQRBtn = document.getElementById('clearQRBtn');
 
+        let currentQRDataUrl = '';
+
         function generateQR() {
             const text = qrTextInput.value.trim();
+            
             if (!text) {
-                showToast('Masukkan teks atau URL', 'warning');
+                showToast('Masukkan teks atau URL terlebih dahulu', 'warning');
                 return;
             }
 
+            const size = parseInt(qrSize.value);
+            const color = qrColor.value;
+            const bgColor = qrBgColor.value;
+            const ecc = qrECC.value;
+
             const options = {
-                width: parseInt(qrSize.value),
+                width: size,
                 margin: 2,
-                color: { dark: qrColor.value, light: qrBgColor.value },
-                errorCorrectionLevel: qrECC.value
+                color: {
+                    dark: color,
+                    light: bgColor
+                },
+                errorCorrectionLevel: ecc
             };
 
             QRCode.toDataURL(text, options, (err, url) => {
                 if (err) {
-                    showToast('Gagal membuat QR', 'error');
+                    console.error(err);
+                    showToast('Gagal membuat QR Code', 'error');
                     return;
                 }
 
+                currentQRDataUrl = url;
                 qrCodeImage.src = url;
                 qrCodeImage.style.display = 'block';
                 qrPlaceholder.style.display = 'none';
                 qrActions.style.display = 'block';
-                downloadPNG.href = url;
 
-                QRCode.toString(text, { ...options, type: 'svg' }, (err, svg) => {
+                // Update download links
+                downloadPNG.href = url;
+                
+                // Untuk SVG, kita buat dari data URL PNG
+                QRCode.toString(text, { ...options, type: 'svg' }, (err, svgString) => {
                     if (!err) {
-                        const blob = new Blob([svg], { type: 'image/svg+xml' });
-                        downloadSVG.href = URL.createObjectURL(blob);
+                        const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+                        const svgUrl = URL.createObjectURL(svgBlob);
+                        downloadSVG.href = svgUrl;
                     }
                 });
 
-                showToast('QR Code siap', 'success');
+                showToast('QR Code berhasil dibuat', 'success');
             });
         }
 
         generateQRBtn.addEventListener('click', generateQR);
+
         qrTextInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -1478,11 +1481,21 @@
             qrColor.value = '#2F72FD';
             qrBgColor.value = '#FFFFFF';
             qrECC.value = 'M';
+            
             qrCodeImage.style.display = 'none';
             qrPlaceholder.style.display = 'flex';
             qrActions.style.display = 'none';
-            showToast('QR direset', 'success');
+            currentQRDataUrl = '';
+            
+            showToast('QR Generator direset', 'success');
         });
+
+        // Initialize QR with default text
+        setTimeout(() => {
+            if (qrSection.style.display !== 'none') {
+                generateQR();
+            }
+        }, 500);
     </script>
 </body>
 </html>
