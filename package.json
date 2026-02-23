@@ -2,7 +2,7 @@
   "name": "node-shortlink-vercel",
   "version": "1.0.0",
   "description": "Simple URL Shortener",
-  "main": "api/index.js",
+  "main": "api/shorten.js",
   "dependencies": {
     "axios": "^1.6.0",
     "cheerio": "^1.0.0-rc.12"
