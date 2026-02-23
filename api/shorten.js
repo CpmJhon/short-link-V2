@@ -1,74 +1,103 @@
-import axios from 'axios';
-import { v2 as cloudinary } from 'cloudinary';
-import multer from 'multer';
+const axios = require('axios');
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
-
-const upload = multer({ storage: multer.memoryStorage() });
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET
-});
-
-export default async function handler(req, res) {
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ status:false, error:'Method not allowed' });
-  }
-
-  // === CLOUDINARY (multipart upload) ===
-  if (req.headers['content-type']?.includes('multipart/form-data')) {
-
-    upload.single('image')(req, res, async function (err) {
-      if (err) return res.status(500).json({ status:false, error:'Upload error' });
-
-      try {
-
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'jhonlink_uploads' },
-          (error, result) => {
-            if (error) {
-              return res.status(500).json({ status:false, error:error.message });
+class ShortUrl {
+    // 1. IS.GD (Menggunakan API Resmi JSON)
+    isgd = async function (url) {
+        try {
+            // Validasi URL
+            if (!url.match(/^https?:\/\//)) {
+                url = 'https://' + url;
             }
-            return res.json({ status:true, result: result.secure_url });
-          }
-        );
 
-        stream.end(req.file.buffer);
+            const response = await axios.get('https://is.gd/create.php', {
+                params: {
+                    format: 'json',
+                    url: url
+                },
+                timeout: 5000 // Timeout 5 detik agar tidak hang
+            });
 
-      } catch (error) {
-        return res.status(500).json({ status:false, error:error.message });
-      }
-    });
+            if (response.data.errorcode) {
+                throw new Error(response.data.errormessage || 'Is.gd menolak URL ini.');
+            }
 
-    return;
-  }
-
-  // === SHORTLINK LOGIC ===
-  const { url, provider, alias } = req.body;
-
-  try {
-
-    if (provider === 'isgd') {
-      const r = await axios.get(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
-      if (r.data.errorcode) throw new Error(r.data.errormessage);
-      return res.json({ status:true, result:r.data.shorturl });
+            return response.data.shorturl;
+        } catch (error) {
+            console.error('ISGD Error:', error.message);
+            throw new Error('Gagal memproses is.gd. Pastikan URL valid.');
+        }
     }
+    
+    // 2. TINYURL (Pengganti Tinu.be agar 100% Sukses)
+    tinyurl = async function (url, alias = '') {
+        try {
+             if (!url.match(/^https?:\/\//)) {
+                url = 'https://' + url;
+            }
 
-    if (provider === 'tinyurl') {
-      const r = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
-      return res.json({ status:true, result:r.data });
+            // TinyURL API Endpoint
+            let apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
+            if (alias) {
+                apiUrl += `&alias=${encodeURIComponent(alias)}`;
+            }
+
+            const response = await axios.get(apiUrl, {
+                timeout: 5000
+            });
+
+            if (response.data === 'Error') {
+                 throw new Error('Alias sudah digunakan atau URL tidak valid.');
+            }
+
+            return response.data;
+        } catch (error) {
+            console.error('TinyURL Error:', error.message);
+            // Handle error spesifik dari TinyURL jika alias duplikat
+            if(error.response && error.response.status === 422) {
+                throw new Error('Custom Alias sudah terpakai. Coba kata lain.');
+            }
+            throw new Error('Gagal memproses TinyURL.');
+        }
     }
-
-    return res.status(400).json({ status:false, error:'Provider tidak valid' });
-
-  } catch (error) {
-    return res.status(500).json({ status:false, error:error.message });
-  }
 }
+
+// Handler Vercel
+module.exports = async (req, res) => {
+    // Header CORS agar frontend bisa akses
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    if (req.method !== 'POST') {
+        return res.status(405).json({ status: false, error: 'Method Not Allowed' });
+    }
+
+    const { url, provider, alias } = req.body;
+
+    if (!url) {
+        return res.status(400).json({ status: false, error: 'URL tidak boleh kosong.' });
+    }
+
+    const shortener = new ShortUrl();
+
+    try {
+        let resultUrl;
+        
+        if (provider === 'isgd') {
+            resultUrl = await shortener.isgd(url);
+        } else if (provider === 'tinyurl') {
+            resultUrl = await shortener.tinyurl(url, alias);
+        } else {
+            return res.status(400).json({ status: false, error: 'Provider tidak valid.' });
+        }
+
+        return res.status(200).json({ status: true, result: resultUrl });
+
+    } catch (error) {
+        return res.status(500).json({ status: false, error: error.message });
+    }
+};
