@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JHONLink Pro</title>
+<style>
+body { font-family: Arial; background:#f3f4f6; padding:40px; }
+.card { max-width:600px; margin:auto; background:white; padding:30px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
+input, select { width:100%; padding:12px; margin-top:8px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd; }
+button { width:100%; padding:14px; border:none; border-radius:50px; background:#2F72FD; color:white; font-weight:bold; cursor:pointer; }
+button:hover { background:#1e5dd6; }
+#preview { width:100%; margin-top:15px; border-radius:15px; display:none; }
+#progressContainer { display:none; margin-top:10px; }
+#progressBar { width:0%; height:10px; background:#2F72FD; border-radius:10px; }
+.result { margin-top:20px; padding:15px; background:#f0fdf4; border-radius:12px; display:none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>JHONLink Pro</h2>
+
+<select id="provider">
+<option value="isgd">Shortlink - is.gd</option>
+<option value="tinyurl">Shortlink - TinyURL</option>
+<option value="cloudinary">Upload Gambar</option>
+</select>
+
+<input type="text" id="urlInput" placeholder="Masukkan URL (untuk shortlink)">
+<input type="text" id="aliasInput" placeholder="Custom alias (TinyURL saja)">
+
+<input type="file" id="imageInput" accept="image/*" style="display:none;">
+<img id="preview">
+
+<div id="progressContainer">
+<div style="background:#ddd; border-radius:10px;">
+<div id="progressBar"></div>
+</div>
+<small id="progressText">0%</small>
+</div>
+
+<button onclick="submitForm()">Proses</button>
+
+<div class="result" id="resultBox">
+<input type="text" id="resultUrl" readonly>
+</div>
+
+</div>
+
+<script>
+const provider = document.getElementById("provider");
+const imageInput = document.getElementById("imageInput");
+const preview = document.getElementById("preview");
+
+provider.addEventListener("change", () => {
+    imageInput.style.display = provider.value === "cloudinary" ? "block" : "none";
+});
+
+imageInput.addEventListener("change", () => {
+    const file = imageInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+});
+
+function submitForm() {
+
+    if (provider.value === "cloudinary") {
+
+        const file = imageInput.files[0];
+        if (!file) return alert("Pilih gambar dulu");
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/index");
+
+        const progressBar = document.getElementById("progressBar");
+        const progressContainer = document.getElementById("progressContainer");
+        const progressText = document.getElementById("progressText");
+
+        progressContainer.style.display = "block";
+
+        xhr.upload.onprogress = e => {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = percent + "%";
+                progressText.textContent = percent + "%";
+            }
+        };
+
+        xhr.onload = () => {
+            const res = JSON.parse(xhr.responseText);
+            if (res.status) {
+                document.getElementById("resultUrl").value = res.result;
+                document.getElementById("resultBox").style.display = "block";
+            } else {
+                alert(res.error);
+            }
+            progressContainer.style.display = "none";
+        };
+
+        xhr.send(formData);
+
+    } else {
+
+        fetch("/api/index", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({
+                url: document.getElementById("urlInput").value,
+                provider: provider.value,
+                alias: document.getElementById("aliasInput").value
+            })
+        })
+        .then(r=>r.json())
+        .then(res=>{
+            if(res.status){
+                document.getElementById("resultUrl").value=res.result;
+                document.getElementById("resultBox").style.display="block";
+            } else {
+                alert(res.error);
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
