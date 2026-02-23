@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JHONLink - ShortLink & Image Upload Modern</title>
+    <title>JHONLink - ShortLink, Image Upload & QR Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -22,6 +22,8 @@
             --font-family: 'Inter', sans-serif;
             --star-color: #FFB300;
             --input-bg: #f9fafb;
+            --qr-primary: #2F72FD;
+            --qr-secondary: #10b981;
         }
 
         * {
@@ -171,6 +173,10 @@
             cursor: pointer;
             transition: all 0.2s;
             color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .tab-btn.active {
@@ -200,7 +206,7 @@
             color: var(--text-main);
         }
 
-        input[type="text"], select {
+        input[type="text"], select, textarea {
             width: 100%;
             padding: 16px;
             border: 1px solid var(--border-light);
@@ -213,7 +219,12 @@
             -webkit-appearance: none;
         }
 
-        input[type="text"]:focus, select:focus {
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
             border-color: var(--brand-blue);
             background: #fff;
             box-shadow: 0 0 0 3px rgba(47, 114, 253, 0.1);
@@ -492,6 +503,118 @@
             font-size: 1rem;
         }
 
+        /* --- QR GENERATOR STYLES --- */
+        .qr-container {
+            background: #fff;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-light);
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .qr-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .qr-option-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .qr-option-item label {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        .qr-option-item input, .qr-option-item select {
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .qr-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+        }
+
+        #qrCodeImage {
+            max-width: 250px;
+            max-height: 250px;
+            border-radius: 12px;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .qr-placeholder {
+            width: 250px;
+            height: 250px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            gap: 15px;
+            border: 2px dashed var(--border-light);
+        }
+
+        .qr-placeholder i {
+            font-size: 4rem;
+            color: var(--brand-blue);
+            opacity: 0.5;
+        }
+
+        .qr-download-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .qr-download-btn {
+            background: var(--brand-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .qr-download-btn:hover {
+            background: var(--brand-blue-hover);
+            transform: translateY(-2px);
+        }
+
+        .qr-download-btn.secondary {
+            background: #10b981;
+        }
+
+        .qr-download-btn.secondary:hover {
+            background: #059669;
+        }
+
         /* --- SECTIONS --- */
         .section-heading { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: #000; text-align: center; margin-top: 40px; }
         .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 60px; text-align: left; }
@@ -590,6 +713,21 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .qr-options {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-preview {
+                padding: 15px;
+            }
+
+            #qrCodeImage, .qr-placeholder {
+                max-width: 200px;
+                max-height: 200px;
+                width: 200px;
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -620,9 +758,9 @@
             </div>
         </div>
 
-        <h1 class="hero-title">Buat Tautan Pendek & Upload Gambar<br>Lebih Profesional</h1>
+        <h1 class="hero-title">ShortLink, Upload Gambar & QR Code<br>Satu Platform</h1>
         <p class="hero-desc">
-            Persingkat URL panjang Anda atau upload gambar ke cloud. Gratis tanpa syarat!
+            Persingkat URL, upload gambar ke cloud, atau buat QR code instan. Gratis tanpa syarat!
         </p>
 
         <div class="badges-container">
@@ -635,6 +773,7 @@
         <div class="tab-container">
             <button class="tab-btn active" id="tabShortener"><i class="fas fa-link"></i> Shortener</button>
             <button class="tab-btn" id="tabUpload"><i class="fas fa-cloud-upload-alt"></i> Image Upload</button>
+            <button class="tab-btn" id="tabQR"><i class="fas fa-qrcode"></i> QR Generator</button>
         </div>
 
         <!-- SHORTENER SECTION -->
@@ -707,6 +846,77 @@
             </div>
         </div>
 
+        <!-- QR GENERATOR SECTION -->
+        <div id="qrSection" style="display: none;">
+            <div class="qr-container">
+                <div class="form-group">
+                    <label><i class="fas fa-font"></i> Teks / URL untuk QR Code</label>
+                    <textarea id="qrTextInput" placeholder="https://example.com atau teks apapun..." rows="3">https://example.com</textarea>
+                </div>
+
+                <div class="qr-options">
+                    <div class="qr-option-item">
+                        <label>Ukuran QR</label>
+                        <select id="qrSize">
+                            <option value="100">Kecil (100x100)</option>
+                            <option value="150">Sedang (150x150)</option>
+                            <option value="200" selected>Besar (200x200)</option>
+                            <option value="250">Extra Besar (250x250)</option>
+                            <option value="300">Super Besar (300x300)</option>
+                        </select>
+                    </div>
+
+                    <div class="qr-option-item">
+                        <label>Warna QR</label>
+                        <input type="color" id="qrColor" value="#2F72FD">
+                    </div>
+
+                    <div class="qr-option-item">
+                        <label>Warna Background</label>
+                        <input type="color" id="qrBgColor" value="#FFFFFF">
+                    </div>
+
+                    <div class="qr-option-item">
+                        <label>Error Correction</label>
+                        <select id="qrECC">
+                            <option value="L">L (7%)</option>
+                            <option value="M" selected>M (15%)</option>
+                            <option value="Q">Q (25%)</option>
+                            <option value="H">H (30%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-saas" id="generateQRBtn">
+                    <i class="fas fa-qrcode"></i> Generate QR Code
+                </button>
+
+                <div id="qrResult" class="qr-preview">
+                    <div id="qrPlaceholder" class="qr-placeholder">
+                        <i class="fas fa-qrcode"></i>
+                        <p>QR Code akan tampil di sini</p>
+                    </div>
+                    <img id="qrCodeImage" src="" alt="QR Code" style="display: none;">
+                </div>
+
+                <div id="qrActions" style="display: none;">
+                    <div class="qr-download-buttons">
+                        <a id="downloadPNG" class="qr-download-btn" download="qrcode.png">
+                            <i class="fas fa-download"></i> Download PNG
+                        </a>
+                        <a id="downloadSVG" class="qr-download-btn secondary" download="qrcode.svg">
+                            <i class="fas fa-download"></i> Download SVG
+                        </a>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="clear-btn" id="clearQRBtn">
+                            <i class="fas fa-times-circle"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="testimoni"></div>
         <h2 class="section-heading">Apa Kata Mereka?</h2>
         <div class="review-grid">
@@ -717,14 +927,14 @@
             </div>
             <div class="review-card">
                 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="review-text">"Fitur upload gambar ke Cloudinary sangat membantu untuk hosting gambar cepat."</p>
+                <p class="review-text">"Fitur QR Generator sangat membantu untuk membuat QR code menu restoran saya."</p>
                 <p class="reviewer-name">Dimas Anggara - Seller</p>
             </div>
         </div>
 
         <div id="penjelasan" style="padding-top: 20px;">
              <h2 class="section-heading">Mengapa JHONLink?</h2>
-             <p class="hero-desc">Kami menyediakan layanan pemendek URL dan image hosting yang fokus pada kecepatan dan kemudahan pengguna.</p>
+             <p class="hero-desc">Kami menyediakan layanan pemendek URL, image hosting, dan QR generator yang fokus pada kecepatan dan kemudahan pengguna.</p>
              <img src="https://cdn.odzre.my.id/x1o.jpg" style="width: 100%; border-radius: 20px; margin-top: 20px;" alt="Analytics">
         </div>
     </div>
@@ -779,6 +989,9 @@
     <audio id="soundError" preload="auto" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTG9uZG9uU291bmRzLmNvbQAAVFJBTkNSQUZUSU9OUgAAADFJQ1dEUlRYWFgAAAAtAAAAAAAQZGVzY3JpcHRpb24AAAAAAAANVW5rbm93biBFcnJvcgAAAAAA"></audio>
     <audio id="soundWarning" preload="auto" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTG9uZG9uU291bmRzLmNvbQAAVFJBTkNSQUZUSU9OUgAAADFJQ1dEUlRYWFgAAAAtAAAAAAAQZGVzY3JpcHRpb24AAAAAAAANVW5rbm93biBFcnJvcgAAAAAA"></audio>
 
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
     <script>
         // UI Interaction Script (Sidebar)
         const menuBtn = document.getElementById('menuBtn');
@@ -797,22 +1010,36 @@
         // Tab Navigation
         const tabShortener = document.getElementById('tabShortener');
         const tabUpload = document.getElementById('tabUpload');
+        const tabQR = document.getElementById('tabQR');
         const shortenerSection = document.getElementById('shortenerSection');
         const uploadSection = document.getElementById('uploadSection');
+        const qrSection = document.getElementById('qrSection');
 
-        tabShortener.addEventListener('click', () => {
-            tabShortener.classList.add('active');
-            tabUpload.classList.remove('active');
-            shortenerSection.style.display = 'block';
-            uploadSection.style.display = 'none';
-        });
-
-        tabUpload.addEventListener('click', () => {
-            tabUpload.classList.add('active');
+        function showTab(tab) {
+            // Reset semua tab
             tabShortener.classList.remove('active');
+            tabUpload.classList.remove('active');
+            tabQR.classList.remove('active');
             shortenerSection.style.display = 'none';
-            uploadSection.style.display = 'block';
-        });
+            uploadSection.style.display = 'none';
+            qrSection.style.display = 'none';
+
+            // Aktifkan tab yang dipilih
+            if (tab === 'shortener') {
+                tabShortener.classList.add('active');
+                shortenerSection.style.display = 'block';
+            } else if (tab === 'upload') {
+                tabUpload.classList.add('active');
+                uploadSection.style.display = 'block';
+            } else if (tab === 'qr') {
+                tabQR.classList.add('active');
+                qrSection.style.display = 'block';
+            }
+        }
+
+        tabShortener.addEventListener('click', () => showTab('shortener'));
+        tabUpload.addEventListener('click', () => showTab('upload'));
+        tabQR.addEventListener('click', () => showTab('qr'));
 
         // --- SHORTENER LOGIC (ORIGINAL - TIDAK BERUBAH) ---
         const form = document.getElementById('shortenForm');
@@ -1182,6 +1409,105 @@
 
             xhr.send(formData);
         });
+
+        // --- QR GENERATOR LOGIC ---
+        const qrTextInput = document.getElementById('qrTextInput');
+        const qrSize = document.getElementById('qrSize');
+        const qrColor = document.getElementById('qrColor');
+        const qrBgColor = document.getElementById('qrBgColor');
+        const qrECC = document.getElementById('qrECC');
+        const generateQRBtn = document.getElementById('generateQRBtn');
+        const qrPlaceholder = document.getElementById('qrPlaceholder');
+        const qrCodeImage = document.getElementById('qrCodeImage');
+        const qrActions = document.getElementById('qrActions');
+        const downloadPNG = document.getElementById('downloadPNG');
+        const downloadSVG = document.getElementById('downloadSVG');
+        const clearQRBtn = document.getElementById('clearQRBtn');
+
+        let currentQRDataUrl = '';
+
+        function generateQR() {
+            const text = qrTextInput.value.trim();
+            
+            if (!text) {
+                showToast('Masukkan teks atau URL terlebih dahulu', 'warning');
+                return;
+            }
+
+            const size = parseInt(qrSize.value);
+            const color = qrColor.value;
+            const bgColor = qrBgColor.value;
+            const ecc = qrECC.value;
+
+            const options = {
+                width: size,
+                margin: 2,
+                color: {
+                    dark: color,
+                    light: bgColor
+                },
+                errorCorrectionLevel: ecc
+            };
+
+            QRCode.toDataURL(text, options, (err, url) => {
+                if (err) {
+                    console.error(err);
+                    showToast('Gagal membuat QR Code', 'error');
+                    return;
+                }
+
+                currentQRDataUrl = url;
+                qrCodeImage.src = url;
+                qrCodeImage.style.display = 'block';
+                qrPlaceholder.style.display = 'none';
+                qrActions.style.display = 'block';
+
+                // Update download links
+                downloadPNG.href = url;
+                
+                // Untuk SVG, kita buat dari data URL PNG
+                QRCode.toString(text, { ...options, type: 'svg' }, (err, svgString) => {
+                    if (!err) {
+                        const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+                        const svgUrl = URL.createObjectURL(svgBlob);
+                        downloadSVG.href = svgUrl;
+                    }
+                });
+
+                showToast('QR Code berhasil dibuat', 'success');
+            });
+        }
+
+        generateQRBtn.addEventListener('click', generateQR);
+
+        qrTextInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateQR();
+            }
+        });
+
+        clearQRBtn.addEventListener('click', () => {
+            qrTextInput.value = 'https://example.com';
+            qrSize.value = '200';
+            qrColor.value = '#2F72FD';
+            qrBgColor.value = '#FFFFFF';
+            qrECC.value = 'M';
+            
+            qrCodeImage.style.display = 'none';
+            qrPlaceholder.style.display = 'flex';
+            qrActions.style.display = 'none';
+            currentQRDataUrl = '';
+            
+            showToast('QR Generator direset', 'success');
+        });
+
+        // Initialize QR with default text
+        setTimeout(() => {
+            if (qrSection.style.display !== 'none') {
+                generateQR();
+            }
+        }, 500);
     </script>
 </body>
 </html>
