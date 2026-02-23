@@ -1,11 +1,10 @@
 {
-  "name": "jhonlink-pro",
+  "name": "node-shortlink-vercel",
   "version": "1.0.0",
-  "description": "JHONLink Pro - Shortlink + Image Host",
-  "main": "api/index.js",
+  "description": "Simple URL Shortener",
+  "main": "api/shorten.js",
   "dependencies": {
     "axios": "^1.6.0",
-    "cloudinary": "^1.41.0",
-    "multer": "^1.4.5-lts.1"
+    "cheerio": "^1.0.0-rc.12"
   }
 }
