@@ -545,9 +545,9 @@
             dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
             shopee: { name: 'ShopeePay', num: '085894955362', img: 'https://cdn.odzre.my.id/8px.jpg' },
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
-            ovo: { name: 'OVO', num: '085894955362', img: 'https://cdn.odzre.my.id/lpp.jpg' },
+            ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '085591916436', img: 'https://cdn.odzre.my.id/mb4.jpg' },
-            PayPal: { name: 'Paypal', num: 'https://www.paypal.com/paypalme/cpmjhon', img: 'https://cdn.odzre.my.id/m1l.jpg' },
+            PayPal: { name: 'Paypal', num: 'https://tinyurl.com/Paypal-me-jhon', img: 'https://cdn.odzre.my.id/m1l.jpg' },
             
             
             // Bank
@@ -727,7 +727,7 @@
                     </div>`;
             } else if (mode === 'dana_only') {
                 title.innerText = "E-WALLET";
-                ['dana', 'shopee', 'gopay', 'ovo', 'linkaja', 'paypal'].forEach(k => html += rowHtml(k));
+                ['dana', 'shopee', 'gopay', 'ovo', 'paypal', 'linkaja'].forEach(k => html += rowHtml(k));
             } else if (mode === 'bank') {
                 title.innerText = "TRANSFER BANK";
                 ['bca', 'sebank', 'bri'].forEach(k => html += rowHtml(k));
