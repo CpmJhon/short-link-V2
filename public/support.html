@@ -526,30 +526,37 @@
     </div>
 
     <script>
-        // Data iklan dengan URL yang valid dan pasti bisa diakses
+        // Data iklan dengan tema e-wallet dan pembayaran digital
         const adBanners = [
-            "https://images.unsplash.com/photo-1607083206865-6c7e3f1e9b1d?w=480&h=140&fit=crop",
-            "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=480&h=140&fit=crop",
-            "https://images.unsplash.com/photo-1607083206960-7c3e9b8b9b9e?w=480&h=140&fit=crop"
+            "https://img.freepik.com/free-vector/gradient-qr-code-payment-illustration_23-2149433618.jpg?w=480&h=140&fit=crop", // QRIS
+            "https://img.freepik.com/free-vector/digital-wallet-concept-illustration_114360-7558.jpg?w=480&h=140&fit=crop", // Digital Wallet
+            "https://img.freepik.com/free-vector/mobile-payment-concept-illustration_114360-1192.jpg?w=480&h=140&fit=crop" // Mobile Payment
+        ];
+        
+        // Data iklan cadangan jika gambar utama gagal dimuat
+        const fallbackBanners = [
+            "https://via.placeholder.com/480x140/2563eb/ffffff?text=QRIS+Payment+Instant",
+            "https://via.placeholder.com/480x140/10b981/ffffff?text=E-Wallet+Dana+OVO+GoPay",
+            "https://via.placeholder.com/480x140/6366f1/ffffff?text=Top+Up+Pulsa+Murah"
         ];
         
         const dataPay = {
             // E-Wallet
             dana: { name: 'DANA', num: '081227108559', img: 'https://cdn.odzre.my.id/r25.jpg' },
-            shopee: { name: 'ShopeePay', num: '081xxx', img: 'https://cdn.odzre.my.id/ukr.jpg' },
+            shopee: { name: 'ShopeePay', num: '081227108559', img: 'https://cdn.odzre.my.id/ukr.jpg' },
             gopay: { name: 'GoPay', num: '081227108559', img: 'https://cdn.odzre.my.id/fw6.jpg' },
             ovo: { name: 'OVO', num: '081227108559', img: 'https://cdn.odzre.my.id/lpp.jpg' },
-            linkaja: { name: 'LinkAja', num: '081xxx', img: 'https://cdn.odzre.my.id/qga.jpg' },
+            linkaja: { name: 'LinkAja', num: '081227108559', img: 'https://cdn.odzre.my.id/qga.jpg' },
             
             // Bank
-            bca: { name: 'BCA', num: '123xxx', img: 'https://cdn.odzre.my.id/nbo.jpg' },
-            sebank: { name: 'SeaBank', num: '081xxx', img: 'https://cdn.odzre.my.id/k7m.jpg' },
-            bri: { name: 'BRI', num: '081xxx', img: 'https://cdn.odzre.my.id/tke.jpg' },
+            bca: { name: 'BCA', num: '1234567890', img: 'https://cdn.odzre.my.id/nbo.jpg' },
+            sebank: { name: 'SeaBank', num: '9012345678', img: 'https://cdn.odzre.my.id/k7m.jpg' },
+            bri: { name: 'BRI', num: '0987654321', img: 'https://cdn.odzre.my.id/tke.jpg' },
 
             // Pulsa
-            telkomsel: { name: 'Telkomsel', num: '081xxx', img: 'https://cdn.odzre.my.id/zmm.jpg' },
-            indosat: { name: 'Indosat', num: '081xxx', img: 'https://cdn.odzre.my.id/nz4.jpg' },
-            tri: { name: 'Tri (3)', num: '081xxx', img: 'https://cdn.odzre.my.id/z39.jpg' },
+            telkomsel: { name: 'Telkomsel', num: '08123456789', img: 'https://cdn.odzre.my.id/zmm.jpg' },
+            indosat: { name: 'Indosat', num: '08567890123', img: 'https://cdn.odzre.my.id/nz4.jpg' },
+            tri: { name: 'Tri (3)', num: '08987654321', img: 'https://cdn.odzre.my.id/z39.jpg' },
             smartfren: { name: 'Smartfren', num: '088976422189', img: 'https://cdn.odzre.my.id/3wg.jpg' }
         };
 
@@ -574,7 +581,7 @@
                 
                 // Fallback jika gambar gagal dimuat
                 img.onerror = function() {
-                    this.src = 'https://via.placeholder.com/480x140/2563eb/ffffff?text=Promo+Spesial';
+                    this.src = fallbackBanners[index];
                 };
                 
                 slide.appendChild(img);
@@ -713,7 +720,7 @@
                 title.innerText = "SCAN QRIS";
                 html = `
                     <div class="qris-display">
-                        <img src="qr8.jpg" style="width:100%; max-width:220px; border-radius:10px;" onerror="this.src='https://via.placeholder.com/220x220/2563eb/ffffff?text=QRIS'">
+                        <img src="https://img.freepik.com/free-vector/gradient-qr-code-payment-illustration_23-2149433618.jpg" style="width:100%; max-width:220px; border-radius:10px;" onerror="this.src='https://via.placeholder.com/220x220/2563eb/ffffff?text=QRIS'">
                         <p style="margin-top:10px; font-size:12px; color:#555;">Support All E-Wallet & Bank</p>
                     </div>`;
             } else if (mode === 'dana_only') {
