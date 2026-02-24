@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOCHUY INDONESIA ALL PAYMENT</title>
+    <title>JHON WEB PAYMENT</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
+        /* --- ULTIMATE THEME VARS (Dark Gray + Old White) --- */
         :root {
             --bg-main: #121212;
             --bg-deep: #0a0a0a;
@@ -48,6 +49,7 @@
             .app-frame { height: 95vh; border-radius: 35px; border: 4px solid #333; }
         }
 
+        /* --- HEADER --- */
         .header-area {
             padding: 30px 24px 20px;
             display: flex; justify-content: space-between; align-items: center;
@@ -60,41 +62,22 @@
             font-size: 20px; cursor: pointer; transition: 0.2s; position: relative;
         }
         .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        .notif-badge {
+            position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px;
+            background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-main);
+            color: white; font-size: 9px; font-weight: bold; display: flex; 
+            align-items: center; justify-content: center; opacity: 0; transition: 0.3s;
+        }
+        .notif-badge.show { opacity: 1; }
 
-        .currency-selector {
-            width: 110px; height: 36px;
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            display: flex; align-items: center; gap: 8px;
-            padding: 0 12px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .currency-selector:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .currency-flag {
-            width: 20px; height: 20px;
-            border-radius: 4px;
-            background: linear-gradient(to bottom, #ff4b55 50%, #ffffff 50%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px;
-            color: white;
-            font-weight: bold;
-        }
-        .currency-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-on-dark);
-        }
-
+        /* --- CONTENT SCROLL AREA --- */
         .content-area {
             flex: 1; overflow-y: auto; padding: 0 24px 100px;
             scrollbar-width: none;
         }
         .content-area::-webkit-scrollbar { display: none; }
 
+        /* --- PROFILE SECTION --- */
         .profile-section {
             display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
         }
@@ -106,6 +89,7 @@
         .p-info p { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
         .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
 
+        /* --- SOCIAL MEDIA (NEW) --- */
         .social-bar {
             margin-top: 8px; display: flex; gap: 10px;
         }
@@ -118,61 +102,18 @@
         }
         .soc-icon:active { transform: scale(0.9); background: var(--accent); border-color: var(--accent); }
 
-        .ad-slider {
-            position: relative;
-            width: 100%;
-            height: 140px;
-            border-radius: 20px;
-            overflow: hidden;
-            margin: 20px 0;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-        }
-        .ad-slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.6s ease-in-out;
-        }
-        .ad-slide.active {
-            opacity: 1;
-        }
-        .ad-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .ad-dots {
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            z-index: 10;
-        }
-        .ad-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            cursor: pointer;
-        }
-        .ad-dot.active {
-            background: white;
-        }
-
+        /* --- MARQUEE --- */
         .marquee-container {
             background: #1e1e1e; border-radius: 8px; overflow: hidden; white-space: nowrap;
-            padding: 8px 0; margin-bottom: 25px; border-left: 3px solid var(--accent); margin-top: 10px;
+            padding: 8px 0; margin-bottom: 25px; border-left: 3px solid var(--accent); margin-top: 15px;
         }
         .marquee-text {
             display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite;
             font-size: 11px; color: var(--text-muted); font-family: monospace;
         }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
+        /* --- MENU GRID --- */
         .menu-title { font-size: 14px; font-weight: 700; margin-bottom: 15px; color: var(--text-on-dark); letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.8; }
         
         .menu-grid {
@@ -195,14 +136,15 @@
             font-size: 20px; color: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 1;
         }
         
-        .mc-text h3 { font-size: 15px; font-weight: 800; color: var(--text-on-light); margin-bottom: 3px; }
-        .mc-text p { font-size: 11px; font-weight: 500; color: #666; }
+        .mc-text h3 { font-size: 15px; font-weight: 800; color: var(--text-on-light); margin-bottom: 3px; z-index: 1; position: relative;}
+        .mc-text p { font-size: 11px; font-weight: 500; color: #666; z-index: 1; position: relative;}
         .menu-card::before {
             content: ''; position: absolute; top: -20px; right: -20px;
             width: 80px; height: 80px; border-radius: 50%;
             background: rgba(0,0,0,0.05); z-index: 0;
         }
 
+        /* --- QRIS WIDGET (UPDATED) --- */
         .card-qris-full {
             grid-column: span 2; height: 90px;
             background: #222;
@@ -214,9 +156,11 @@
             border-radius: 14px; display: flex; align-items: center; justify-content: center;
             font-size: 24px; color: #fff;
         }
+        .qris-right { text-align: right; }
         .qris-right h3 { color: #fff; font-size: 18px; margin-bottom: 2px; }
         .qris-right p { color: #888; font-size: 12px; }
 
+        /* --- NEW INFO WIDGET --- */
         .info-features {
             margin-top: 15px;
             display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
@@ -233,6 +177,7 @@
         .feat-text h5 { color: #222; font-size: 11px; font-weight: 700; }
         .feat-text p { color: #666; font-size: 9px; }
 
+        /* --- PROMO BANNER --- */
         .promo-banner {
             margin-top: 25px;
             background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
@@ -243,6 +188,40 @@
         .promo-banner p { color: rgba(255,255,255,0.8); font-size: 11px; position: relative; z-index: 2; max-width: 70%; }
         .promo-deco { position: absolute; bottom: -10px; right: -10px; font-size: 80px; color: rgba(255,255,255,0.1); transform: rotate(-15deg); }
 
+        /* --- NOTIFICATION PANEL (NEW) --- */
+        .notif-panel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 200;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        .notif-panel.active { opacity: 1; pointer-events: auto; }
+        .notif-box {
+            width: 85%; max-width: 350px; background: #1a1a1a;
+            border-radius: 24px; border: 1px solid #333;
+            overflow: hidden; max-height: 60vh; display: flex; flex-direction: column;
+        }
+        .nb-header {
+            padding: 15px 20px; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #222;
+        }
+        .nb-header h3 { font-size: 14px; color: #fff; font-weight: 700; }
+        .nb-close { cursor: pointer; color: #888; font-size: 20px; padding: 5px; }
+        .nb-body { padding: 10px; overflow-y: auto; }
+        .notif-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .ni-icon {
+            width: 30px; height: 30px; background: rgba(37,99,235,0.2); 
+            color: #60a5fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        }
+        .ni-text h5 { color: #ddd; font-size: 12px; margin-bottom: 2px; }
+        .ni-text p { color: #777; font-size: 10px; }
+        .empty-state { text-align: center; padding: 30px; color: #555; font-size: 12px; }
+
+        /* --- FLOATING CHAT --- */
         .fab-container { position: fixed; bottom: 25px; right: 25px; z-index: 90; }
         .btn-fab {
             width: 58px; height: 58px; border-radius: 20px;
@@ -252,7 +231,8 @@
             border: none; cursor: pointer; transition: 0.3s;
         }
         .btn-fab:hover { transform: scale(1.1) rotate(5deg); }
-
+        
+        /* --- CHAT WINDOW --- */
         .chat-modal {
             position: fixed; bottom: 90px; right: 25px; width: 300px; height: 400px;
             background: #1a1a1a; border-radius: 24px; border: 1px solid #333;
@@ -261,27 +241,15 @@
             transition: 0.3s ease; z-index: 90;
         }
         .chat-modal.active { transform: scale(1); opacity: 1; }
-        .cm-header {
-            padding: 15px; background: #222; display: flex; justify-content: space-between;
-            color: white; font-weight: 700; font-size: 13px;
-        }
-        .cm-body {
-            flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
-        }
-        .cm-footer {
-            padding: 10px; background: #222; display: flex; gap: 5px; overflow-x: auto;
-        }
-        .bubble {
-            padding: 8px 12px; border-radius: 10px; font-size: 11px; max-width: 85%;
-        }
+        .cm-header { padding: 15px; background: #222; display: flex; justify-content: space-between; color: white; font-weight: 700; font-size: 13px; }
+        .cm-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .cm-footer { padding: 10px; background: #222; display: flex; gap: 5px; overflow-x: auto; }
+        .bubble { padding: 8px 12px; border-radius: 10px; font-size: 11px; max-width: 85%; }
         .b-bot { background: #333; color: #ddd; align-self: flex-start; }
         .b-user { background: var(--text-on-dark); color: #000; align-self: flex-end; }
-        .c-chip {
-            background: transparent; border: 1px solid #444; color: #aaa;
-            padding: 5px 10px; border-radius: 20px; font-size: 10px;
-            cursor: pointer; white-space: nowrap;
-        }
+        .c-chip { background: transparent; border: 1px solid #444; color: #aaa; padding: 5px 10px; border-radius: 20px; font-size: 10px; cursor: pointer; white-space: nowrap; }
 
+        /* --- BOTTOM SHEET --- */
         .sheet-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 100;
@@ -305,96 +273,217 @@
         .pi-info h5 { font-size: 14px; color: #000; font-weight: 700; }
         .pi-info p { font-size: 12px; color: #666; font-family: monospace; }
         .btn-action { width: 34px; height: 34px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #333; border: none; font-size: 16px; cursor: pointer; }
-        .qris-display { background: #fff; padding: 20px; border-radius: 20px; text-align: center; }
 
+        /* --- QRIS INPUT STYLES --- */
+        .qris-input-container {
+            margin-bottom: 20px; text-align: left;
+        }
+        .qris-label {
+            color: #000; font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;
+        }
+        .qris-input {
+            width: 100%; padding: 12px 15px; border-radius: 12px; 
+            border: 1px solid #ddd; font-size: 16px; font-weight: 600; 
+            color: #000; background: #f9f9f9;
+        }
+        .qris-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+        .qris-hint {
+            color: #666; font-size: 11px; margin-top: 5px;
+        }
+        .qris-generate-btn {
+            width: 100%; padding: 12px; border-radius: 12px; 
+            border: none; background: #000; color: #fff; 
+            font-weight: 700; margin-top: 10px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .qris-generate-btn:disabled {
+            background: #ccc !important;
+            cursor: not-allowed !important;
+        }
+        .qris-generate-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+        .qris-container {
+            display: none; text-align: center;
+        }
+        
+        /* --- QR DISPLAY IMPROVEMENT --- */
+        .qr-display-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .qris-nominal-display {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 0 auto 15px auto;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 700;
+            min-width: 180px;
+        }
+
+        .qris-image {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            background: white;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .qris-info {
+            margin-top: 10px; font-size: 12px; color: #555;
+        }
+        .whatsapp-confirm-btn {
+            width: 100%; padding: 12px; border-radius: 12px; 
+            border: none; background: #2563eb; color: #fff; 
+            font-weight: 700; margin-top: 10px; display: flex; 
+            align-items: center; justify-content: center; gap: 8px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .whatsapp-confirm-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .download-qr-btn {
+            width: 100%; padding: 12px; border-radius: 12px; 
+            border: 1px solid #10b981; background: transparent; 
+            color: #10b981; font-weight: 700; margin-top: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            gap: 8px; cursor: pointer; transition: all 0.2s;
+        }
+        .download-qr-btn:hover {
+            background: #10b981;
+            color: #fff;
+        }
+        .qris-actions {
+            display: flex; gap: 10px; margin-top: 15px;
+        }
+        .qris-loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* QR Loading Animation */
+        .qr-loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 240px;
+        }
+
+        .qr-loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        /* QR Success Animation */
+        .qr-success-animation {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.error {
+            background: #ef4444;
+        }
+
+        /* Utility */
         .ripple { position: relative; overflow: hidden; }
         .ripple span { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-        .menu-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 150;
-            opacity: 0; pointer-events: none; transition: 0.3s;
-        }
-        .menu-overlay.active {
-            opacity: 1; pointer-events: auto;
-        }
-        .menu-panel {
-            position: absolute; top: 0; left: 0; width: 80%; height: 100%;
-            background: var(--bg-deep); border-right: 1px solid #333;
-            transform: translateX(-100%); transition: transform 0.3s ease;
-            padding: 20px; overflow-y: auto;
-        }
-        .menu-overlay.active .menu-panel {
-            transform: translateX(0);
-        }
-        .menu-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 20px; border-bottom: 1px solid #333;
-            margin-bottom: 20px;
-        }
-        .menu-close {
-            width: 32px; height: 32px; background: rgba(255,255,255,0.1);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            color: var(--text-on-dark); cursor: pointer;
-            font-size: 20px;
-        }
-        .menu-title {
-            font-size: 18px; font-weight: 700; color: var(--text-on-dark);
-        }
-        .menu-item {
-            padding: 15px 0; border-bottom: 1px solid #333;
-            cursor: pointer; transition: 0.2s;
-        }
-        .menu-item:hover {
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-        }
-        .menu-item h4 {
-            font-size: 16px; font-weight: 600; color: var(--text-on-dark);
-            margin-bottom: 5px;
-        }
-        .menu-item p {
-            font-size: 13px; color: var(--text-muted);
-        }
     </style>
 </head>
 <body>
+
     <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
     <div class="app-frame">
         <div class="header-area">
             <div class="btn-icon ripple" id="btnMenu">
-                <i class="ri-menu-3-line"></i>
+                <i class="ri-apps-2-line"></i>
             </div>
-            <div style="font-weight:800; font-size:16px; letter-spacing:1px;">VOCHUY<span style="color:var(--text-muted);">PAY</span></div>
-            <div class="currency-selector ripple" id="currencySelector">
-                <div class="currency-flag"></div>
-                <div class="currency-text">ID / IDR</div>
+            <div style="font-weight:800; font-size:16px; letter-spacing:1px;">JHON<span style="color:var(--text-muted);">PAY</span></div>
+            <div class="btn-icon ripple" onclick="toggleNotifPanel()">
+                <i class="ri-notification-4-line"></i>
+                <div class="notif-badge" id="notifBadge">0</div>
             </div>
         </div>
 
-        <div class="content-area" id="mainContent">
+        <div class="content-area">
+            
             <div class="profile-section">
-                <img src="https://cdn.odzre.my.id/47e.jpg" class="p-img" onerror="this.src='https://placehold.co/100'">
+                <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
                 <div class="p-info">
                     <h2 id="userName"></h2>
                     <p><span class="status-dot"></span> Online & Verified</p>
                     <div class="social-bar">
-                        <a href="https://www.instagram.com/vochuyindonesia?igsh=MXV4OHdiOGFmdWt5Mw==" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
+                        <a href="https://instagram.com/cpm_jhon" target="_blank" class="soc-icon ripple" onclick="playTick()">
                             <i class="ri-instagram-fill"></i>
                         </a>
-                        <a href="https://telegram.org" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
+                        <a href="https://t.me/cpm_jhon21" target="_blank" class="soc-icon ripple" onclick="playTick()">
                             <i class="ri-telegram-fill"></i>
                         </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
+                        <a href="https://linkedin.com" target="_blank" class="soc-icon ripple" onclick="playTick()">
                             <i class="ri-linkedin-fill"></i>
                         </a>
                     </div>
                 </div>
             </div>
-
-            <div class="ad-slider" id="adSlider"></div>
 
             <div class="marquee-container">
                 <div class="marquee-text">
@@ -411,6 +500,7 @@
                         <p>Instant Payment</p>
                     </div>
                 </div>
+
                 <div class="menu-card ripple" onclick="openSheet('dana_only')">
                     <div class="mc-icon" style="color:#10b981;"><i class="ri-wallet-3-fill"></i></div>
                     <div class="mc-text">
@@ -418,6 +508,7 @@
                         <p>Dana / OVO / GoPay</p>
                     </div>
                 </div>
+
                 <div class="menu-card ripple" onclick="openSheet('bank')">
                     <div class="mc-icon" style="color:#f59e0b;"><i class="ri-bank-card-fill"></i></div>
                     <div class="mc-text">
@@ -425,13 +516,15 @@
                         <p>Semua Bank</p>
                     </div>
                 </div>
-                <div class="menu-card ripple" onclick="openSheet('pulsa')">
+
+                 <div class="menu-card ripple" onclick="openSheet('pulsa')">
                     <div class="mc-icon" style="color:#ef4444;"><i class="ri-smartphone-fill"></i></div>
                     <div class="mc-text">
                         <h3>Top Up</h3>
                         <p>Pulsa All Op</p>
                     </div>
                 </div>
+
                 <div class="menu-card ripple" onclick="openSheet('all')">
                     <div class="mc-icon" style="color:#6366f1;"><i class="ri-grid-fill"></i></div>
                     <div class="mc-text">
@@ -470,6 +563,7 @@
                 <p>Khusus pengguna baru untuk transaksi pertama via QRIS.</p>
                 <i class="ri-coupon-3-line promo-deco"></i>
             </div>
+
             <div style="height:30px;"></div>
         </div>
 
@@ -493,6 +587,19 @@
                 <button class="c-chip" onclick="sendChat('admin')">Admin</button>
             </div>
         </div>
+
+        <div class="notif-panel" id="notifPanel">
+            <div class="notif-box">
+                <div class="nb-header">
+                    <h3>Notifikasi</h3>
+                    <i class="ri-close-circle-fill nb-close" onclick="toggleNotifPanel()"></i>
+                </div>
+                <div class="nb-body" id="notifList">
+                    <div class="empty-state">Belum ada aktivitas terbaru</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="sheet-overlay" id="sheet">
@@ -506,165 +613,120 @@
         </div>
     </div>
 
-    <div class="menu-overlay" id="menuOverlay">
-        <div class="menu-panel">
-            <div class="menu-header">
-                <div class="menu-title">Menu</div>
-                <div class="menu-close" id="menuClose">
-                    <i class="ri-close-line"></i>
-                </div>
-            </div>
-            <div class="menu-item" onclick="showHomePage()">
-                <h4>Beranda</h4>
-                <p>Kembali ke halaman utama</p>
-            </div>
-            <div class="menu-item" onclick="showUsagePage()">
-                <h4>Cara Penggunaan</h4>
-                <p>Panduan lengkap cara menggunakan layanan</p>
-            </div>
-        </div>
-    </div>
-<script>
-const adBanners = [
-            "wc.jpg",
-            "https://files.catbox.moe/teykgt.jpg",
-            "https://files.catbox.moe/9z74yc.jpg"
-        ];
-        const dataPay = {
-            // E-Wallet
-            dana: { name: 'DANA', num: '081227108559', img: 'https://cdn.odzre.my.id/r25.jpg' },
-            shopee: { name: 'ShopeePay', num: '081xxx', img: 'https://cdn.odzre.my.id/ukr.jpg' },
-            gopay: { name: 'GoPay', num: '081227108559', img: 'https://cdn.odzre.my.id/fw6.jpg' },
-            ovo: { name: 'OVO', num: '081227108559', img: 'https://cdn.odzre.my.id/lpp.jpg' },
-            linkaja: { name: 'LinkAja', num: '081xxx', img: 'https://cdn.odzre.my.id/qga.jpg' },
+    <script>
+        // --- KONFIGURASI APLIKASI ---
+        const config = {
+            // URL QRIS ASLI ANDA
+            qrisImageUrl: 'qr8.jpg',
             
-            // Bank
-            bca: { name: 'BCA', num: '123xxx', img: 'https://cdn.odzre.my.id/nbo.jpg' },
-            sebank: { name: 'SeaBank', num: '081xxx', img: 'https://cdn.odzre.my.id/k7m.jpg' },
-            bri: { name: 'BRI', num: '081xxx', img: 'https://cdn.odzre.my.id/tke.jpg' },
-
-            // Pulsa
-            telkomsel: { name: 'Telkomsel', num: '081xxx', img: 'https://cdn.odzre.my.id/zmm.jpg' },
-            indosat: { name: 'Indosat', num: '081xxx', img: 'https://cdn.odzre.my.id/nz4.jpg' },
-            tri: { name: 'Tri (3)', num: '081xxx', img: 'https://cdn.odzre.my.id/z39.jpg' },
-            smartfren: { name: 'Smartfren', num: '088976422189', img: 'https://cdn.odzre.my.id/3wg.jpg' }
+            // WhatsApp admin
+            whatsappNumber: '6285894955362',
+            adminName: 'Admin JHON'
         };
 
-        function initAdSlider() {
-            const slider = document.getElementById('adSlider');
-            slider.innerHTML = '';
+        // --- DATA PAYMENT ---
+        const dataPay = {
+            dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
+            shopee: { name: 'ShopeePay', num: '085894955362', img: 'pay.jpg' },
+            gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
+            ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
+            linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
+            sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
+            sea2: { name: 'SeaBank', num: '9016xxx', img: 'bank.jpg' },
+            bri: { name: 'BRI', num: '1234xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
+            pulsa: { name: 'Telkomsel', num: '0825xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
+            indosat: { name: 'Indosat', num: '085894955362', img: 'indosat.jpg' },
+            tri: { name: 'Tri (3)', num: '089xxx', img: 'tri.jpg' },
+            smartfren: { name: 'Smartfren', num: '088xxx', img: 'smr.jpg' }
+        };
 
-            adBanners.forEach((url, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'ad-slide';
-                if (index === 0) slide.classList.add('active');
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = `Iklan ${index + 1}`;
-                img.loading = 'lazy';
-                slide.appendChild(img);
-                slider.appendChild(slide);
-            });
+        // --- VARIABEL GLOBAL ---
+        let currentQrisAmount = 0;
+        let currentQRImage = '';
 
-            const dotsContainer = document.createElement('div');
-            dotsContainer.className = 'ad-dots';
-            adBanners.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.className = 'ad-dot';
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => showAdSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-            slider.appendChild(dotsContainer);
+        // --- HELPER FUNCTIONS ---
+        CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+            if (width < 2 * radius) radius = width / 2;
+            if (height < 2 * radius) radius = height / 2;
+            this.beginPath();
+            this.moveTo(x + radius, y);
+            this.arcTo(x + width, y, x + width, y + height, radius);
+            this.arcTo(x + width, y + height, x, y + height, radius);
+            this.arcTo(x, y + height, x, y, radius);
+            this.arcTo(x, y, x + width, y, radius);
+            this.closePath();
+            return this;
+        };
 
-            let current = 0;
-            setInterval(() => {
-                current = (current + 1) % adBanners.length;
-                showAdSlide(current);
-            }, 4000);
-        }
-
-        function showAdSlide(index) {
-            document.querySelectorAll('.ad-slide').forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
-            document.querySelectorAll('.ad-dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-        }
-
+        // --- SOUND & UTILS ---
         const audio = document.getElementById('clickSound');
-        const playTick = () => {
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play().catch(() => {});
-            }
+        const playTick = () => { 
+            audio.currentTime = 0; 
+            audio.play().catch(()=>{}); 
         };
 
-        const txtName = "VOCHUY INDONESIA";
+        // --- TYPING NAME ---
+        const txtName = "JHON FORUM";
         let i = 0;
         function typeWriter() {
-            if (i < txtName.length) {
+            if(i < txtName.length) {
                 document.getElementById('userName').innerHTML += txtName.charAt(i);
-                i++;
+                i++; 
                 setTimeout(typeWriter, 80);
             }
         }
+        setTimeout(typeWriter, 500);
 
-        const fab = document.getElementById('fabChat');
-        const win = document.getElementById('chatWin');
-        const closeC = document.getElementById('closeChat');
-        const bodyC = document.getElementById('chatBody');
+        // --- NOTIFICATION SYSTEM ---
+        let notifCount = 0;
+        const notifBadge = document.getElementById('notifBadge');
+        const notifContainer = document.getElementById('notifList');
 
-        fab.onclick = () => {
+        function addLog(actionName) {
+            notifCount++;
+            notifBadge.innerText = notifCount;
+            notifBadge.classList.add('show');
+            
+            const time = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            
+            if(notifContainer.querySelector('.empty-state')) {
+                notifContainer.innerHTML = '';
+            }
+
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `
+                <div class="ni-icon"><i class="ri-file-list-3-line"></i></div>
+                <div class="ni-text">
+                    <h5>${actionName}</h5>
+                    <p>Tercatat pada ${time}</p>
+                </div>
+            `;
+            notifContainer.prepend(item);
+        }
+
+        function toggleNotifPanel() {
             playTick();
-            win.classList.add('active');
-            fab.style.transform = 'scale(0)';
-        };
-        closeC.onclick = () => {
-            playTick();
-            win.classList.remove('active');
-            fab.style.transform = 'scale(1)';
-        };
+            const p = document.getElementById('notifPanel');
+            p.classList.toggle('active');
+            if(p.classList.contains('active')) {
+                notifCount = 0;
+                notifBadge.classList.remove('show');
+            }
+        }
 
-        window.sendChat = (msg) => {
-            playTick();
-            const u = document.createElement('div');
-            u.className = 'bubble b-user';
-            u.innerText = msg;
-            bodyC.appendChild(u);
-            bodyC.scrollTop = bodyC.scrollHeight;
-
-            setTimeout(() => {
-                const b = document.createElement('div');
-                b.className = 'bubble b-bot';
-                if (msg === 'konfirmasi') 
-                    b.innerHTML = "✅ Silakan kirim bukti transfer ke admin untuk percepat proses.";
-                else if (msg === 'admin') 
-                    b.innerHTML = "📞 Hubungi WhatsApp: <strong>081227108559</strong> untuk bantuan langsung.";
-                else 
-                    b.innerHTML = "⚠️ Tunggu 1-2 menit. Masih error? Langsung chat admin!";
-                bodyC.appendChild(b);
-                bodyC.scrollTop = bodyC.scrollHeight;
-                playTick();
-            }, 800);
-        };
-
+        // --- SHEET LOGIC ---
         const sheet = document.getElementById('sheet');
         const list = document.getElementById('sheetList');
         const title = document.getElementById('sheetTitle');
-        const menuOverlay = document.getElementById('menuOverlay');
-        const menuClose = document.getElementById('menuClose');
-        const mainContent = document.getElementById('mainContent');
-        const currencySelector = document.getElementById('currencySelector');
 
         function rowHtml(key) {
             const d = dataPay[key];
-            if (!d) return '';
+            const imgUrl = d.img ? d.img : 'https://placehold.co/100'; 
             return `
                 <div class="pay-item">
                     <div class="pi-left">
-                        <img src="${d.img}" class="pi-img" onerror="this.src='https://placehold.co/100?text=Icon'">
+                        <img src="${imgUrl}" class="pi-img" onerror="this.src='https://placehold.co/100'">
                         <div class="pi-info">
                             <h5>${d.name}</h5>
                             <p id="t-${key}">${d.num}</p>
@@ -677,29 +739,320 @@ const adBanners = [
             `;
         }
 
+        // --- TOAST NOTIFICATION ---
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.innerHTML = `
+                <i class="ri-${isError ? 'error-warning-fill' : 'checkbox-circle-fill'}"></i>
+                ${message}
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // --- GENERATE QRIS FINAL (OPTIMAL UNTUK SCAN) ---
+        async function generateAndDownloadQRIS() {
+            const amountInput = document.getElementById('qrisAmount');
+            const amount = parseInt(amountInput.value);
+            
+            if (!amount || amount <= 0) {
+                showToast('Masukkan nominal yang valid', true);
+                return;
+            }
+            
+            currentQrisAmount = amount;
+            const generateBtn = document.getElementById('generateQR');
+            const qrContainer = document.getElementById('qrContainer');
+            const qrImage = document.getElementById('qrImage');
+            
+            generateBtn.innerHTML = '<i class="ri-loader-4-line qris-loading"></i> Membuat QR...';
+            generateBtn.disabled = true;
+            qrContainer.style.display = 'block';
+            
+            try {
+                // Load QR asli
+                const qrImg = new Image();
+                qrImg.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                    qrImg.onload = resolve;
+                    qrImg.onerror = reject;
+                    qrImg.src = config.qrisImageUrl + '?t=' + Date.now();
+                });
+                
+                // Buat canvas dengan ukuran besar untuk kualitas maksimal
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 1000;
+                const ctx = canvas.getContext('2d');
+                
+                // Background putih
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Header dengan nominal
+                ctx.fillStyle = '#2563eb';
+                ctx.roundRect(40, 40, canvas.width - 80, 90, 15);
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 42px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 95);
+                
+                // HITUNG UKURAN QR YANG OPTIMAL
+                // Target ukuran minimal 500px untuk scan mudah
+                const targetSize = 550;
+                
+                // Pertahankan rasio asli QR
+                const qrRatio = qrImg.width / qrImg.height;
+                let qrWidth, qrHeight;
+                
+                if (qrRatio >= 1) {
+                    qrWidth = targetSize;
+                    qrHeight = targetSize / qrRatio;
+                } else {
+                    qrHeight = targetSize;
+                    qrWidth = targetSize * qrRatio;
+                }
+                
+                // Pastikan minimal 500px
+                qrWidth = Math.max(qrWidth, 500);
+                qrHeight = Math.max(qrHeight, 500);
+                
+                // Posisi QR di tengah dengan margin cukup
+                const qrX = (canvas.width - qrWidth) / 2;
+                const qrY = 160;
+                
+                // Bersihkan area QR (pastikan putih bersih)
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(qrX - 10, qrY - 10, qrWidth + 20, qrHeight + 20);
+                
+                // Gambar QR dengan kualitas tinggi
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(qrImg, qrX, qrY, qrWidth, qrHeight);
+                
+                // Tambah border tipis untuk kontras
+                ctx.strokeStyle = '#2563eb';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(qrX - 2, qrY - 2, qrWidth + 4, qrHeight + 4);
+                
+                // Garis pemisah
+                ctx.strokeStyle = '#dddddd';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(60, qrY + qrHeight + 40);
+                ctx.lineTo(canvas.width - 60, qrY + qrHeight + 40);
+                ctx.stroke();
+                
+                // Footer
+                ctx.fillStyle = '#333333';
+                ctx.font = 'bold 28px Arial';
+                ctx.fillText('JHON PAYMENT', canvas.width / 2, qrY + qrHeight + 90);
+                
+                ctx.fillStyle = '#666666';
+                ctx.font = '20px Arial';
+                ctx.fillText('Scan QRIS untuk membayar', canvas.width / 2, qrY + qrHeight + 130);
+                
+                ctx.fillStyle = '#2563eb';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText(`Total: Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, qrY + qrHeight + 170);
+                
+                // Petunjuk scan
+                ctx.fillStyle = '#10b981';
+                ctx.font = '18px Arial';
+                ctx.fillText('✓ Arahkan kamera ke QR code di atas', canvas.width / 2, qrY + qrHeight + 210);
+                
+                // Konversi ke PNG kualitas tinggi
+                const dataUrl = canvas.toDataURL('image/png');
+                qrImage.src = dataUrl;
+                currentQRImage = dataUrl;
+                
+                // Download otomatis
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `QRIS-JHON-${amount}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast(`✅ QRIS siap! Rp ${amount.toLocaleString()}`);
+                
+                // Update display
+                let nominalDisplay = document.getElementById('qrisNominalDisplay');
+                nominalDisplay.style.display = 'inline-block';
+                nominalDisplay.innerHTML = `<span>Rp ${amount.toLocaleString('id-ID')}</span>`;
+                
+                nominalDisplay.style.animation = 'pulse 0.5s ease';
+                qrImage.classList.add('qr-success-animation');
+                
+                setTimeout(() => {
+                    nominalDisplay.style.animation = '';
+                    qrImage.classList.remove('qr-success-animation');
+                }, 500);
+                
+                addLog(`QRIS Generated: Rp ${amount.toLocaleString()}`);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Gagal memuat QR code', true);
+                qrImage.src = config.qrisImageUrl + '?t=' + Date.now();
+                currentQRImage = config.qrisImageUrl;
+            } finally {
+                generateBtn.innerHTML = '<i class="ri-qr-code-line"></i> Generate Ulang QR';
+                generateBtn.disabled = false;
+            }
+        }
+
+        // --- FUNGSI DOWNLOAD QR ---
+        function downloadQRCode() {
+            if (!currentQRImage || currentQrisAmount === 0) {
+                showToast('Silakan generate QR Code terlebih dahulu', true);
+                return;
+            }
+            
+            playTick();
+            
+            try {
+                const link = document.createElement('a');
+                link.href = currentQRImage;
+                link.download = `QRIS-JHON-${currentQrisAmount}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                addLog(`Download QR: Rp ${currentQrisAmount.toLocaleString()}`);
+                showToast(`✅ QRIS didownload! Rp ${currentQrisAmount.toLocaleString()}`);
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                window.open(currentQRImage, '_blank');
+                showToast('Buka gambar di tab baru, lalu save manual', false);
+            }
+        }
+
+        // --- KONFIRMASI WHATSAPP ---
+        function confirmPayment() {
+            if (!currentQrisAmount || currentQrisAmount === 0) {
+                showToast('Silakan generate QR Code terlebih dahulu', true);
+                return;
+            }
+            
+            playTick();
+            
+            const message = encodeURIComponent(
+`Halo ${config.adminName}%0A%0A✅ *KONFIRMASI PEMBAYARAN QRIS*%0A%0A📋 *Detail Transaksi*%0A• Nominal: *Rp ${currentQrisAmount.toLocaleString()}*%0A• Metode: *QRIS*%0A• Status: *Sudah Bayar*%0A• Waktu: *${new Date().toLocaleTimeString('id-ID')}*%0A%0A🖼️ *Bukti Transfer*%0A(Silahkan upload screenshot)%0A%0ATerima kasih.`
+            );
+            
+            const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+            
+            addLog(`Konfirmasi WA: Rp ${currentQrisAmount.toLocaleString()}`);
+            showToast(`✅ WhatsApp terbuka! Kirim bukti transfer.`);
+        }
+
+        // --- OPEN SHEET ---
         window.openSheet = (mode) => {
             playTick();
             let html = '';
-            if (mode === 'qris') {
+            let logName = '';
+
+            if(mode === 'qris') {
                 title.innerText = "SCAN QRIS";
+                logName = "Membuka Menu QRIS";
                 html = `
-                    <div class="qris-display">
-                        <img src="https://cdn.odzre.my.id/feh.jpg" style="width:100%; max-width:220px; border-radius:10px;">
-                        <p style="margin-top:10px; font-size:12px; color:#555;">Support All E-Wallet & Bank</p>
+                    <div class="qris-input-container">
+                        <label class="qris-label">Masukkan Nominal (Rp)</label>
+                        <input type="number" id="qrisAmount" class="qris-input" placeholder="Contoh: 10000" min="1" value="">
+                        <p class="qris-hint">Masukkan jumlah nominal pembayaran</p>
+                        <button id="generateQR" class="qris-generate-btn ripple" onclick="generateAndDownloadQRIS()" disabled>
+                            <i class="ri-qr-code-line"></i> Generate QR
+                        </button>
+                    </div>
+                    
+                    <div id="qrContainer" class="qris-container">
+                        <div class="qr-display-wrapper">
+                            <div id="qrisNominalDisplay" class="qris-nominal-display" style="display:none;"></div>
+                            <img id="qrImage" class="qris-image" alt="QR Code" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNGM0Y0RjYiIHJ4PSIxMiIvPjx0ZXh0IHg9IjEyMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NDc0OEIiPkdlbmVyYXRlIFFSIGRhbGVoIHVsYTwvdGV4dD48L3N2Zz4=">
+                        </div>
+                        <p class="qris-info">QR akan otomatis terdownload setelah dibuat</p>
+                        
+                        <div class="qris-actions">
+                            <button class="download-qr-btn ripple" onclick="downloadQRCode()">
+                                <i class="ri-download-line"></i> Download QR
+                            </button>
+                            <button class="whatsapp-confirm-btn ripple" onclick="confirmPayment()">
+                                <i class="ri-whatsapp-fill"></i> Konfirmasi
+                            </button>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding: 10px; background: #f0f9ff; border-radius: 10px; border: 1px dashed #cbd5e1;">
+                            <p style="color: #64748b; font-size: 11px; margin: 0;">
+                                <i class="ri-information-line" style="color: #3b82f6;"></i> 
+                                Support semua e-wallet & bank
+                            </p>
+                        </div>
                     </div>`;
-            } else if (mode === 'dana_only') {
+                
+                setTimeout(() => {
+                    const amountInput = document.getElementById('qrisAmount');
+                    const generateBtn = document.getElementById('generateQR');
+                    
+                    const checkInput = () => {
+                        const amount = parseInt(amountInput.value);
+                        generateBtn.disabled = !(amount > 0);
+                        generateBtn.style.opacity = amount > 0 ? '1' : '0.6';
+                    };
+                    
+                    amountInput.addEventListener('input', checkInput);
+                    amountInput.addEventListener('keyup', checkInput);
+                    amountInput.focus();
+                    
+                    currentQrisAmount = 0;
+                    currentQRImage = '';
+                    checkInput();
+                }, 100);
+                
+            } else if(mode === 'dana_only') {
                 title.innerText = "E-WALLET";
-                ['dana', 'shopee', 'gopay', 'ovo', 'linkaja'].forEach(k => html += rowHtml(k));
-            } else if (mode === 'bank') {
+                logName = "Menu E-Wallet";
+                html += rowHtml('dana');
+                html += rowHtml('shopee');
+                html += rowHtml('gopay');
+                html += rowHtml('ovo');
+                html += rowHtml('linkaja');
+            } else if(mode === 'bank') {
                 title.innerText = "TRANSFER BANK";
-                ['bca', 'sebank', 'bri'].forEach(k => html += rowHtml(k));
-            } else if (mode === 'pulsa') {
+                logName = "Menu Bank";
+                html += rowHtml('sea');
+                html += rowHtml('sea2');
+                html += rowHtml('bri');
+            } else if(mode === 'pulsa') {
                 title.innerText = "TOP UP PULSA";
-                ['telkomsel', 'indosat', 'tri', 'smartfren'].forEach(k => html += rowHtml(k));
-            } else if (mode === 'all') {
+                logName = "Menu Pulsa";
+                html += rowHtml('pulsa');
+                html += rowHtml('indosat');
+                html += rowHtml('tri');
+                html += rowHtml('smartfren');
+            } else {
                 title.innerText = "SEMUA METODE";
+                logName = "Semua Menu";
                 Object.keys(dataPay).forEach(k => html += rowHtml(k));
             }
+            
+            addLog(logName);
             list.innerHTML = html;
             sheet.classList.add('active');
         };
@@ -709,251 +1062,76 @@ const adBanners = [
             playTick();
         };
 
+        // --- COPY FUNCTION ---
         window.copyIt = (id, label) => {
             playTick();
-            const el = document.getElementById(id);
-            if (!el) return;
-            const txt = el.innerText.trim();
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(txt).then(() => {
-                    // Notification removed as requested
-                }).catch(() => {
-                    fallbackCopy(txt);
-                });
-            } else {
-                fallbackCopy(txt);
-            }
+            const txt = document.getElementById(id).innerText;
+            if(txt.includes('Hubungi')) return;
+            navigator.clipboard.writeText(txt).then(() => {
+                showToast(`✅ ${label} berhasil disalin!`);
+            }).catch(() => {
+                showToast(`❌ Gagal menyalin ${label}`, true);
+            });
         };
 
-        function fallbackCopy(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                // Notification removed as requested
-            } catch (err) {
-                // Keep only the error alert for fallback cases
-                alert('Gagal menyalin: salin manual ya.');
-            }
-            document.body.removeChild(textArea);
-        }
+        // --- CHAT SYSTEM ---
+        const fab = document.getElementById('fabChat');
+        const win = document.getElementById('chatWin');
+        const closeC = document.getElementById('closeChat');
+        const bodyC = document.getElementById('chatBody');
 
-        document.getElementById('btnMenu').onclick = () => {
-            playTick();
-            menuOverlay.classList.add('active');
+        fab.onclick = () => { 
+            playTick(); 
+            win.classList.add('active'); 
+            fab.style.transform = 'scale(0)'; 
+        };
+        
+        closeC.onclick = () => { 
+            playTick(); 
+            win.classList.remove('active'); 
+            fab.style.transform = 'scale(1)'; 
         };
 
-        menuClose.onclick = () => {
+        window.sendChat = (msg) => {
             playTick();
-            menuOverlay.classList.remove('active');
+            const u = document.createElement('div');
+            u.className = 'bubble b-user'; 
+            u.innerText = msg;
+            bodyC.appendChild(u);
+            bodyC.scrollTop = bodyC.scrollHeight;
+            
+            setTimeout(() => {
+                const b = document.createElement('div');
+                b.className = 'bubble b-bot';
+                if(msg === 'konfirmasi') {
+                    b.innerHTML = "✅ Setelah bayar QRIS, kirim bukti ke WhatsApp admin via tombol konfirmasi.";
+                } else if(msg === 'admin') {
+                    b.innerHTML = "📞 Hubungi admin via WhatsApp dari menu QRIS.";
+                } else {
+                    b.innerHTML = "⚠️ Kendala QRIS? Coba: 1) Generate ulang 2) Nominal berbeda 3) Hubungi admin";
+                }
+                bodyC.appendChild(b);
+                bodyC.scrollTop = bodyC.scrollHeight;
+                playTick();
+            }, 800);
         };
 
-        // Currency selector functionality
-        currencySelector.onclick = () => {
-            playTick();
-            alert("Currency selector clicked. Currently set to ID / IDR");
-        };
-
-        function showUsagePage() {
-            playTick();
-            menuOverlay.classList.remove('active');
-            
-            const usageHTML = `
-                <div class="profile-section">
-                    <img src="https://cdn.odzre.my.id/47e.jpg" class="p-img" onerror="this.src='https://placehold.co/100'">
-                    <div class="p-info">
-                        <h2 id="userName">VOCHUY INDONESIA</h2>
-                        <p><span class="status-dot"></span> Online & Verified</p>
-                        <div class="social-bar">
-                            <a href="https://www.instagram.com/vochuyindonesia?igsh=MXV4OHdiOGFmdWt5Mw==" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                                <i class="ri-instagram-fill"></i>
-                            </a>
-                            <a href="https://telegram.org" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                                <i class="ri-telegram-fill"></i>
-                            </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                                <i class="ri-linkedin-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin: 20px 0;">
-                    <h3 style="color: var(--text-on-dark); font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center;">Cara Penggunaan</h3>
-                    <div style="background: var(--card-surface); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
-                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
-                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">1</div>
-                            <div>
-                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Pilih Metode Pembayaran</h5>
-                                <p style="font-size: 12px; color: var(--text-muted);">Pilih salah satu metode pembayaran yang tersedia seperti QRIS, E-Wallet, Transfer Bank, atau Top Up Pulsa.</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
-                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">2</div>
-                            <div>
-                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Salin Nomor atau Scan QR</h5>
-                                <p style="font-size: 12px; color: var(--text-muted);">Salin nomor tujuan atau scan QR code yang disediakan untuk melakukan pembayaran.</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
-                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">3</div>
-                            <div>
-                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Lakukan Pembayaran</h5>
-                                <p style="font-size: 12px; color: var(--text-muted);">Lakukan pembayaran sesuai dengan jumlah yang ditentukan melalui aplikasi pembayaran Anda.</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 12px;">
-                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">4</div>
-                            <div>
-                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Konfirmasi ke Admin</h5>
-                                <p style="font-size: 12px; color: var(--text-muted);">Kirim bukti transfer ke admin melalui WhatsApp untuk mempercepat proses verifikasi.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="ripple" onclick="showHomePage()" style="width:100%; padding:15px; border-radius:12px; border:none; background:#000; color:#fff; font-weight:700; margin-top:15px;">Kembali ke Beranda</button>
-                </div>
-            `;
-            
-            mainContent.innerHTML = usageHTML;
-        }
-
-        function showHomePage() {
-            playTick();
-            menuOverlay.classList.remove('active');
-            
-            const homeHTML = `
-                <div class="profile-section">
-                    <img src="https://cdn.odzre.my.id/47e.jpg" class="p-img" onerror="this.src='https://placehold.co/100'">
-                    <div class="p-info">
-                        <h2 id="userName"></h2>
-                        <p><span class="status-dot"></span> Online & Verified</p>
-                        <div class="social-bar">
-                            <a href="https://www.instagram.com/vochuyindonesia?igsh=MXV4OHdiOGFmdWt5Mw==" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                                <i class="ri-instagram-fill"></i>
-                            </a>
-                            <a href="https://telegram.org" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                                <i class="ri-telegram-fill"></i>
-                            </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                                <i class="ri-linkedin-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ad-slider" id="adSlider"></div>
-
-                <div class="marquee-container">
-                    <div class="marquee-text">
-                        INFO: Pembayaran Otomatis DANA & ShopeePay tersedia 24 Jam • Hubungi Admin jika ada kendala • Jangan lupa simpan bukti transfer.
-                    </div>
-                </div>
-
-                <div class="menu-title">Main Service</div>
-                <div class="menu-grid">
-                    <div class="menu-card card-qris-full ripple" onclick="openSheet('qris')">
-                        <div class="qris-left"><i class="ri-qr-scan-2-line"></i></div>
-                        <div class="qris-right">
-                            <h3>Scan QRIS</h3>
-                            <p>Instant Payment</p>
-                        </div>
-                    </div>
-                    <div class="menu-card ripple" onclick="openSheet('dana_only')">
-                        <div class="mc-icon" style="color:#10b981;"><i class="ri-wallet-3-fill"></i></div>
-                        <div class="mc-text">
-                            <h3>E-Wallet</h3>
-                            <p>Dana / OVO / GoPay</p>
-                        </div>
-                    </div>
-                    <div class="menu-card ripple" onclick="openSheet('bank')">
-                        <div class="mc-icon" style="color:#f59e0b;"><i class="ri-bank-card-fill"></i></div>
-                        <div class="mc-text">
-                            <h3>Transfer</h3>
-                            <p>Semua Bank</p>
-                        </div>
-                    </div>
-                    <div class="menu-card ripple" onclick="openSheet('pulsa')">
-                        <div class="mc-icon" style="color:#ef4444;"><i class="ri-smartphone-fill"></i></div>
-                        <div class="mc-text">
-                            <h3>Top Up</h3>
-                            <p>Pulsa All Op</p>
-                        </div>
-                    </div>
-                    <div class="menu-card ripple" onclick="openSheet('all')">
-                        <div class="mc-icon" style="color:#6366f1;"><i class="ri-grid-fill"></i></div>
-                        <div class="mc-text">
-                            <h3>Lainnya</h3>
-                            <p>Lihat Menu</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-features">
-                    <div class="feat-item ripple" onclick="playTick()">
-                        <i class="ri-flashlight-fill feat-icon"></i>
-                        <div class="feat-text">
-                            <h5>Proses Cepat</h5>
-                            <p>Instant Process</p>
-                        </div>
-                    </div>
-                    <div class="feat-item ripple" onclick="playTick()">
-                        <i class="ri-shield-check-fill feat-icon"></i>
-                        <div class="feat-text">
-                            <h5>Aman 100%</h5>
-                            <p>Terverifikasi</p>
-                        </div>
-                    </div>
-                    <div class="feat-item ripple" onclick="playTick()">
-                        <i class="ri-customer-service-fill feat-icon"></i>
-                        <div class="feat-text">
-                            <h5>Admin 24/7</h5>
-                            <p>Siap Membantu</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="promo-banner ripple">
-                    <h4>Promo Cashback 50%</h4>
-                    <p>Khusus pengguna baru untuk transaksi pertama via QRIS.</p>
-                    <i class="ri-coupon-3-line promo-deco"></i>
-                </div>
-                <div style="height:30px;"></div>
-            `;
-            
-            mainContent.innerHTML = homeHTML;
-            initAdSlider();
-            setTimeout(typeWriter, 500);
-        }
-
-        document.addEventListener('click', (e) => {
+        // --- RIPPLE EFFECT ---
+        document.addEventListener('click', e => {
             const btn = e.target.closest('.ripple');
-            if (btn) {
-                const rect = btn.getBoundingClientRect();
-                const size = Math.max(btn.clientWidth, btn.clientHeight);
-                const span = document.createElement('span');
-                span.style.cssText = `
-                    position: absolute;
-                    width: ${size}px; height: ${size}px;
-                    left: ${e.clientX - rect.left - size/2}px;
-                    top: ${e.clientY - rect.top - size/2}px;
-                    border-radius: 50%;
-                    background: rgba(255,255,255,0.3);
-                    transform: scale(0);
-                    animation: ripple 0.6s linear;
-                    pointer-events: none;
-                `;
-                btn.appendChild(span);
-                setTimeout(() => span.remove(), 600);
+            if(btn) {
+                const c = document.createElement('span');
+                const d = Math.max(btn.clientWidth, btn.clientHeight);
+                c.style.width = c.style.height = d + 'px';
+                c.style.left = (e.clientX - btn.getBoundingClientRect().left - d/2) + 'px';
+                c.style.top = (e.clientY - btn.getBoundingClientRect().top - d/2) + 'px';
+                btn.appendChild(c);
+                setTimeout(()=>c.remove(), 600);
             }
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(typeWriter, 500);
-            initAdSlider();
-        });
+        console.log('JHON Payment System Ready!');
+
     </script>
 </body>
 </html>
-
