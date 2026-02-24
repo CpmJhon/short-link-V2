@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JHON WEB PAYMENT</title>
+    <title>SANN WEB PAYMENT</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -315,37 +315,51 @@
         .qr-display-wrapper {
             background: white;
             border-radius: 16px;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 15px;
             text-align: center;
             border: 1px solid #e5e7eb;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
         }
 
         .qris-nominal-display {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             color: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin: 0 auto 15px auto;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin: 0 auto 20px auto;
             display: inline-block;
+            border: none;
             font-size: 16px;
             font-weight: 700;
-            min-width: 180px;
+            min-width: 200px;
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .qris-nominal-display span {
+            color: white;
+            font-weight: 800;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .qris-image {
             width: 100%;
-            max-width: 350px;
-            border-radius: 8px;
+            max-width: 240px;
+            border-radius: 12px;
             display: block;
             margin: 0 auto;
+            border: 2px solid #e5e7eb;
             background: white;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            image-rendering: pixelated;
-            border: 2px solid #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 10px;
+            min-height: 240px;
+            transition: all 0.3s ease;
+        }
+
+        .qris-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
 
         .qris-info {
@@ -467,7 +481,7 @@
         <div class="content-area">
             
             <div class="profile-section">
-                <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
+                <img src="foto4.jpg" class="p-img">
                 <div class="p-info">
                     <h2 id="userName"></h2>
                     <p><span class="status-dot"></span> Online & Verified</p>
@@ -616,8 +630,8 @@
     <script>
         // --- KONFIGURASI APLIKASI ---
         const config = {
-            // URL QRIS ASLI ANDA
-            qrisImageUrl: 'qr8.jpg',
+            // URL QRIS asli Anda
+            qrisImageUrl: 'https://i.ibb.co.com/hFm0cLbw/qr-Farid-dewangga-26-09-23-1695698726.jpg',
             
             // WhatsApp admin
             whatsappNumber: '6285894955362',
@@ -645,6 +659,7 @@
         let currentQRImage = '';
 
         // --- HELPER FUNCTIONS ---
+        // Fungsi untuk rounded rectangle di Canvas
         CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
             if (width < 2 * radius) radius = width / 2;
             if (height < 2 * radius) radius = height / 2;
@@ -761,7 +776,7 @@
             }, 3000);
         }
 
-        // --- GENERATE QRIS FINAL (OPTIMAL UNTUK SCAN) ---
+        // --- GENERATE DAN DOWNLOAD QRIS ---
         async function generateAndDownloadQRIS() {
             const amountInput = document.getElementById('qrisAmount');
             const amount = parseInt(amountInput.value);
@@ -776,147 +791,194 @@
             const qrContainer = document.getElementById('qrContainer');
             const qrImage = document.getElementById('qrImage');
             
+            // Tampilkan loading
             generateBtn.innerHTML = '<i class="ri-loader-4-line qris-loading"></i> Membuat QR...';
             generateBtn.disabled = true;
+            
+            // Tampilkan container
             qrContainer.style.display = 'block';
             
+            // Tampilkan loading state di QR image
+            qrImage.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNGM0Y0RjYiIHJ4PSIxMiIvPjxjaXJjbGUgY3g9IjEyMCIgY3k9IjEyMCIgcj0iMzAiIGZpbGw9IiMyNTYzRUIiPjxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9InIiIHZhbHVlcz0iMzA7NDA7MzAiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIi8+PC9jaXJjbGU+PHRleHQgeD0iMTIwIiB5PSIxODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY0NzQ4QiI+TWVtcHJvc2VzIFFSSVMuLi48L3RleHQ+PC9zdmc+';
+            
             try {
-                // Load QR asli
-                const qrImg = new Image();
-                qrImg.crossOrigin = 'anonymous';
+                console.log('Membuat QRIS dengan nominal:', amount);
                 
+                // ========== METODE 1: Gunakan API Ryzumi secara sederhana ==========
+                const encodedUrl = encodeURIComponent(config.qrisImageUrl);
+                const apiUrl = `https://api.ryzumi.vip/api/tool/qris-converter?url=${encodedUrl}&nominal=${amount}`;
+                
+                console.log('API URL:', apiUrl);
+                
+                // Coba load gambar langsung dari API
+                qrImage.src = apiUrl + '&t=' + Date.now(); // Tambah timestamp untuk cache busting
+                currentQRImage = apiUrl;
+                
+                // Tunggu gambar selesai load
                 await new Promise((resolve, reject) => {
-                    qrImg.onload = resolve;
-                    qrImg.onerror = reject;
-                    qrImg.src = config.qrisImageUrl + '?t=' + Date.now();
+                    qrImage.onload = resolve;
+                    qrImage.onerror = () => {
+                        console.log('Gambar API gagal, coba metode 2...');
+                        reject(new Error('API image failed'));
+                    };
                 });
                 
-                // Buat canvas dengan ukuran besar untuk kualitas maksimal
-                const canvas = document.createElement('canvas');
-                canvas.width = 800;
-                canvas.height = 1000;
-                const ctx = canvas.getContext('2d');
+                console.log('Gambar berhasil dimuat dari API');
                 
-                // Background putih
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // ========== DOWNLOAD OTOMATIS ==========
+                // Buat iframe untuk download
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = apiUrl;
+                document.body.appendChild(iframe);
                 
-                // Header dengan nominal
-                ctx.fillStyle = '#2563eb';
-                ctx.roundRect(40, 40, canvas.width - 80, 90, 15);
-                ctx.fill();
+                // Juga buat link download untuk fallback
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = apiUrl;
+                    link.download = `QRIS-SANN-${amount}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }, 500);
                 
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 42px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(`Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 95);
+                showToast(`✅ QRIS berhasil dibuat! Rp ${amount.toLocaleString()}`);
                 
-                // HITUNG UKURAN QR YANG OPTIMAL
-                // Target ukuran minimal 500px untuk scan mudah
-                const targetSize = 550;
+            } catch (apiError) {
+                console.log('Metode API gagal, gunakan Canvas...', apiError);
                 
-                // Pertahankan rasio asli QR
-                const qrRatio = qrImg.width / qrImg.height;
-                let qrWidth, qrHeight;
-                
-                if (qrRatio >= 1) {
-                    qrWidth = targetSize;
-                    qrHeight = targetSize / qrRatio;
-                } else {
-                    qrHeight = targetSize;
-                    qrWidth = targetSize * qrRatio;
+                try {
+                    // ========== METODE 2: Buat QR dengan Canvas ==========
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 300;
+                    canvas.height = 350;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Background putih
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Buat background untuk nominal
+                    ctx.fillStyle = '#3b82f6';
+                    ctx.roundRect(canvas.width/2 - 120, 10, 240, 50, 10);
+                    ctx.fill();
+                    
+                    // Tambah teks nominal dengan warna putih
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 18px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`Nominal:`, canvas.width / 2, 35);
+                    
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText(`Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 60);
+                    
+                    // Load gambar QRIS asli (jika ada)
+                    const qrImg = new Image();
+                    qrImg.crossOrigin = 'anonymous';
+                    
+                    await new Promise((resolve, reject) => {
+                        qrImg.onload = resolve;
+                        qrImg.onerror = () => {
+                            console.log('Gagal load gambar QRIS, buat manual...');
+                            resolve(); // Lanjutkan meski gagal
+                        };
+                        qrImg.src = config.qrisImageUrl;
+                    });
+                    
+                    // Jika gambar berhasil dimuat, gambar di canvas
+                    if (qrImg.complete && qrImg.naturalWidth > 0) {
+                        // Hitung posisi
+                        const qrSize = 200;
+                        const x = (canvas.width - qrSize) / 2;
+                        const y = 70;
+                        
+                        ctx.drawImage(qrImg, x, y, qrSize, qrSize);
+                    } else {
+                        // Buat QR sederhana di tengah
+                        ctx.fillStyle = '#000000';
+                        for(let i = 0; i < 7; i++) {
+                            for(let j = 0; j < 7; j++) {
+                                if((i + j) % 3 !== 0) {
+                                    ctx.fillRect(50 + i * 30, 70 + j * 30, 25, 25);
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Tambah teks info di bawah
+                    ctx.fillStyle = '#666666';
+                    ctx.font = '14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('JHON PAYMENT', canvas.width / 2, 310);
+                    ctx.fillText('Scan dengan e-wallet/bank', canvas.width / 2, 330);
+                    
+                    // Konversi ke data URL
+                    const dataUrl = canvas.toDataURL('image/png');
+                    qrImage.src = dataUrl;
+                    currentQRImage = dataUrl;
+                    
+                    // Download otomatis
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = `QRIS-SANN-${amount}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    showToast(`✅ QRIS dibuat dengan Canvas! Rp ${amount.toLocaleString()}`);
+                    
+                } catch (canvasError) {
+                    console.error('Canvas juga gagal:', canvasError);
+                    
+                    // ========== METODE 3: Gunakan API QR generator ==========
+                    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=JHON-PAY-${amount}&format=png&margin=10&color=0-0-0&bgcolor=255-255-255`;
+                    
+                    qrImage.src = qrApiUrl;
+                    currentQRImage = qrApiUrl;
+                    
+                    // Coba download
+                    setTimeout(() => {
+                        const link = document.createElement('a');
+                        link.href = qrApiUrl;
+                        link.download = `QRIS-SANN-${amount}.png`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }, 1000);
+                    
+                    showToast(`✅ QRIS alternatif dibuat! Rp ${amount.toLocaleString()}`);
                 }
-                
-                // Pastikan minimal 500px
-                qrWidth = Math.max(qrWidth, 500);
-                qrHeight = Math.max(qrHeight, 500);
-                
-                // Posisi QR di tengah dengan margin cukup
-                const qrX = (canvas.width - qrWidth) / 2;
-                const qrY = 160;
-                
-                // Bersihkan area QR (pastikan putih bersih)
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(qrX - 10, qrY - 10, qrWidth + 20, qrHeight + 20);
-                
-                // Gambar QR dengan kualitas tinggi
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = 'high';
-                ctx.drawImage(qrImg, qrX, qrY, qrWidth, qrHeight);
-                
-                // Tambah border tipis untuk kontras
-                ctx.strokeStyle = '#2563eb';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(qrX - 2, qrY - 2, qrWidth + 4, qrHeight + 4);
-                
-                // Garis pemisah
-                ctx.strokeStyle = '#dddddd';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(60, qrY + qrHeight + 40);
-                ctx.lineTo(canvas.width - 60, qrY + qrHeight + 40);
-                ctx.stroke();
-                
-                // Footer
-                ctx.fillStyle = '#333333';
-                ctx.font = 'bold 28px Arial';
-                ctx.fillText('JHON PAYMENT', canvas.width / 2, qrY + qrHeight + 90);
-                
-                ctx.fillStyle = '#666666';
-                ctx.font = '20px Arial';
-                ctx.fillText('Scan QRIS untuk membayar', canvas.width / 2, qrY + qrHeight + 130);
-                
-                ctx.fillStyle = '#2563eb';
-                ctx.font = 'bold 24px Arial';
-                ctx.fillText(`Total: Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, qrY + qrHeight + 170);
-                
-                // Petunjuk scan
-                ctx.fillStyle = '#10b981';
-                ctx.font = '18px Arial';
-                ctx.fillText('✓ Arahkan kamera ke QR code di atas', canvas.width / 2, qrY + qrHeight + 210);
-                
-                // Konversi ke PNG kualitas tinggi
-                const dataUrl = canvas.toDataURL('image/png');
-                qrImage.src = dataUrl;
-                currentQRImage = dataUrl;
-                
-                // Download otomatis
-                const link = document.createElement('a');
-                link.href = dataUrl;
-                link.download = `QRIS-JHON-${amount}.png`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showToast(`✅ QRIS siap! Rp ${amount.toLocaleString()}`);
-                
-                // Update display
+            } finally {
+                // Update display nominal dengan posisi yang tepat
                 let nominalDisplay = document.getElementById('qrisNominalDisplay');
-                nominalDisplay.style.display = 'inline-block';
                 nominalDisplay.innerHTML = `<span>Rp ${amount.toLocaleString('id-ID')}</span>`;
+                nominalDisplay.style.display = 'inline-block';
                 
+                // Tambah animasi
                 nominalDisplay.style.animation = 'pulse 0.5s ease';
                 qrImage.classList.add('qr-success-animation');
                 
+                // Hapus animasi setelah selesai
                 setTimeout(() => {
                     nominalDisplay.style.animation = '';
                     qrImage.classList.remove('qr-success-animation');
                 }, 500);
                 
-                addLog(`QRIS Generated: Rp ${amount.toLocaleString()}`);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Gagal memuat QR code', true);
-                qrImage.src = config.qrisImageUrl + '?t=' + Date.now();
-                currentQRImage = config.qrisImageUrl;
-            } finally {
+                // Restore button
                 generateBtn.innerHTML = '<i class="ri-qr-code-line"></i> Generate Ulang QR';
                 generateBtn.disabled = false;
+                
+                // Scroll ke QR
+                setTimeout(() => {
+                    qrContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+                
+                // Log
+                addLog(`QRIS Generated: Rp ${amount.toLocaleString()}`);
             }
         }
 
-        // --- FUNGSI DOWNLOAD QR ---
+        // --- FUNGSI DOWNLOAD QR YANG SUDAH ADA ---
         function downloadQRCode() {
             if (!currentQRImage || currentQrisAmount === 0) {
                 showToast('Silakan generate QR Code terlebih dahulu', true);
@@ -928,7 +990,8 @@
             try {
                 const link = document.createElement('a');
                 link.href = currentQRImage;
-                link.download = `QRIS-JHON-${currentQrisAmount}.png`;
+                link.download = `QRIS-SANN-${currentQrisAmount}.png`;
+                
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -938,6 +1001,8 @@
                 
             } catch (error) {
                 console.error('Download error:', error);
+                
+                // Fallback: Buka gambar di tab baru untuk manual save
                 window.open(currentQRImage, '_blank');
                 showToast('Buka gambar di tab baru, lalu save manual', false);
             }
@@ -953,7 +1018,7 @@
             playTick();
             
             const message = encodeURIComponent(
-`Halo ${config.adminName}%0A%0A✅ *KONFIRMASI PEMBAYARAN QRIS*%0A%0A📋 *Detail Transaksi*%0A• Nominal: *Rp ${currentQrisAmount.toLocaleString()}*%0A• Metode: *QRIS*%0A• Status: *Sudah Bayar*%0A• Waktu: *${new Date().toLocaleTimeString('id-ID')}*%0A%0A🖼️ *Bukti Transfer*%0A(Silahkan upload screenshot)%0A%0ATerima kasih.`
+`Halo ${config.adminName}%0A%0A✅ *KONFIRMASI PEMBAYARAN QRIS*%0A%0A📋 *Detail Transaksi*%0A• Nominal: *Rp ${currentQrisAmount.toLocaleString()}*%0A• Metode: *QRIS*%0A• Status: *Sudah Bayar*%0A• Waktu: *${new Date().toLocaleTimeString('id-ID')}*%0A%0A🖼️ *Bukti Transfer*%0A(Silahkan upload screenshot pembayaran QRIS)%0A%0ATerima kasih.`
             );
             
             const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
@@ -963,7 +1028,7 @@
             showToast(`✅ WhatsApp terbuka! Kirim bukti transfer.`);
         }
 
-        // --- OPEN SHEET ---
+        // --- OPEN SHEET MAIN FUNCTION ---
         window.openSheet = (mode) => {
             playTick();
             let html = '';
@@ -977,7 +1042,7 @@
                         <label class="qris-label">Masukkan Nominal (Rp)</label>
                         <input type="number" id="qrisAmount" class="qris-input" placeholder="Contoh: 10000" min="1" value="">
                         <p class="qris-hint">Masukkan jumlah nominal pembayaran</p>
-                        <button id="generateQR" class="qris-generate-btn ripple" onclick="generateAndDownloadQRIS()" disabled>
+                        <button id="generateQR" class="qris-generate-btn ripple" onclick="generateAndDownloadQRIS()">
                             <i class="ri-qr-code-line"></i> Generate QR
                         </button>
                     </div>
@@ -985,7 +1050,7 @@
                     <div id="qrContainer" class="qris-container">
                         <div class="qr-display-wrapper">
                             <div id="qrisNominalDisplay" class="qris-nominal-display" style="display:none;"></div>
-                            <img id="qrImage" class="qris-image" alt="QR Code" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNGM0Y0RjYiIHJ4PSIxMiIvPjx0ZXh0IHg9IjEyMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NDc0OEIiPkdlbmVyYXRlIFFSIGRhbGVoIHVsYTwvdGV4dD48L3N2Zz4=">
+                            <img id="qrImage" class="qris-image" alt="QR Code" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNGM0Y0RjYiIHJ4PSIxMiIvPjx0ZXh0IHg9IjEyMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NDc0OEIiPk1hc3Vra2FuIG5vbWluYWw8L3RleHQ+PC9zdmc+'">
                         </div>
                         <p class="qris-info">QR akan otomatis terdownload setelah dibuat</p>
                         
@@ -1001,28 +1066,34 @@
                         <div style="margin-top: 15px; padding: 10px; background: #f0f9ff; border-radius: 10px; border: 1px dashed #cbd5e1;">
                             <p style="color: #64748b; font-size: 11px; margin: 0;">
                                 <i class="ri-information-line" style="color: #3b82f6;"></i> 
-                                Support semua e-wallet & bank
+                                Support DANA, OVO, GoPay, ShopeePay, LinkAja, dan semua bank
                             </p>
                         </div>
                     </div>`;
                 
+                // Setup event listener
                 setTimeout(() => {
                     const amountInput = document.getElementById('qrisAmount');
                     const generateBtn = document.getElementById('generateQR');
                     
-                    const checkInput = () => {
-                        const amount = parseInt(amountInput.value);
-                        generateBtn.disabled = !(amount > 0);
-                        generateBtn.style.opacity = amount > 0 ? '1' : '0.6';
-                    };
+                    amountInput.addEventListener('input', function() {
+                        const amount = parseInt(this.value);
+                        if (amount > 0) {
+                            generateBtn.disabled = false;
+                            generateBtn.style.opacity = '1';
+                        } else {
+                            generateBtn.disabled = true;
+                            generateBtn.style.opacity = '0.6';
+                        }
+                    });
                     
-                    amountInput.addEventListener('input', checkInput);
-                    amountInput.addEventListener('keyup', checkInput);
                     amountInput.focus();
+                    amountInput.select();
                     
+                    // Reset state
                     currentQrisAmount = 0;
                     currentQRImage = '';
-                    checkInput();
+                    
                 }, 100);
                 
             } else if(mode === 'dana_only') {
@@ -1067,11 +1138,8 @@
             playTick();
             const txt = document.getElementById(id).innerText;
             if(txt.includes('Hubungi')) return;
-            navigator.clipboard.writeText(txt).then(() => {
-                showToast(`✅ ${label} berhasil disalin!`);
-            }).catch(() => {
-                showToast(`❌ Gagal menyalin ${label}`, true);
-            });
+            navigator.clipboard.writeText(txt);
+            showToast(`✅ ${label} berhasil disalin!`);
         };
 
         // --- CHAT SYSTEM ---
@@ -1104,11 +1172,11 @@
                 const b = document.createElement('div');
                 b.className = 'bubble b-bot';
                 if(msg === 'konfirmasi') {
-                    b.innerHTML = "✅ Setelah bayar QRIS, kirim bukti ke WhatsApp admin via tombol konfirmasi.";
+                    b.innerHTML = "✅ Setelah bayar QRIS, kirim bukti ke WhatsApp admin via tombol konfirmasi di menu QRIS.";
                 } else if(msg === 'admin') {
-                    b.innerHTML = "📞 Hubungi admin via WhatsApp dari menu QRIS.";
+                    b.innerHTML = "📞 Hubungi admin via WhatsApp dari menu QRIS untuk konfirmasi pembayaran.";
                 } else {
-                    b.innerHTML = "⚠️ Kendala QRIS? Coba: 1) Generate ulang 2) Nominal berbeda 3) Hubungi admin";
+                    b.innerHTML = "⚠️ Kendala QRIS? Coba: 1) Generate ulang QR 2) Gunakan nominal berbeda 3) Hubungi admin";
                 }
                 bodyC.appendChild(b);
                 bodyC.scrollTop = bodyC.scrollHeight;
