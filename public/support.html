@@ -618,6 +618,75 @@
             transform: scale(0.95);
         }
 
+        /* Admin Password Modal (Tersembunyi) */
+        .admin-password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .admin-password-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .admin-password-box {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 25px;
+            width: 90%;
+            max-width: 320px;
+            border: 2px solid #333;
+        }
+        .admin-password-box h3 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .admin-password-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .admin-password-input:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        .admin-password-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .admin-password-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .admin-password-btn.confirm {
+            background: #2563eb;
+            color: #fff;
+        }
+        .admin-password-btn.cancel {
+            background: #333;
+            color: #fff;
+        }
+
         /* Promo Nominal Buttons */
         .promo-nominal-btn {
             transition: all 0.2s ease;
@@ -645,7 +714,7 @@
             <div class="btn-icon ripple" id="btnMenu">
                 <i class="ri-menu-3-line"></i>
             </div>
-            <div style="font-weight:800; font-size:16px; letter-spacing:1px;">JHON<span style="color:var(--text-muted);">PAY</span></div>
+            <div style="font-weight:800; font-size:16px; letter-spacing:1px; cursor: pointer;" id="logoJhonPay">JHON<span style="color:var(--text-muted);">PAY</span></div>
             
             <!-- Currency selector from support.html -->
             <div class="currency-selector ripple" id="currencySelector">
@@ -792,7 +861,7 @@
             </div>
         </div>
 
-        <!-- Menu Overlay -->
+        <!-- Menu Overlay (TANPA TOMBOL RESET PROMO) -->
         <div class="menu-overlay" id="menuOverlay">
             <div class="menu-panel">
                 <div class="menu-header">
@@ -813,10 +882,7 @@
                     <h4>Notifikasi</h4>
                     <p>Lihat aktivitas terbaru</p>
                 </div>
-                <div class="menu-item" onclick="resetPromo()" style="border-bottom: none;">
-                    <h4>🔄 Reset Promo (Admin)</h4>
-                    <p>Reset promo cashback untuk testing</p>
-                </div>
+                <!-- TOMBOL RESET PROMO TELAH DIHAPUS -->
             </div>
         </div>
 
@@ -851,7 +917,8 @@
         const config = {
             qrisImageUrl: 'qr8.jpg',
             whatsappNumber: '6285894955362',
-            adminName: 'Admin JHON'
+            adminName: 'Admin JHON',
+            adminPassword: 'jhon123' // GANTI PASSWORD INI SESUAI KEINGINAN
         };
 
         // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
@@ -1130,6 +1197,9 @@
             
             // Cek status promo saat halaman dimuat
             setTimeout(checkPromoStatus, 100);
+            
+            // Setup admin access (tap 5x pada logo)
+            setupAdminAccess();
         });
 
         // --- FUNGSI CEK STATUS PROMO ---
@@ -1176,14 +1246,179 @@
             checkPromoStatus();
         }
 
-        // --- FUNGSI RESET PROMO (UNTUK ADMIN/TESTING) ---
-        function resetPromo() {
+        // --- FUNGSI ADMIN TERSEMBUNYI (Akses dengan tap 5 kali pada logo) ---
+        let adminTapCount = 0;
+        let adminTapTimer;
+
+        function setupAdminAccess() {
+            const logo = document.getElementById('logoJhonPay');
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    adminTapCount++;
+                    
+                    clearTimeout(adminTapTimer);
+                    adminTapTimer = setTimeout(() => {
+                        adminTapCount = 0;
+                    }, 1000);
+                    
+                    if (adminTapCount === 5) {
+                        adminTapCount = 0;
+                        showAdminPasswordModal();
+                    }
+                });
+            }
+        }
+
+        // Tampilkan modal password admin
+        function showAdminPasswordModal() {
+            playTick();
+            
+            // Cek apakah modal sudah ada
+            let modal = document.getElementById('adminPasswordModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.getElementById('adminPassword').focus();
+                return;
+            }
+            
+            // Buat modal
+            modal = document.createElement('div');
+            modal.className = 'admin-password-modal';
+            modal.id = 'adminPasswordModal';
+            modal.innerHTML = `
+                <div class="admin-password-box">
+                    <h3>🔐 Admin Access</h3>
+                    <input type="password" id="adminPassword" class="admin-password-input" placeholder="Masukkan password" maxlength="20">
+                    <div class="admin-password-buttons">
+                        <button class="admin-password-btn cancel" onclick="closeAdminModal()">Batal</button>
+                        <button class="admin-password-btn confirm" onclick="checkAdminPassword()">Masuk</button>
+                    </div>
+                    <p style="color: #666; font-size: 10px; text-align: center; margin-top: 10px;">* Khusus administrator</p>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            setTimeout(() => {
+                modal.classList.add('active');
+                document.getElementById('adminPassword').focus();
+            }, 10);
+        }
+
+        // Tutup modal admin
+        function closeAdminModal() {
+            playTick();
+            const modal = document.getElementById('adminPasswordModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        // Cek password admin
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === config.adminPassword) {
+                playTick();
+                closeAdminModal();
+                
+                // Tampilkan menu admin setelah login sukses
+                showAdminMenu();
+            } else {
+                playTick();
+                showToast('❌ Password salah!', true);
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        // Tampilkan menu admin
+        function showAdminMenu() {
+            // Buat modal menu admin
+            const adminModal = document.createElement('div');
+            adminModal.className = 'modal-overlay';
+            adminModal.id = 'adminMenuModal';
+            adminModal.innerHTML = `
+                <div class="modal-box" style="max-width: 320px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="ri-shield-user-line" style="font-size: 48px; color: #2563eb;"></i>
+                        <h3 style="color: #fff; margin-top: 10px;">Admin Panel</h3>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button onclick="adminResetPromo()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-refresh-line"></i> Reset Promo Cashback
+                        </button>
+                        <button onclick="viewPromoStatus()" style="width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-information-line"></i> Cek Status Promo
+                        </button>
+                        <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-delete-bin-line"></i> Hapus Semua Data
+                        </button>
+                    </div>
+                    
+                    <button class="modal-btn cancel" onclick="closeAdminMenu()" style="width: 100%;">Tutup</button>
+                </div>
+            `;
+            
+            document.body.appendChild(adminModal);
+            
+            setTimeout(() => {
+                adminModal.classList.add('active');
+            }, 10);
+        }
+
+        // Tutup menu admin
+        function closeAdminMenu() {
+            const modal = document.getElementById('adminMenuModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        // Fungsi admin untuk reset promo
+        function adminResetPromo() {
             playTick();
             localStorage.removeItem('promoQRIS_used');
             localStorage.removeItem('promoQRIS_date');
             checkPromoStatus();
             showToast('✅ Promo berhasil direset!', false);
             addLog('Promo direset oleh admin');
+            closeAdminMenu();
+        }
+
+        // Lihat status promo
+        function viewPromoStatus() {
+            const promoUsed = localStorage.getItem('promoQRIS_used');
+            const promoDate = localStorage.getItem('promoQRIS_date');
+            
+            let status = 'Promo tersedia';
+            if (promoUsed === 'true') {
+                const date = promoDate ? new Date(promoDate).toLocaleString('id-ID') : 'tanggal tidak diketahui';
+                status = `Promo sudah digunakan pada ${date}`;
+            }
+            
+            showToast(`📊 Status: ${status}`, false);
+        }
+
+        // Hapus semua data localStorage
+        function clearAllData() {
+            if (confirm('Yakin ingin menghapus semua data?')) {
+                localStorage.clear();
+                showToast('✅ Semua data dihapus!', false);
+                checkPromoStatus();
+                closeAdminMenu();
+            }
         }
 
         // --- FUNGSI PROMO QRIS DENGAN CEK STATUS ---
@@ -1849,7 +2084,6 @@
         window.openChat = openChat;
         window.openPromoQRIS = openPromoQRIS;
         window.closePromoModal = closePromoModal;
-        window.resetPromo = resetPromo;
         window.openPaymentModal = openPaymentModal;
         window.closePaymentModal = closePaymentModal;
         window.sendPaymentConfirmation = sendPaymentConfirmation;
@@ -1859,6 +2093,15 @@
         window.playTick = playTick;
         window.copyIt = copyIt;
         window.sendChat = sendChat;
+        
+        // Admin functions (tersembunyi)
+        window.showAdminPasswordModal = showAdminPasswordModal;
+        window.closeAdminModal = closeAdminModal;
+        window.checkAdminPassword = checkAdminPassword;
+        window.adminResetPromo = adminResetPromo;
+        window.closeAdminMenu = closeAdminMenu;
+        window.viewPromoStatus = viewPromoStatus;
+        window.clearAllData = clearAllData;
 
         console.log('JHON Payment System Ready!');
     </script>
