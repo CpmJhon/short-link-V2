@@ -214,10 +214,25 @@
             background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
             border-radius: 20px; padding: 20px;
             position: relative; overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .promo-banner:active {
+            transform: scale(0.98);
         }
         .promo-banner h4 { color: white; font-size: 16px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 2; }
         .promo-banner p { color: rgba(255,255,255,0.8); font-size: 11px; position: relative; z-index: 2; max-width: 70%; }
         .promo-deco { position: absolute; bottom: -10px; right: -10px; font-size: 80px; color: rgba(255,255,255,0.1); transform: rotate(-15deg); }
+
+        /* Promo disabled state */
+        .promo-banner.disabled {
+            background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .promo-banner.disabled:active {
+            transform: none;
+        }
 
         /* --- NOTIFICATION PANEL --- */
         .notif-panel {
@@ -603,6 +618,17 @@
             transform: scale(0.95);
         }
 
+        /* Promo Nominal Buttons */
+        .promo-nominal-btn {
+            transition: all 0.2s ease;
+        }
+        .promo-nominal-btn:hover {
+            transform: scale(0.95);
+        }
+        .promo-nominal-btn:active {
+            transform: scale(0.9);
+        }
+
         /* Utility */
         .ripple { position: relative; overflow: hidden; }
         .ripple span { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
@@ -713,7 +739,7 @@
                         <p>Terverifikasi</p>
                     </div>
                 </div>
-                <div class="feat-item ripple" onclick="playTick()">
+                <div class="feat-item ripple" onclick="openChat()">
                     <i class="ri-customer-service-fill feat-icon"></i>
                     <div class="feat-text">
                         <h5>Admin 24/7</h5>
@@ -722,7 +748,8 @@
                 </div>
             </div>
 
-            <div class="promo-banner ripple">
+            <!-- PROMO BANNER - dengan fungsi dan status promo -->
+            <div class="promo-banner ripple" id="promoBanner" onclick="openPromoQRIS()">
                 <h4>Promo Cashback 50%</h4>
                 <p>Khusus pengguna baru untuk transaksi pertama via QRIS.</p>
                 <i class="ri-coupon-3-line promo-deco"></i>
@@ -786,6 +813,10 @@
                     <h4>Notifikasi</h4>
                     <p>Lihat aktivitas terbaru</p>
                 </div>
+                <div class="menu-item" onclick="resetPromo()" style="border-bottom: none;">
+                    <h4>🔄 Reset Promo (Admin)</h4>
+                    <p>Reset promo cashback untuk testing</p>
+                </div>
             </div>
         </div>
 
@@ -831,7 +862,7 @@
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
-            paypal: { name: 'PayPal', num: 'paypal.me/cpmjhon', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
+            paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
             
             // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
@@ -1079,6 +1110,9 @@
             }
             
             setTimeout(typeWriter, 500);
+            
+            // Update status promo setelah kembali ke beranda
+            setTimeout(checkPromoStatus, 100);
         }
 
         // --- FUNGSI OPEN CHAT ---
@@ -1093,7 +1127,224 @@
         // --- SIMPAN ORIGINAL CONTENT ---
         document.addEventListener('DOMContentLoaded', () => {
             originalContent = document.querySelector('.content-area').innerHTML;
+            
+            // Cek status promo saat halaman dimuat
+            setTimeout(checkPromoStatus, 100);
         });
+
+        // --- FUNGSI CEK STATUS PROMO ---
+        function checkPromoStatus() {
+            const promoBanner = document.getElementById('promoBanner');
+            if (!promoBanner) return;
+            
+            const promoUsed = localStorage.getItem('promoQRIS_used');
+            
+            if (promoUsed === 'true') {
+                // Ubah tampilan banner jika promo sudah digunakan
+                promoBanner.classList.add('disabled');
+                
+                // Ubah teks promo
+                const promoTitle = promoBanner.querySelector('h4');
+                const promoDesc = promoBanner.querySelector('p');
+                
+                if (promoTitle) promoTitle.innerHTML = 'Promo Telah Digunakan';
+                if (promoDesc) promoDesc.innerHTML = 'Cashback 50% sudah diklaim. Coba promo lainnya!';
+            } else {
+                // Pastikan banner dalam keadaan aktif
+                promoBanner.classList.remove('disabled');
+                
+                const promoTitle = promoBanner.querySelector('h4');
+                const promoDesc = promoBanner.querySelector('p');
+                
+                if (promoTitle) promoTitle.innerHTML = 'Promo Cashback 50%';
+                if (promoDesc) promoDesc.innerHTML = 'Khusus pengguna baru untuk transaksi pertama via QRIS.';
+            }
+        }
+
+        // --- FUNGSI CEK KETERSEDIAAN PROMO ---
+        function isPromoAvailable() {
+            const promoUsed = localStorage.getItem('promoQRIS_used');
+            return promoUsed !== 'true';
+        }
+
+        // --- FUNGSI TANDAI PROMO SUDAH DIGUNAKAN ---
+        function markPromoAsUsed() {
+            localStorage.setItem('promoQRIS_used', 'true');
+            localStorage.setItem('promoQRIS_date', new Date().toISOString());
+            
+            // Update tampilan banner
+            checkPromoStatus();
+        }
+
+        // --- FUNGSI RESET PROMO (UNTUK ADMIN/TESTING) ---
+        function resetPromo() {
+            playTick();
+            localStorage.removeItem('promoQRIS_used');
+            localStorage.removeItem('promoQRIS_date');
+            checkPromoStatus();
+            showToast('✅ Promo berhasil direset!', false);
+            addLog('Promo direset oleh admin');
+        }
+
+        // --- FUNGSI PROMO QRIS DENGAN CEK STATUS ---
+        function openPromoQRIS() {
+            playTick();
+            
+            // Cek ketersediaan promo
+            if (!isPromoAvailable()) {
+                // Ambil tanggal penggunaan
+                const usedDate = localStorage.getItem('promoQRIS_date');
+                const formattedDate = usedDate ? new Date(usedDate).toLocaleDateString('id-ID') : 'sebelumnya';
+                
+                // Tampilkan notifikasi bahwa promo sudah digunakan
+                showToast('⚠️ Promo Cashback 50% sudah pernah digunakan pada ' + formattedDate, true);
+                
+                // Tetap buka QRIS tapi tanpa promo
+                setTimeout(() => {
+                    openSheet('qris');
+                }, 500);
+                
+                return;
+            }
+            
+            // Buat modal promo
+            const promoModal = document.createElement('div');
+            promoModal.className = 'modal-overlay';
+            promoModal.id = 'promoModal';
+            promoModal.innerHTML = `
+                <div class="modal-box" style="max-width: 400px;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <i class="ri-coupon-3-line" style="font-size: 48px; color: #10b981;"></i>
+                    </div>
+                    <h3 style="color: #10b981; font-size: 22px; margin-bottom: 5px;">🎉 Promo Cashback 50%</h3>
+                    <p style="color: #fff; margin-bottom: 20px; text-align: center; font-size: 14px;">
+                        Khusus pengguna baru! Cashback 50% untuk transaksi pertama via QRIS
+                    </p>
+                    <p style="color: #fbbf24; font-size: 12px; text-align: center; margin-bottom: 20px; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px;">
+                        <i class="ri-information-line"></i> Promo hanya berlaku 1x per pengguna
+                    </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="color: #fff; font-size: 13px; margin-bottom: 8px; display: block;">Pilih Nominal:</label>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <button class="promo-nominal-btn" data-nominal="50000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 50.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 25rb</span>
+                            </button>
+                            <button class="promo-nominal-btn" data-nominal="100000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 100.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 50rb</span>
+                            </button>
+                            <button class="promo-nominal-btn" data-nominal="200000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 200.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 100rb</span>
+                            </button>
+                            <button class="promo-nominal-btn" data-nominal="500000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 500.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 250rb</span>
+                            </button>
+                        </div>
+                        
+                        <p style="color: #10b981; font-size: 11px; text-align: center; margin-top: 10px;">
+                            <i class="ri-information-line"></i> Maksimal cashback Rp 250.000
+                        </p>
+                    </div>
+                    
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" onclick="closePromoModal()">Nanti Saja</button>
+                        <button class="modal-btn confirm" id="applyPromoBtn" style="background: #10b981;">Gunakan Promo</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(promoModal);
+            
+            // Tampilkan modal
+            setTimeout(() => {
+                promoModal.classList.add('active');
+            }, 10);
+            
+            // Tambahkan event listener untuk tombol nominal
+            const nominalBtns = promoModal.querySelectorAll('.promo-nominal-btn');
+            let selectedNominal = 50000; // Default
+            
+            // Set default selected
+            if (nominalBtns.length > 0) {
+                nominalBtns[0].style.background = '#10b981';
+                nominalBtns[0].style.transform = 'scale(0.95)';
+            }
+            
+            nominalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Hapus style active dari semua button
+                    nominalBtns.forEach(b => {
+                        b.style.background = '#2563eb';
+                        b.style.transform = 'scale(1)';
+                    });
+                    
+                    // Style untuk button yang dipilih
+                    this.style.background = '#10b981';
+                    this.style.transform = 'scale(0.95)';
+                    
+                    selectedNominal = parseInt(this.dataset.nominal);
+                });
+            });
+            
+            // Tombol apply promo
+            document.getElementById('applyPromoBtn').onclick = () => {
+                playTick();
+                
+                // Tandai promo sudah digunakan
+                markPromoAsUsed();
+                
+                closePromoModal();
+                
+                // Buka sheet QRIS
+                openSheet('qris');
+                
+                // Setelah sheet terbuka, set nominal
+                setTimeout(() => {
+                    const amountInput = document.getElementById('qrisAmount');
+                    
+                    if (amountInput) {
+                        amountInput.value = selectedNominal;
+                        
+                        const event = new Event('input', { bubbles: true });
+                        amountInput.dispatchEvent(event);
+                        
+                        showToast(`🎉 Promo Cashback 50%! Rp ${(selectedNominal * 0.5).toLocaleString()} cashback`, false);
+                        
+                        // Highlight
+                        amountInput.style.border = '2px solid #10b981';
+                        amountInput.style.backgroundColor = '#f0fdf4';
+                        
+                        setTimeout(() => {
+                            if (amountInput) {
+                                amountInput.style.border = '1px solid #ddd';
+                                amountInput.style.backgroundColor = '#f9f9f9';
+                            }
+                        }, 2000);
+                        
+                        addLog(`Promo QRIS: Rp ${selectedNominal.toLocaleString()}`);
+                    }
+                }, 500);
+            };
+        }
+
+        // --- FUNGSI MENUTUP MODAL PROMO ---
+        function closePromoModal() {
+            playTick();
+            const modal = document.getElementById('promoModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
 
         // --- SHEET LOGIC ---
         const sheet = document.getElementById('sheet');
@@ -1161,38 +1412,26 @@
             const message = encodeURIComponent(
 `📊 *BUKTI PEMBAYARAN*
 ════════════════════
-         *PESAN TERKIRIM ✅*
+         *PESAN TERKIRIM*
 ════════════════════
-📨 *NOMINAL:* 
-
-Rp ${parseInt(nominal).toLocaleString('id-ID')}
+📨 *NOMINAL:* Rp ${parseInt(nominal).toLocaleString('id-ID')}
 
 ════════════════════
-📧 *VIA PEMBAYARAN:* 
-
-${paymentData.name}
+📧 *VIA PEMBAYARAN:* ${paymentData.name}
 
 ════════════════════
-⏱️ *Waktu Transfer:* 
-
-${formattedTime} WIB
+⏱️ *Waktu Transfer:* ${formattedTime} WIB
 
 ════════════════════
-🗓️ *Tanggal:* 
-
-${formattedDate}
+🗓️ *Tanggal:* ${formattedDate}
 
 ════════════════════
 💾 *SS BUKTI PEMBAYARAN:* 
-
 (Silahkan lampirkan screenshot)
 
 ════════════════════
 
-> HALO HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
-
-════════════════════
-> *SUKSES✅*
+> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
 
 ════════════════════`
             );
@@ -1408,37 +1647,24 @@ ${formattedDate}
 ════════════════════
          *PESAN TERKIRIM*
 ════════════════════
-📨 *NOMINAL:* 
-
-Rp ${currentQrisAmount.toLocaleString('id-ID')}
+📨 *NOMINAL:* Rp ${currentQrisAmount.toLocaleString('id-ID')}
 
 ════════════════════
-📧 *VIA PEMBAYARAN:*
-
- QRIS
+📧 *VIA PEMBAYARAN:* QRIS
 
 ════════════════════
-⏱️ *Waktu Transfer:* 
-
-${formattedTime} WIB
+⏱️ *Waktu Transfer:* ${formattedTime} WIB
 
 ════════════════════
-🗓️ *Tanggal:* 
-
-${formattedDate}
+🗓️ *Tanggal:* ${formattedDate}
 
 ════════════════════
 💾 *SS BUKTI PEMBAYARAN:* 
-
 (Silahkan lampirkan screenshot)
 
 ════════════════════
 
-> HALO HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
-
-════════════════════
-
-> *SUKSES✅*
+> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
 
 ════════════════════`
             );
@@ -1618,6 +1844,21 @@ ${formattedDate}
                 setTimeout(()=>c.remove(), 600);
             }
         });
+
+        // EXPOSE FUNCTIONS TO GLOBAL SCOPE
+        window.openChat = openChat;
+        window.openPromoQRIS = openPromoQRIS;
+        window.closePromoModal = closePromoModal;
+        window.resetPromo = resetPromo;
+        window.openPaymentModal = openPaymentModal;
+        window.closePaymentModal = closePaymentModal;
+        window.sendPaymentConfirmation = sendPaymentConfirmation;
+        window.toggleNotifPanel = toggleNotifPanel;
+        window.showHomePage = showHomePage;
+        window.showUsagePage = showUsagePage;
+        window.playTick = playTick;
+        window.copyIt = copyIt;
+        window.sendChat = sendChat;
 
         console.log('JHON Payment System Ready!');
     </script>
