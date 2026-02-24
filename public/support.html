@@ -346,14 +346,14 @@
 
         .qris-image {
             width: 100%;
-            max-width: 280px;
+            max-width: 320px;
             border-radius: 12px;
             display: block;
             margin: 0 auto;
             border: 2px solid #e5e7eb;
             background: white;
-            padding: 10px;
-            min-height: 280px;
+            padding: 5px;
+            min-height: 320px;
             transition: all 0.3s ease;
         }
 
@@ -481,7 +481,7 @@
         <div class="content-area">
             
             <div class="profile-section">
-                <img src="foto4.jpg" class="p-img">
+                <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
                 <div class="p-info">
                     <h2 id="userName"></h2>
                     <p><span class="status-dot"></span> Online & Verified</p>
@@ -630,7 +630,7 @@
     <script>
         // --- KONFIGURASI APLIKASI ---
         const config = {
-            // URL QRIS ASLI ANDA (STATIS)
+            // URL QRIS ASLI ANDA (STATIS) - TIDAK AKAN DIMODIFIKASI
             qrisImageUrl: 'https://i.ibb.co.com/hFm0cLbw/qr-Farid-dewangga-26-09-23-1695698726.jpg',
             
             // WhatsApp admin
@@ -776,7 +776,7 @@
             }, 3000);
         }
 
-        // --- GENERATE QRIS DENGAN QR STATIS (HANYA AMBIL BARCODE) ---
+        // --- GENERATE QRIS FINAL (QR ASLI TIDAK BERUBAH) ---
         async function generateAndDownloadQRIS() {
             const amountInput = document.getElementById('qrisAmount');
             const amount = parseInt(amountInput.value);
@@ -799,17 +799,31 @@
             qrContainer.style.display = 'block';
             
             try {
-                // ========== METODE YANG BENAR: HANYA AMBIL BARCODE ==========
+                // ===== METODE FINAL: QR ASLI TIDAK BERUBAH =====
+                // Load QR code ASLI Anda
+                const qrImg = new Image();
+                qrImg.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                    qrImg.onload = resolve;
+                    qrImg.onerror = () => {
+                        console.log('Gagal load QR asli');
+                        reject('Gagal load gambar');
+                    };
+                    qrImg.src = config.qrisImageUrl + '?t=' + Date.now(); // Cache busting
+                });
+                
+                // Buat canvas dengan ukuran yang cukup
                 const canvas = document.createElement('canvas');
-                canvas.width = 400;
-                canvas.height = 500;
+                canvas.width = 450;
+                canvas.height = 550;
                 const ctx = canvas.getContext('2d');
                 
                 // Background putih
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                // Header dengan nominal (biru)
+                // Header dengan nominal (HANYA VISUAL, TIDAK MENGUBAH QR)
                 ctx.fillStyle = '#2563eb';
                 ctx.roundRect(20, 20, canvas.width - 40, 70, 10);
                 ctx.fill();
@@ -820,145 +834,59 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(`Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 65);
                 
-                // ===== CARA BARU: HANYA AMBIL BAGIAN BARCODE =====
-                // Load QR code ASLI Anda
-                const qrImg = new Image();
-                qrImg.crossOrigin = 'anonymous';
+                // ===== GAMBAR QR ASLI TANPA MODIFIKASI =====
+                // Hitung ukuran QR yang proporsional (80% dari lebar canvas)
+                const maxQrSize = 320;
+                const qrRatio = qrImg.width / qrImg.height;
+                let qrDisplayWidth, qrDisplayHeight;
                 
-                await new Promise((resolve, reject) => {
-                    qrImg.onload = resolve;
-                    qrImg.onerror = () => {
-                        console.log('Gagal load QR asli, buat QR sederhana');
-                        resolve(); // Tetap lanjut
-                    };
-                    qrImg.src = config.qrisImageUrl + '?t=' + Date.now(); // Tambah timestamp untuk cache busting
-                });
-                
-                if (qrImg.complete && qrImg.naturalWidth > 0) {
-                    console.log('Ukuran QR asli:', qrImg.width, 'x', qrImg.height);
-                    
-                    // Buat canvas sementara untuk memproses gambar
-                    const tempCanvas = document.createElement('canvas');
-                    tempCanvas.width = qrImg.width;
-                    tempCanvas.height = qrImg.height;
-                    const tempCtx = tempCanvas.getContext('2d');
-                    tempCtx.drawImage(qrImg, 0, 0, qrImg.width, qrImg.height);
-                    
-                    // ===== DETEKSI AREA BARCODE =====
-                    // Pendekatan: barcode biasanya di tengah dengan ukuran 60-70% dari gambar
-                    // Hitung padding (15% dari masing-masing sisi)
-                    const paddingPercent = 0.15; // 15% padding
-                    const barcodeX = Math.floor(qrImg.width * paddingPercent);
-                    const barcodeY = Math.floor(qrImg.height * paddingPercent);
-                    const barcodeW = Math.floor(qrImg.width * (1 - (paddingPercent * 2)));
-                    const barcodeH = Math.floor(qrImg.height * (1 - (paddingPercent * 2)));
-                    
-                    console.log('Area barcode:', barcodeX, barcodeY, barcodeW, barcodeH);
-                    
-                    // Ambil data gambar hanya area barcode
-                    const imageData = tempCtx.getImageData(barcodeX, barcodeY, barcodeW, barcodeH);
-                    
-                    // Buat canvas untuk barcode yang sudah dipotong
-                    const barcodeCanvas = document.createElement('canvas');
-                    barcodeCanvas.width = 250; // Ukuran QR yang diinginkan
-                    barcodeCanvas.height = 250;
-                    const barcodeCtx = barcodeCanvas.getContext('2d');
-                    
-                    // Buat temporary canvas untuk menampung potongan
-                    const tempBarcodeCanvas = document.createElement('canvas');
-                    tempBarcodeCanvas.width = barcodeW;
-                    tempBarcodeCanvas.height = barcodeH;
-                    const tempBarcodeCtx = tempBarcodeCanvas.getContext('2d');
-                    tempBarcodeCtx.putImageData(imageData, 0, 0);
-                    
-                    // Gambar ke barcodeCanvas dengan ukuran 250x250 (proses scaling)
-                    barcodeCtx.drawImage(tempBarcodeCanvas, 0, 0, barcodeW, barcodeH, 0, 0, 250, 250);
-                    
-                    // Sekarang gambar barcode yang sudah bersih ke canvas utama
-                    const qrSize = 250;
-                    const x = (canvas.width - qrSize) / 2;
-                    const y = 110;
-                    
-                    // Gambar border putih di sekitar QR
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(x - 5, y - 5, qrSize + 10, qrSize + 10);
-                    
-                    // Gambar barcode yang sudah dipotong
-                    ctx.drawImage(barcodeCanvas, x, y, qrSize, qrSize);
-                    
+                if (qrRatio > 1) {
+                    // QR lebih lebar
+                    qrDisplayWidth = maxQrSize;
+                    qrDisplayHeight = maxQrSize / qrRatio;
                 } else {
-                    // Fallback: buat QR sederhana jika gambar gagal load
-                    console.log('Menggunakan fallback QR sederhana');
-                    
-                    const qrSize = 250;
-                    const x = (canvas.width - qrSize) / 2;
-                    const y = 110;
-                    
-                    // Background putih untuk QR
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(x - 5, y - 5, qrSize + 10, qrSize + 10);
-                    
-                    // Buat pola QR sederhana
-                    ctx.fillStyle = '#000000';
-                    const blockSize = qrSize / 10;
-                    
-                    for(let i = 0; i < 10; i++) {
-                        for(let j = 0; j < 10; j++) {
-                            // Buat pola acak tapi konsisten berdasarkan amount
-                            const isBlack = (i * j + amount) % 3 === 0;
-                            if(isBlack) {
-                                ctx.fillRect(x + (i * blockSize), y + (j * blockSize), blockSize - 1, blockSize - 1);
-                            }
-                        }
-                    }
-                    
-                    // Tambah marker di pojok
-                    ctx.fillStyle = '#000000';
-                    // Pojok kiri atas
-                    ctx.fillRect(x + 5, y + 5, 40, 40);
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(x + 10, y + 10, 30, 30);
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(x + 15, y + 15, 20, 20);
-                    
-                    // Pojok kanan atas
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(x + qrSize - 45, y + 5, 40, 40);
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(x + qrSize - 40, y + 10, 30, 30);
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(x + qrSize - 35, y + 15, 20, 20);
-                    
-                    // Pojok kiri bawah
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(x + 5, y + qrSize - 45, 40, 40);
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(x + 10, y + qrSize - 40, 30, 30);
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(x + 15, y + qrSize - 35, 20, 20);
+                    // QR lebih tinggi atau persegi
+                    qrDisplayHeight = maxQrSize;
+                    qrDisplayWidth = maxQrSize * qrRatio;
                 }
+                
+                const qrX = (canvas.width - qrDisplayWidth) / 2;
+                const qrY = 110;
+                
+                // Gambar QR code ASLI tanpa modifikasi apapun
+                ctx.drawImage(qrImg, qrX, qrY, qrDisplayWidth, qrDisplayHeight);
+                
+                // Tambah border tipis di sekitar QR (opsional, tidak mengganggu scan)
+                ctx.strokeStyle = '#dddddd';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(qrX - 2, qrY - 2, qrDisplayWidth + 4, qrDisplayHeight + 4);
                 
                 // Tambah garis pemisah
                 ctx.strokeStyle = '#dddddd';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(40, 380);
-                ctx.lineTo(canvas.width - 40, 380);
+                ctx.moveTo(40, qrY + qrDisplayHeight + 25);
+                ctx.lineTo(canvas.width - 40, qrY + qrDisplayHeight + 25);
                 ctx.stroke();
                 
-                // Tambah footer informasi
+                // Tambah footer informasi (HANYA VISUAL)
                 ctx.fillStyle = '#333333';
                 ctx.font = 'bold 16px Arial';
-                ctx.fillText('JHON PAYMENT', canvas.width / 2, 410);
+                ctx.fillText('JHON PAYMENT', canvas.width / 2, qrY + qrDisplayHeight + 55);
                 
                 ctx.fillStyle = '#666666';
                 ctx.font = '12px Arial';
-                ctx.fillText('Scan untuk melakukan pembayaran', canvas.width / 2, 435);
+                ctx.fillText('Scan QRIS untuk pembayaran', canvas.width / 2, qrY + qrDisplayHeight + 80);
                 
-                // Info total
+                // Info total (HANYA VISUAL)
                 ctx.fillStyle = '#2563eb';
-                ctx.font = 'bold 18px Arial';
-                ctx.fillText(`Total: Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 470);
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(`Total bayar: Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, qrY + qrDisplayHeight + 105);
+                
+                // Tambah catatan kecil
+                ctx.fillStyle = '#999999';
+                ctx.font = '10px Arial';
+                ctx.fillText('*Scan QRIS seperti biasa', canvas.width / 2, qrY + qrDisplayHeight + 125);
                 
                 // Konversi ke data URL
                 const dataUrl = canvas.toDataURL('image/png');
@@ -993,9 +921,9 @@
                 
             } catch (error) {
                 console.error('Error detail:', error);
-                showToast('Gagal membuat QR, coba lagi', true);
+                showToast('Gagal memuat QR code', true);
                 
-                // Fallback sederhana
+                // Fallback: tampilkan QR asli langsung
                 qrImage.src = config.qrisImageUrl + '?t=' + Date.now();
                 currentQRImage = config.qrisImageUrl;
                 
