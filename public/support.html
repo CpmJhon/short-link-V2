@@ -92,7 +92,7 @@
             color: var(--text-on-dark);
         }
 
-        /* Notif badge - kept from support1 but hidden by default */
+        /* Notif badge - kept from support1 */
         .notif-badge {
             position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px;
             background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-main);
@@ -303,7 +303,16 @@
         .pi-img { width: 40px; height: 40px; object-fit: contain; }
         .pi-info h5 { font-size: 14px; color: #000; font-weight: 700; }
         .pi-info p { font-size: 12px; color: #666; font-family: monospace; }
-        .btn-action { width: 34px; height: 34px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #333; border: none; font-size: 16px; cursor: pointer; }
+        .btn-action {
+            width: 34px; height: 34px; background: #f3f4f6; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; color: #333; 
+            border: none; font-size: 16px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-action:hover { transform: scale(0.95); }
+        .btn-action.whatsapp {
+            background: #25D366;
+            color: white;
+        }
 
         /* --- QRIS INPUT STYLES --- */
         .qris-input-container {
@@ -374,7 +383,6 @@
             background: white;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
-            image-rendering: pixelated;
             border: 2px solid #ffffff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
@@ -520,11 +528,85 @@
             font-size: 13px; color: var(--text-muted);
         }
 
+        /* Modal Input Nominal untuk Konfirmasi Pembayaran */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 25px;
+            width: 90%;
+            max-width: 350px;
+            border: 1px solid #333;
+        }
+        .modal-box h3 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .modal-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-btn.confirm {
+            background: var(--accent);
+            color: #fff;
+        }
+        .modal-btn.cancel {
+            background: #333;
+            color: #fff;
+        }
+        .modal-btn:active {
+            transform: scale(0.95);
+        }
+
         /* Utility */
         .ripple { position: relative; overflow: hidden; }
         .ripple span { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
-
     </style>
 </head>
 <body>
@@ -670,7 +752,7 @@
             </div>
         </div>
 
-        <!-- Notification Panel (kept from support1) -->
+        <!-- Notification Panel -->
         <div class="notif-panel" id="notifPanel">
             <div class="notif-box">
                 <div class="nb-header">
@@ -683,7 +765,7 @@
             </div>
         </div>
 
-        <!-- Menu Overlay (from support.html) -->
+        <!-- Menu Overlay -->
         <div class="menu-overlay" id="menuOverlay">
             <div class="menu-panel">
                 <div class="menu-header">
@@ -707,6 +789,19 @@
             </div>
         </div>
 
+        <!-- Modal Input Nominal untuk Konfirmasi Pembayaran -->
+        <div class="modal-overlay" id="paymentModal">
+            <div class="modal-box">
+                <h3>Konfirmasi Pembayaran</h3>
+                <input type="number" id="modalNominal" class="modal-input" placeholder="Masukkan nominal" min="1">
+                <input type="text" id="modalMetode" class="modal-input" placeholder="Metode pembayaran" readonly style="background: #333;">
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closePaymentModal()">Batal</button>
+                    <button class="modal-btn confirm" onclick="sendPaymentConfirmation()">Kirim</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="sheet-overlay" id="sheet">
@@ -723,10 +818,7 @@
     <script>
         // --- KONFIGURASI APLIKASI ---
         const config = {
-            // URL QRIS ASLI ANDA
             qrisImageUrl: 'qr8.jpg',
-            
-            // WhatsApp admin
             whatsappNumber: '6285894955362',
             adminName: 'Admin JHON'
         };
@@ -739,7 +831,7 @@
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
-            paypal: { name: 'PayPal', num: 'paypal.me/cpmjhon', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
+            paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
             
             // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
@@ -756,6 +848,9 @@
         // --- VARIABEL GLOBAL ---
         let currentQrisAmount = 0;
         let currentQRImage = '';
+        let originalContent = '';
+        let selectedPaymentMethod = '';
+        let selectedPaymentName = '';
 
         // --- HELPER FUNCTIONS ---
         CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
@@ -777,6 +872,25 @@
             audio.currentTime = 0; 
             audio.play().catch(()=>{}); 
         };
+
+        // Format tanggal Indonesia
+        function getFormattedDate() {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const now = new Date();
+            const dayName = days[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            return `${dayName}, ${day} ${month} ${year}`;
+        }
+
+        function getFormattedTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
 
         // --- TYPING NAME ---
         const txtName = "JHON FORUM";
@@ -836,11 +950,9 @@
             }
         }
 
-        // --- MENU OVERLAY FUNCTIONS (from support.html) ---
+        // --- MENU OVERLAY FUNCTIONS ---
         const menuOverlay = document.getElementById('menuOverlay');
         const menuClose = document.getElementById('menuClose');
-        const mainContent = document.querySelector('.content-area');
-        const originalContent = mainContent.innerHTML;
 
         document.getElementById('btnMenu').onclick = () => {
             playTick();
@@ -852,17 +964,136 @@
             menuOverlay.classList.remove('active');
         };
 
-        function showHomePage() {
-            playTick();
-            menuOverlay.classList.remove('active');
-            // You can add logic to reset to home page if needed
-        }
-
+        // --- FUNGSI SHOW USAGE PAGE (CARA PENGGUNAAN) ---
         function showUsagePage() {
             playTick();
             menuOverlay.classList.remove('active');
-            alert('Cara Penggunaan: Pilih metode pembayaran, salin nomor/scan QR, lakukan pembayaran, konfirmasi ke admin.');
+            
+            if (!originalContent) {
+                originalContent = document.querySelector('.content-area').innerHTML;
+            }
+            
+            const usageHTML = `
+                <div class="profile-section">
+                    <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
+                    <div class="p-info">
+                        <h2>JHON FORUM</h2>
+                        <p><span class="status-dot"></span> Online & Verified</p>
+                        <div class="social-bar">
+                            <a href="https://instagram.com/cpm_jhon" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                                <i class="ri-instagram-fill"></i>
+                            </a>
+                            <a href="https://t.me/cpm_jhon21" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                                <i class="ri-telegram-fill"></i>
+                            </a>
+                            <a href="https://linkedin.com" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                                <i class="ri-linkedin-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h3 style="color: var(--text-on-dark); font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center;">Cara Penggunaan</h3>
+                    
+                    <div style="background: var(--card-surface); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">1</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Pilih Metode Pembayaran</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Pilih salah satu metode pembayaran yang tersedia seperti QRIS, E-Wallet, Transfer Bank, atau Top Up Pulsa.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">2</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Salin Nomor atau Scan QR</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Salin nomor tujuan atau scan QR code yang disediakan untuk melakukan pembayaran.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">3</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Lakukan Pembayaran</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Lakukan pembayaran sesuai dengan jumlah yang ditentukan melalui aplikasi pembayaran Anda.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">4</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Konfirmasi ke Admin</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Kirim bukti transfer ke admin melalui WhatsApp untuk mempercepat proses verifikasi.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 16px; padding: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="ri-information-line" style="color: var(--accent); font-size: 20px;"></i>
+                            <h5 style="color: var(--accent); font-size: 14px; font-weight: 700;">Tips Penting</h5>
+                        </div>
+                        <ul style="color: var(--text-muted); font-size: 12px; padding-left: 20px;">
+                            <li style="margin-bottom: 5px;">Pastikan nomor tujuan sudah benar sebelum transfer</li>
+                            <li style="margin-bottom: 5px;">Simpan bukti transfer sebagai arsip</li>
+                            <li style="margin-bottom: 5px;">Konfirmasi segera setelah transfer untuk mempercepat proses</li>
+                            <li>Jika ada kendala, hubungi admin via live chat atau WhatsApp</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: var(--card-surface); border-radius: 16px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                        <h5 style="color: var(--text-on-dark); font-size: 14px; font-weight: 700; margin-bottom: 10px;">Butuh Bantuan Cepat?</h5>
+                        <div style="display: flex; justify-content: center; gap: 15px;">
+                            <a href="https://wa.me/6285894955362" target="_blank" style="background: #25D366; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; text-decoration: none;">
+                                <i class="ri-whatsapp-fill"></i>
+                            </a>
+                            <a href="https://t.me/cpm_jhon21" target="_blank" style="background: #0088cc; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; text-decoration: none;">
+                                <i class="ri-telegram-fill"></i>
+                            </a>
+                            <div onclick="openChat()" style="background: var(--accent); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;">
+                                <i class="ri-customer-service-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="ripple" onclick="showHomePage()" style="width:100%; padding:15px; border-radius:12px; border:none; background:#000; color:#fff; font-weight:700; margin-top:15px; cursor: pointer;">
+                        <i class="ri-arrow-left-line" style="margin-right: 5px;"></i> Kembali ke Beranda
+                    </button>
+                </div>
+            `;
+            
+            document.querySelector('.content-area').innerHTML = usageHTML;
         }
+
+        // --- FUNGSI SHOW HOME PAGE ---
+        function showHomePage() {
+            playTick();
+            menuOverlay.classList.remove('active');
+            
+            if (originalContent) {
+                document.querySelector('.content-area').innerHTML = originalContent;
+            } else {
+                location.reload();
+            }
+            
+            setTimeout(typeWriter, 500);
+        }
+
+        // --- FUNGSI OPEN CHAT ---
+        function openChat() {
+            playTick();
+            const fab = document.getElementById('fabChat');
+            if (fab) {
+                fab.click();
+            }
+        }
+
+        // --- SIMPAN ORIGINAL CONTENT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            originalContent = document.querySelector('.content-area').innerHTML;
+        });
 
         // --- SHEET LOGIC ---
         const sheet = document.getElementById('sheet');
@@ -881,11 +1112,86 @@
                             <p id="t-${key}">${d.num}</p>
                         </div>
                     </div>
-                    <button class="btn-action ripple" onclick="copyIt('t-${key}', '${d.name}')">
-                        <i class="ri-file-copy-line"></i>
-                    </button>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-action ripple" onclick="copyIt('t-${key}', '${d.name}')">
+                            <i class="ri-file-copy-line"></i>
+                        </button>
+                        <button class="btn-action whatsapp ripple" onclick="openPaymentModal('${key}', '${d.name}')">
+                            <i class="ri-whatsapp-fill"></i>
+                        </button>
+                    </div>
                 </div>
             `;
+        }
+
+        // --- MODAL FUNCTIONS ---
+        function openPaymentModal(methodKey, methodName) {
+            playTick();
+            selectedPaymentMethod = methodKey;
+            selectedPaymentName = methodName;
+            
+            const modal = document.getElementById('paymentModal');
+            const metodeInput = document.getElementById('modalMetode');
+            const nominalInput = document.getElementById('modalNominal');
+            
+            metodeInput.value = methodName;
+            nominalInput.value = '';
+            modal.classList.add('active');
+        }
+
+        function closePaymentModal() {
+            playTick();
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        function sendPaymentConfirmation() {
+            const nominal = document.getElementById('modalNominal').value;
+            
+            if (!nominal || nominal <= 0) {
+                showToast('Masukkan nominal yang valid', true);
+                return;
+            }
+
+            const paymentData = dataPay[selectedPaymentMethod];
+            if (!paymentData) return;
+
+            const formattedDate = getFormattedDate();
+            const formattedTime = getFormattedTime();
+
+            const message = encodeURIComponent(
+`📊 *BUKTI PEMBAYARAN*
+════════════════════
+         *PESAN TERKIRIM*
+════════════════════
+📨 *NOMINAL:* Rp ${parseInt(nominal).toLocaleString('id-ID')}
+
+════════════════════
+📧 *VIA PEMBAYARAN:* ${paymentData.name}
+
+════════════════════
+⏱️ *Waktu Transfer:* ${formattedTime} WIB
+
+════════════════════
+🗓️ *Tanggal:* ${formattedDate}
+
+════════════════════
+💾 *SS BUKTI PEMBAYARAN:* 
+(Silahkan lampirkan screenshot)
+
+════════════════════
+
+> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+
+════════════════════`
+            );
+
+            const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+
+            addLog(`Konfirmasi ${paymentData.name}: Rp ${parseInt(nominal).toLocaleString()}`);
+            
+            closePaymentModal();
+            showToast(`✅ Konfirmasi ${paymentData.name} terkirim!`);
         }
 
         // --- TOAST NOTIFICATION ---
@@ -930,7 +1236,6 @@
             qrContainer.style.display = 'block';
             
             try {
-                // Load QR asli
                 const qrImg = new Image();
                 qrImg.crossOrigin = 'anonymous';
                 
@@ -940,17 +1245,14 @@
                     qrImg.src = config.qrisImageUrl + '?t=' + Date.now();
                 });
                 
-                // Buat canvas dengan ukuran besar untuk kualitas maksimal
                 const canvas = document.createElement('canvas');
                 canvas.width = 800;
                 canvas.height = 1000;
                 const ctx = canvas.getContext('2d');
                 
-                // Background putih
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                // Header dengan nominal
                 ctx.fillStyle = '#2563eb';
                 ctx.roundRect(40, 40, canvas.width - 80, 90, 15);
                 ctx.fill();
@@ -960,7 +1262,6 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(`Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 95);
                 
-                // HITUNG UKURAN QR YANG OPTIMAL
                 const targetSize = 550;
                 const qrRatio = qrImg.width / qrImg.height;
                 let qrWidth, qrHeight;
@@ -1078,7 +1379,7 @@
             }
         }
 
-        // --- KONFIRMASI WHATSAPP ---
+        // --- KONFIRMASI WHATSAPP UNTUK QRIS ---
         function confirmPayment() {
             if (!currentQrisAmount || currentQrisAmount === 0) {
                 showToast('Silakan generate QR Code terlebih dahulu', true);
@@ -1086,15 +1387,41 @@
             }
             
             playTick();
-            
+
+            const formattedDate = getFormattedDate();
+            const formattedTime = getFormattedTime();
+
             const message = encodeURIComponent(
-`Halo ${config.adminName}%0A%0A✅ *KONFIRMASI PEMBAYARAN QRIS*%0A%0A📋 *Detail Transaksi*%0A• Nominal: *Rp ${currentQrisAmount.toLocaleString()}*%0A• Metode: *QRIS*%0A• Status: *Sudah Bayar*%0A• Waktu: *${new Date().toLocaleTimeString('id-ID')}*%0A%0A🖼️ *Bukti Transfer*%0A(Silahkan upload screenshot)%0A%0ATerima kasih.`
+`📊 *BUKTI PEMBAYARAN*
+════════════════════
+         *PESAN TERKIRIM*
+════════════════════
+📨 *NOMINAL:* Rp ${currentQrisAmount.toLocaleString('id-ID')}
+
+════════════════════
+📧 *VIA PEMBAYARAN:* QRIS
+
+════════════════════
+⏱️ *Waktu Transfer:* ${formattedTime} WIB
+
+════════════════════
+🗓️ *Tanggal:* ${formattedDate}
+
+════════════════════
+💾 *SS BUKTI PEMBAYARAN:* 
+(Silahkan lampirkan screenshot)
+
+════════════════════
+
+> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+
+════════════════════`
             );
             
             const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
             window.open(whatsappUrl, '_blank');
             
-            addLog(`Konfirmasi WA: Rp ${currentQrisAmount.toLocaleString()}`);
+            addLog(`Konfirmasi QRIS: Rp ${currentQrisAmount.toLocaleString()}`);
             showToast(`✅ WhatsApp terbuka! Kirim bukti transfer.`);
         }
 
@@ -1168,14 +1495,14 @@
                 html += rowHtml('gopay');
                 html += rowHtml('ovo');
                 html += rowHtml('linkaja');
-                html += rowHtml('paypal'); // PayPal di E-WALLET
+                html += rowHtml('paypal');
             } else if(mode === 'bank') {
                 title.innerText = "TRANSFER BANK";
                 logName = "Menu Bank";
                 html += rowHtml('sea');
                 html += rowHtml('sea2');
                 html += rowHtml('bri');
-                html += rowHtml('paypal'); // PayPal di TRANSFER BANK
+                html += rowHtml('paypal');
             } else if(mode === 'pulsa') {
                 title.innerText = "TOP UP PULSA";
                 logName = "Menu Pulsa";
@@ -1186,7 +1513,7 @@
             } else {
                 title.innerText = "SEMUA METODE";
                 logName = "Semua Menu";
-                Object.keys(dataPay).forEach(k => html += rowHtml(k)); // PayPal sudah termasuk otomatis
+                Object.keys(dataPay).forEach(k => html += rowHtml(k));
             }
             
             addLog(logName);
@@ -1241,11 +1568,11 @@
                 const b = document.createElement('div');
                 b.className = 'bubble b-bot';
                 if(msg === 'konfirmasi') {
-                    b.innerHTML = "✅ Setelah bayar QRIS, kirim bukti ke WhatsApp admin via tombol konfirmasi.";
+                    b.innerHTML = "✅ Setelah bayar, klik ikon WhatsApp di metode pembayaran untuk konfirmasi.";
                 } else if(msg === 'admin') {
-                    b.innerHTML = "📞 Hubungi admin via WhatsApp dari menu QRIS.";
+                    b.innerHTML = "📞 Hubungi admin via WhatsApp dari menu pembayaran.";
                 } else {
-                    b.innerHTML = "⚠️ Kendala QRIS? Coba: 1) Generate ulang 2) Nominal berbeda 3) Hubungi admin";
+                    b.innerHTML = "⚠️ Kendala? Coba: 1) Cek nominal 2) Metode berbeda 3) Hubungi admin";
                 }
                 bodyC.appendChild(b);
                 bodyC.scrollTop = bodyC.scrollHeight;
