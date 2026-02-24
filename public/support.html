@@ -831,7 +831,7 @@
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
-            paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
+            paypal: { name: 'PayPal', num: 'paypal.me/cpmjhon', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
             
             // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
@@ -1161,26 +1161,38 @@
             const message = encodeURIComponent(
 `📊 *BUKTI PEMBAYARAN*
 ════════════════════
-         *PESAN TERKIRIM*
+         *PESAN TERKIRIM ✅*
 ════════════════════
-📨 *NOMINAL:* Rp ${parseInt(nominal).toLocaleString('id-ID')}
+📨 *NOMINAL:* 
+
+Rp ${parseInt(nominal).toLocaleString('id-ID')}
 
 ════════════════════
-📧 *VIA PEMBAYARAN:* ${paymentData.name}
+📧 *VIA PEMBAYARAN:* 
+
+${paymentData.name}
 
 ════════════════════
-⏱️ *Waktu Transfer:* ${formattedTime} WIB
+⏱️ *Waktu Transfer:* 
+
+${formattedTime} WIB
 
 ════════════════════
-🗓️ *Tanggal:* ${formattedDate}
+🗓️ *Tanggal:* 
+
+${formattedDate}
 
 ════════════════════
 💾 *SS BUKTI PEMBAYARAN:* 
+
 (Silahkan lampirkan screenshot)
 
 ════════════════════
 
-> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+> HALO HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+
+════════════════════
+> *SUKSES✅*
 
 ════════════════════`
             );
@@ -1396,24 +1408,37 @@
 ════════════════════
          *PESAN TERKIRIM*
 ════════════════════
-📨 *NOMINAL:* Rp ${currentQrisAmount.toLocaleString('id-ID')}
+📨 *NOMINAL:* 
+
+Rp ${currentQrisAmount.toLocaleString('id-ID')}
 
 ════════════════════
-📧 *VIA PEMBAYARAN:* QRIS
+📧 *VIA PEMBAYARAN:*
+
+ QRIS
 
 ════════════════════
-⏱️ *Waktu Transfer:* ${formattedTime} WIB
+⏱️ *Waktu Transfer:* 
+
+${formattedTime} WIB
 
 ════════════════════
-🗓️ *Tanggal:* ${formattedDate}
+🗓️ *Tanggal:* 
+
+${formattedDate}
 
 ════════════════════
 💾 *SS BUKTI PEMBAYARAN:* 
+
 (Silahkan lampirkan screenshot)
 
 ════════════════════
 
-> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+> HALO HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+
+════════════════════
+
+> *SUKSES✅*
 
 ════════════════════`
             );
