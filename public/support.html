@@ -367,7 +367,7 @@
             <div class="btn-icon ripple" id="btnMenu">
                 <i class="ri-menu-3-line"></i>
             </div>
-            <div style="font-weight:800; font-size:16px; letter-spacing:1px;">VOCHUY<span style="color:var(--text-muted);">PAY</span></div>
+            <div style="font-weight:800; font-size:16px; letter-spacing:1px;">JHON<span style="color:var(--text-muted);">PAY</span></div>
             <div class="currency-selector ripple" id="currencySelector">
                 <div class="currency-flag"></div>
                 <div class="currency-text">ID / IDR</div>
@@ -381,14 +381,14 @@
                     <h2 id="userName"></h2>
                     <p><span class="status-dot"></span> Online & Verified</p>
                     <div class="social-bar">
-                        <a href="https://www.instagram.com/vochuyindonesia?igsh=MXV4OHdiOGFmdWt5Mw==" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
+                        <a href="https://www.instagram.com/cpm_jhon" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
                             <i class="ri-instagram-fill"></i>
                         </a>
-                        <a href="https://telegram.org" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
+                        <a href="https://t.me/cpm_jhon21" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
                             <i class="ri-telegram-fill"></i>
                         </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
-                            <i class="ri-linkedin-fill"></i>
+                        <a href="https://wa.me/6285894955362" target="_blank" rel="noopener" class="soc-icon ripple" onclick="playTick()">
+                            <i class="ri-whatsapp-fill"></i>
                         </a>
                     </div>
                 </div>
@@ -542,22 +542,24 @@
         
         const dataPay = {
             // E-Wallet
-            dana: { name: 'DANA', num: '081227108559', img: 'https://cdn.odzre.my.id/r25.jpg' },
-            shopee: { name: 'ShopeePay', num: '081227108559', img: 'https://cdn.odzre.my.id/ukr.jpg' },
-            gopay: { name: 'GoPay', num: '081227108559', img: 'https://cdn.odzre.my.id/fw6.jpg' },
-            ovo: { name: 'OVO', num: '081227108559', img: 'https://cdn.odzre.my.id/lpp.jpg' },
-            linkaja: { name: 'LinkAja', num: '081227108559', img: 'https://cdn.odzre.my.id/qga.jpg' },
+            dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
+            shopee: { name: 'ShopeePay', num: '085894955362', img: 'https://cdn.odzre.my.id/8px.jpg' },
+            gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
+            ovo: { name: 'OVO', num: '085894955362', img: 'https://cdn.odzre.my.id/lpp.jpg' },
+            linkaja: { name: 'LinkAja', num: '085591916436', img: 'https://cdn.odzre.my.id/mb4.jpg' },
+            PayPal: { name: 'Paypal', num: 'https://www.paypal.com/paypalme/cpmjhon', img: 'https://cdn.odzre.my.id/m1l.jpg' },
+            
             
             // Bank
-            bca: { name: 'BCA', num: '1234567890', img: 'https://cdn.odzre.my.id/nbo.jpg' },
-            sebank: { name: 'SeaBank', num: '9012345678', img: 'https://cdn.odzre.my.id/k7m.jpg' },
-            bri: { name: 'BRI', num: '0987654321', img: 'https://cdn.odzre.my.id/tke.jpg' },
+            bca: { name: 'BCA', num: '3781910587', img: 'https://cdn.odzre.my.id/qw3.jpg' },
+            sebank: { name: 'SeaBank', num: '901120214185', img: 'https://cdn.odzre.my.id/c9s.jpg' },
+            bri: { name: 'BRI', num: 'BELUM TERSEDIA', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
 
             // Pulsa
-            telkomsel: { name: 'Telkomsel', num: '08123456789', img: 'https://cdn.odzre.my.id/zmm.jpg' },
-            indosat: { name: 'Indosat', num: '08567890123', img: 'https://cdn.odzre.my.id/nz4.jpg' },
-            tri: { name: 'Tri (3)', num: '08987654321', img: 'https://cdn.odzre.my.id/z39.jpg' },
-            smartfren: { name: 'Smartfren', num: '088976422189', img: 'https://cdn.odzre.my.id/3wg.jpg' }
+            telkomsel: { name: 'Telkomsel', num: 'BELUM TERSEDIA', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
+            indosat: { name: 'Indosat', num: '085894955362', img: 'https://cdn.odzre.my.id/x4d.jpg' },
+            tri: { name: 'Tri (3)', num: 'BELUM TERSEDIA', img: 'https://cdn.odzre.my.id/fqe.jpg' },
+            smartfren: { name: 'Smartfren', num: 'BELUM TERSEDIA', img: 'https://cdn.odzre.my.id/uun.jpg' }
         };
 
         // Fungsi untuk inisialisasi slider iklan
@@ -677,7 +679,7 @@
                 if (msg === 'konfirmasi') 
                     b.innerHTML = "✅ Silakan kirim bukti transfer ke admin untuk percepat proses.";
                 else if (msg === 'admin') 
-                    b.innerHTML = "📞 Hubungi WhatsApp: <strong>081227108559</strong> untuk bantuan langsung.";
+                    b.innerHTML = "📞 Hubungi WhatsApp: <strong>085894955362</strong> untuk bantuan langsung.";
                 else 
                     b.innerHTML = "⚠️ Tunggu 1-2 menit. Masih error? Langsung chat admin!";
                 bodyC.appendChild(b);
@@ -720,12 +722,12 @@
                 title.innerText = "SCAN QRIS";
                 html = `
                     <div class="qris-display">
-                        <img src="https://img.freepik.com/free-vector/gradient-qr-code-payment-illustration_23-2149433618.jpg" style="width:100%; max-width:220px; border-radius:10px;" onerror="this.src='https://via.placeholder.com/220x220/2563eb/ffffff?text=QRIS'">
+                        <img src="qr8.jpg" style="width:100%; max-width:220px; border-radius:10px;" onerror="this.src='https://via.placeholder.com/220x220/2563eb/ffffff?text=QRIS'">
                         <p style="margin-top:10px; font-size:12px; color:#555;">Support All E-Wallet & Bank</p>
                     </div>`;
             } else if (mode === 'dana_only') {
                 title.innerText = "E-WALLET";
-                ['dana', 'shopee', 'gopay', 'ovo', 'linkaja'].forEach(k => html += rowHtml(k));
+                ['dana', 'shopee', 'gopay', 'ovo', 'linkaja', 'paypal'].forEach(k => html += rowHtml(k));
             } else if (mode === 'bank') {
                 title.innerText = "TRANSFER BANK";
                 ['bca', 'sebank', 'bri'].forEach(k => html += rowHtml(k));
