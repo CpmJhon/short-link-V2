@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
-        /* --- ULTIMATE THEME VARS (Dark Gray + Old White) --- */
+        /* --- ULTIMATE THEME VARS --- */
         :root {
             --bg-main: #121212;
             --bg-deep: #0a0a0a;
@@ -26,7 +26,7 @@
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            outline: none; user-select: none; scroll-behavior: smooth;
+            outline: none; scroll-behavior: smooth;
         }
 
         body {
@@ -49,7 +49,7 @@
             .app-frame { height: 95vh; border-radius: 35px; border: 4px solid #333; }
         }
 
-        /* --- HEADER (LIKE support.html) --- */
+        /* --- HEADER --- */
         .header-area {
             padding: 30px 24px 20px;
             display: flex; justify-content: space-between; align-items: center;
@@ -63,7 +63,6 @@
         }
         .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
         
-        /* Currency selector from support.html */
         .currency-selector {
             width: 110px; height: 36px;
             background: rgba(255,255,255,0.05); 
@@ -81,10 +80,6 @@
             width: 20px; height: 20px;
             border-radius: 4px;
             background: linear-gradient(to bottom, #ff4b55 50%, #ffffff 50%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px;
-            color: white;
-            font-weight: bold;
         }
         .currency-text {
             font-size: 14px;
@@ -92,7 +87,6 @@
             color: var(--text-on-dark);
         }
 
-        /* Notif badge - kept from support1 */
         .notif-badge {
             position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px;
             background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-main);
@@ -101,7 +95,7 @@
         }
         .notif-badge.show { opacity: 1; }
 
-        /* --- CONTENT SCROLL AREA --- */
+        /* --- CONTENT AREA --- */
         .content-area {
             flex: 1; overflow-y: auto; padding: 0 24px 100px;
             scrollbar-width: none;
@@ -120,7 +114,6 @@
         .p-info p { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
         .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
 
-        /* --- SOCIAL MEDIA --- */
         .social-bar {
             margin-top: 8px; display: flex; gap: 10px;
         }
@@ -132,6 +125,68 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
         .soc-icon:active { transform: scale(0.9); background: var(--accent); border-color: var(--accent); }
+
+        /* --- CASHBACK BALANCE --- */
+        .cashback-balance {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cashback-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cashback-icon {
+            width: 45px; height: 45px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        .cashback-text h4 {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .cashback-text p {
+            color: rgba(255,255,255,0.9);
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .cashback-claim-btn {
+            background: white;
+            color: #059669;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .cashback-claim-btn:hover { transform: scale(1.05); background: #f0fdf4; }
+        .cashback-claim-btn:active { transform: scale(0.95); }
+        .cashback-claim-btn.disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
 
         /* --- MARQUEE --- */
         .marquee-container {
@@ -217,22 +272,16 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .promo-banner:active {
-            transform: scale(0.98);
-        }
+        .promo-banner:active { transform: scale(0.98); }
         .promo-banner h4 { color: white; font-size: 16px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 2; }
         .promo-banner p { color: rgba(255,255,255,0.8); font-size: 11px; position: relative; z-index: 2; max-width: 70%; }
         .promo-deco { position: absolute; bottom: -10px; right: -10px; font-size: 80px; color: rgba(255,255,255,0.1); transform: rotate(-15deg); }
-
-        /* Promo disabled state */
         .promo-banner.disabled {
             background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
             opacity: 0.7;
             cursor: not-allowed;
         }
-        .promo-banner.disabled:active {
-            transform: none;
-        }
+        .promo-banner.disabled:active { transform: none; }
 
         /* --- NOTIFICATION PANEL --- */
         .notif-panel {
@@ -366,7 +415,6 @@
             display: none; text-align: center;
         }
         
-        /* --- QR DISPLAY IMPROVEMENT --- */
         .qr-display-wrapper {
             background: white;
             border-radius: 16px;
@@ -396,8 +444,6 @@
             display: block;
             margin: 0 auto;
             background: white;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
             border: 2px solid #ffffff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
@@ -440,36 +486,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* QR Loading Animation */
-        .qr-loading-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 240px;
-        }
-
-        .qr-loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #f3f4f6;
-            border-top: 3px solid #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-
-        /* QR Success Animation */
-        .qr-success-animation {
-            animation: pulse 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
         /* Toast Notification */
         .toast {
             position: fixed;
@@ -495,7 +511,7 @@
             background: #ef4444;
         }
 
-        /* Menu Overlay (from support.html) */
+        /* Menu Overlay */
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 150;
@@ -543,7 +559,7 @@
             font-size: 13px; color: var(--text-muted);
         }
 
-        /* Modal Input Nominal untuk Konfirmasi Pembayaran */
+        /* Modal Input Nominal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -618,7 +634,7 @@
             transform: scale(0.95);
         }
 
-        /* Admin Password Modal (Tersembunyi) */
+        /* Admin Password Modal */
         .admin-password-modal {
             position: fixed;
             top: 0;
@@ -698,6 +714,38 @@
             transform: scale(0.9);
         }
 
+        /* Cashback History */
+        .cashback-history {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .cashback-history-item {
+            background: #222;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cashback-history-item .date {
+            color: #888;
+            font-size: 11px;
+        }
+        .cashback-history-item .amount {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .cashback-history-item .status {
+            background: #059669;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+        }
+
         /* Utility */
         .ripple { position: relative; overflow: hidden; }
         .ripple span { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
@@ -709,14 +757,12 @@
     <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
     <div class="app-frame">
-        <!-- HEADER - Like support.html with currency selector -->
+        <!-- HEADER -->
         <div class="header-area">
             <div class="btn-icon ripple" id="btnMenu">
                 <i class="ri-menu-3-line"></i>
             </div>
             <div style="font-weight:800; font-size:16px; letter-spacing:1px; cursor: pointer;" id="logoJhonPay">JHON<span style="color:var(--text-muted);">PAY</span></div>
-            
-            <!-- Currency selector from support.html -->
             <div class="currency-selector ripple" id="currencySelector">
                 <div class="currency-flag"></div>
                 <div class="currency-text">ID / IDR</div>
@@ -743,6 +789,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- CASHBACK BALANCE SECTION -->
+            <div id="cashbackBalanceContainer" style="display: none;"></div>
 
             <div class="marquee-container">
                 <div class="marquee-text">
@@ -817,7 +866,7 @@
                 </div>
             </div>
 
-            <!-- PROMO BANNER - dengan fungsi dan status promo -->
+            <!-- PROMO BANNER -->
             <div class="promo-banner ripple" id="promoBanner" onclick="openPromoQRIS()">
                 <h4>Promo Cashback 50%</h4>
                 <p>Khusus pengguna baru untuk transaksi pertama via QRIS.</p>
@@ -861,7 +910,7 @@
             </div>
         </div>
 
-        <!-- Menu Overlay (TANPA TOMBOL RESET PROMO) -->
+        <!-- Menu Overlay -->
         <div class="menu-overlay" id="menuOverlay">
             <div class="menu-panel">
                 <div class="menu-header">
@@ -882,11 +931,14 @@
                     <h4>Notifikasi</h4>
                     <p>Lihat aktivitas terbaru</p>
                 </div>
-                <!-- TOMBOL RESET PROMO TELAH DIHAPUS -->
+                <div class="menu-item" onclick="showCashbackHistory()">
+                    <h4>💰 Riwayat Cashback</h4>
+                    <p>Lihat history cashback Anda</p>
+                </div>
             </div>
         </div>
 
-        <!-- Modal Input Nominal untuk Konfirmasi Pembayaran -->
+        <!-- Modal Input Nominal -->
         <div class="modal-overlay" id="paymentModal">
             <div class="modal-box">
                 <h3>Konfirmasi Pembayaran</h3>
@@ -896,6 +948,42 @@
                     <button class="modal-btn cancel" onclick="closePaymentModal()">Batal</button>
                     <button class="modal-btn confirm" onclick="sendPaymentConfirmation()">Kirim</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Cashback History -->
+        <div class="modal-overlay" id="cashbackHistoryModal">
+            <div class="modal-box" style="max-width: 400px;">
+                <h3>💰 Riwayat Cashback</h3>
+                <div id="cashbackHistoryList" class="cashback-history"></div>
+                <button class="modal-btn cancel" onclick="closeCashbackHistory()" style="width: 100%;">Tutup</button>
+            </div>
+        </div>
+
+        <!-- Modal Claim Cashback -->
+        <div class="modal-overlay" id="claimCashbackModal">
+            <div class="modal-box">
+                <h3>🎉 Klaim Cashback</h3>
+                <p style="color: #fff; text-align: center; margin-bottom: 20px;">
+                    Pilih metode untuk menerima cashback Anda
+                </p>
+                
+                <div style="margin-bottom: 20px;">
+                    <button onclick="claimCashbackTo('dana')" style="width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="ri-wallet-3-fill"></i> Dana
+                    </button>
+                    <button onclick="claimCashbackTo('ovo')" style="width: 100%; padding: 15px; background: #8A2BE2; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="ri-wallet-3-fill"></i> OVO
+                    </button>
+                    <button onclick="claimCashbackTo('gopay')" style="width: 100%; padding: 15px; background: #00A79D; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="ri-wallet-3-fill"></i> GoPay
+                    </button>
+                    <button onclick="claimCashbackTo('bank')" style="width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="ri-bank-line"></i> Transfer Bank
+                    </button>
+                </div>
+                
+                <button class="modal-btn cancel" onclick="closeClaimModal()" style="width: 100%;">Tutup</button>
             </div>
         </div>
 
@@ -918,25 +1006,20 @@
             qrisImageUrl: 'qr8.jpg',
             whatsappNumber: '6285894955362',
             adminName: 'Admin JHON',
-            adminPassword: 'jhon123' // GANTI PASSWORD INI SESUAI KEINGINAN
+            adminPassword: 'jhon123'
         };
 
-        // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
+        // --- DATA PAYMENT DENGAN PAYPAL ---
         const dataPay = {
-            // E-WALLET
             dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
             shopee: { name: 'ShopeePay', num: '085894955362', img: 'pay.jpg' },
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
             paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
-            
-            // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
             sea2: { name: 'SeaBank', num: '9016xxx', img: 'bank.jpg' },
             bri: { name: 'BRI', num: '1234xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
-            
-            // PULSA
             pulsa: { name: 'Telkomsel', num: '0825xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
             indosat: { name: 'Indosat', num: '085894955362', img: 'indosat.jpg' },
             tri: { name: 'Tri (3)', num: '089xxx', img: 'tri.jpg' },
@@ -949,6 +1032,172 @@
         let originalContent = '';
         let selectedPaymentMethod = '';
         let selectedPaymentName = '';
+
+        // --- CASHBACK SYSTEM ---
+        let cashbackBalance = 0;
+        let cashbackHistory = [];
+
+        // Load cashback data dari localStorage
+        function loadCashbackData() {
+            const savedBalance = localStorage.getItem('cashbackBalance');
+            const savedHistory = localStorage.getItem('cashbackHistory');
+            
+            cashbackBalance = savedBalance ? parseInt(savedBalance) : 0;
+            cashbackHistory = savedHistory ? JSON.parse(savedHistory) : [];
+            
+            updateCashbackDisplay();
+        }
+
+        // Simpan cashback data ke localStorage
+        function saveCashbackData() {
+            localStorage.setItem('cashbackBalance', cashbackBalance.toString());
+            localStorage.setItem('cashbackHistory', JSON.stringify(cashbackHistory));
+        }
+
+        // Tambah cashback
+        function addCashback(amount, from) {
+            cashbackBalance += amount;
+            
+            cashbackHistory.unshift({
+                date: new Date().toISOString(),
+                amount: amount,
+                from: from,
+                status: 'tersedia'
+            });
+            
+            saveCashbackData();
+            updateCashbackDisplay();
+            
+            showToast(`🎉 Cashback Rp ${amount.toLocaleString()} ditambahkan!`, false);
+        }
+
+        // Update tampilan cashback
+        function updateCashbackDisplay() {
+            const container = document.getElementById('cashbackBalanceContainer');
+            if (!container) return;
+            
+            if (cashbackBalance > 0) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div class="cashback-balance">
+                        <div class="cashback-info">
+                            <div class="cashback-icon">
+                                <i class="ri-coupon-3-line"></i>
+                            </div>
+                            <div class="cashback-text">
+                                <h4>Total Cashback</h4>
+                                <p>Rp ${cashbackBalance.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <button class="cashback-claim-btn" onclick="openClaimModal()" ${cashbackBalance === 0 ? 'disabled' : ''}>
+                            Klaim
+                        </button>
+                    </div>
+                `;
+            } else {
+                container.style.display = 'none';
+                container.innerHTML = '';
+            }
+        }
+
+        // Buka modal klaim cashback
+        function openClaimModal() {
+            if (cashbackBalance === 0) {
+                showToast('Tidak ada cashback untuk diklaim', true);
+                return;
+            }
+            playTick();
+            document.getElementById('claimCashbackModal').classList.add('active');
+        }
+
+        function closeClaimModal() {
+            playTick();
+            document.getElementById('claimCashbackModal').classList.remove('active');
+        }
+
+        // Klaim cashback ke metode tertentu
+        function claimCashbackTo(method) {
+            playTick();
+            
+            const methodNames = {
+                dana: 'DANA',
+                ovo: 'OVO',
+                gopay: 'GoPay',
+                bank: 'Transfer Bank'
+            };
+            
+            const message = encodeURIComponent(
+`💰 *KLAIM CASHBACK*
+════════════════════
+👤 *Username:* ${document.getElementById('userName').innerText}
+💰 *Jumlah:* Rp ${cashbackBalance.toLocaleString()}
+📱 *Metode:* ${methodNames[method]}
+⏱️ *Waktu:* ${getFormattedTime()} WIB
+🗓️ *Tanggal:* ${getFormattedDate()}
+
+> Mohon transfer cashback ke nomor/user ID yang terdaftar`
+            );
+            
+            const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+            
+            cashbackHistory.unshift({
+                date: new Date().toISOString(),
+                amount: cashbackBalance,
+                from: 'Klaim',
+                status: 'diproses',
+                method: methodNames[method]
+            });
+            
+            cashbackBalance = 0;
+            saveCashbackData();
+            updateCashbackDisplay();
+            closeClaimModal();
+            
+            showToast(`✅ Permintaan klaim terkirim!`, false);
+        }
+
+        // Tampilkan history cashback
+        function showCashbackHistory() {
+            playTick();
+            menuOverlay.classList.remove('active');
+            
+            const historyList = document.getElementById('cashbackHistoryList');
+            if (!historyList) return;
+            
+            if (cashbackHistory.length === 0) {
+                historyList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada history cashback</p>';
+            } else {
+                let html = '';
+                cashbackHistory.forEach(item => {
+                    const date = new Date(item.date).toLocaleDateString('id-ID');
+                    html += `
+                        <div class="cashback-history-item">
+                            <div>
+                                <div style="font-weight: 600; color: #fff; margin-bottom: 3px;">
+                                    ${item.from === 'Klaim' ? '📤 Klaim' : '🎉 Cashback'}
+                                </div>
+                                <div class="date">${date}</div>
+                            </div>
+                            <div>
+                                <span class="amount">Rp ${item.amount.toLocaleString()}</span>
+                                <span class="status" style="background: ${item.status === 'tersedia' ? '#10b981' : '#f59e0b'}">
+                                    ${item.status}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                historyList.innerHTML = html;
+            }
+            
+            document.getElementById('cashbackHistoryModal').classList.add('active');
+        }
+
+        function closeCashbackHistory() {
+            playTick();
+            document.getElementById('cashbackHistoryModal').classList.remove('active');
+        }
 
         // --- HELPER FUNCTIONS ---
         CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
@@ -971,7 +1220,6 @@
             audio.play().catch(()=>{}); 
         };
 
-        // Format tanggal Indonesia
         function getFormattedDate() {
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -1002,10 +1250,10 @@
         }
         setTimeout(typeWriter, 500);
 
-        // --- CURRENCY SELECTOR FUNCTIONALITY ---
+        // --- CURRENCY SELECTOR ---
         document.getElementById('currencySelector').onclick = () => {
             playTick();
-            alert("Currency selector clicked. Currently set to ID / IDR");
+            alert("Currency selector: ID / IDR");
         };
 
         // --- NOTIFICATION SYSTEM ---
@@ -1048,7 +1296,7 @@
             }
         }
 
-        // --- MENU OVERLAY FUNCTIONS ---
+        // --- MENU OVERLAY ---
         const menuOverlay = document.getElementById('menuOverlay');
         const menuClose = document.getElementById('menuClose');
 
@@ -1062,7 +1310,7 @@
             menuOverlay.classList.remove('active');
         };
 
-        // --- FUNGSI SHOW USAGE PAGE (CARA PENGGUNAAN) ---
+        // --- SHOW USAGE PAGE ---
         function showUsagePage() {
             playTick();
             menuOverlay.classList.remove('active');
@@ -1165,7 +1413,7 @@
             document.querySelector('.content-area').innerHTML = usageHTML;
         }
 
-        // --- FUNGSI SHOW HOME PAGE ---
+        // --- SHOW HOME PAGE ---
         function showHomePage() {
             playTick();
             menuOverlay.classList.remove('active');
@@ -1177,12 +1425,10 @@
             }
             
             setTimeout(typeWriter, 500);
-            
-            // Update status promo setelah kembali ke beranda
             setTimeout(checkPromoStatus, 100);
         }
 
-        // --- FUNGSI OPEN CHAT ---
+        // --- OPEN CHAT ---
         function openChat() {
             playTick();
             const fab = document.getElementById('fabChat');
@@ -1191,18 +1437,15 @@
             }
         }
 
-        // --- SIMPAN ORIGINAL CONTENT ---
+        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             originalContent = document.querySelector('.content-area').innerHTML;
-            
-            // Cek status promo saat halaman dimuat
+            loadCashbackData();
             setTimeout(checkPromoStatus, 100);
-            
-            // Setup admin access (tap 5x pada logo)
             setupAdminAccess();
         });
 
-        // --- FUNGSI CEK STATUS PROMO ---
+        // --- PROMO FUNCTIONS ---
         function checkPromoStatus() {
             const promoBanner = document.getElementById('promoBanner');
             if (!promoBanner) return;
@@ -1210,43 +1453,35 @@
             const promoUsed = localStorage.getItem('promoQRIS_used');
             
             if (promoUsed === 'true') {
-                // Ubah tampilan banner jika promo sudah digunakan
                 promoBanner.classList.add('disabled');
-                
-                // Ubah teks promo
                 const promoTitle = promoBanner.querySelector('h4');
                 const promoDesc = promoBanner.querySelector('p');
-                
                 if (promoTitle) promoTitle.innerHTML = 'Promo Telah Digunakan';
                 if (promoDesc) promoDesc.innerHTML = 'Cashback 50% sudah diklaim. Coba promo lainnya!';
             } else {
-                // Pastikan banner dalam keadaan aktif
                 promoBanner.classList.remove('disabled');
-                
                 const promoTitle = promoBanner.querySelector('h4');
                 const promoDesc = promoBanner.querySelector('p');
-                
                 if (promoTitle) promoTitle.innerHTML = 'Promo Cashback 50%';
                 if (promoDesc) promoDesc.innerHTML = 'Khusus pengguna baru untuk transaksi pertama via QRIS.';
             }
         }
 
-        // --- FUNGSI CEK KETERSEDIAAN PROMO ---
         function isPromoAvailable() {
-            const promoUsed = localStorage.getItem('promoQRIS_used');
-            return promoUsed !== 'true';
+            return localStorage.getItem('promoQRIS_used') !== 'true';
         }
 
-        // --- FUNGSI TANDAI PROMO SUDAH DIGUNAKAN ---
-        function markPromoAsUsed() {
+        function markPromoAsUsed(amount) {
             localStorage.setItem('promoQRIS_used', 'true');
             localStorage.setItem('promoQRIS_date', new Date().toISOString());
             
-            // Update tampilan banner
+            const cashbackAmount = Math.floor(amount * 0.5);
+            addCashback(cashbackAmount, 'Promo Cashback 50%');
+            
             checkPromoStatus();
         }
 
-        // --- FUNGSI ADMIN TERSEMBUNYI (Akses dengan tap 5 kali pada logo) ---
+        // --- ADMIN ACCESS (TAP 5X LOGO) ---
         let adminTapCount = 0;
         let adminTapTimer;
 
@@ -1269,11 +1504,9 @@
             }
         }
 
-        // Tampilkan modal password admin
         function showAdminPasswordModal() {
             playTick();
             
-            // Cek apakah modal sudah ada
             let modal = document.getElementById('adminPasswordModal');
             if (modal) {
                 modal.classList.add('active');
@@ -1281,7 +1514,6 @@
                 return;
             }
             
-            // Buat modal
             modal = document.createElement('div');
             modal.className = 'admin-password-modal';
             modal.id = 'adminPasswordModal';
@@ -1305,7 +1537,6 @@
             }, 10);
         }
 
-        // Tutup modal admin
         function closeAdminModal() {
             playTick();
             const modal = document.getElementById('adminPasswordModal');
@@ -1319,15 +1550,12 @@
             }
         }
 
-        // Cek password admin
         function checkAdminPassword() {
             const password = document.getElementById('adminPassword').value;
             
             if (password === config.adminPassword) {
                 playTick();
                 closeAdminModal();
-                
-                // Tampilkan menu admin setelah login sukses
                 showAdminMenu();
             } else {
                 playTick();
@@ -1337,9 +1565,7 @@
             }
         }
 
-        // Tampilkan menu admin
         function showAdminMenu() {
-            // Buat modal menu admin
             const adminModal = document.createElement('div');
             adminModal.className = 'modal-overlay';
             adminModal.id = 'adminMenuModal';
@@ -1357,6 +1583,9 @@
                         <button onclick="viewPromoStatus()" style="width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
                             <i class="ri-information-line"></i> Cek Status Promo
                         </button>
+                        <button onclick="adminAddCashback()" style="width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-add-circle-line"></i> Tambah Cashback Manual
+                        </button>
                         <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">
                             <i class="ri-delete-bin-line"></i> Hapus Semua Data
                         </button>
@@ -1373,7 +1602,6 @@
             }, 10);
         }
 
-        // Tutup menu admin
         function closeAdminMenu() {
             const modal = document.getElementById('adminMenuModal');
             if (modal) {
@@ -1386,7 +1614,6 @@
             }
         }
 
-        // Fungsi admin untuk reset promo
         function adminResetPromo() {
             playTick();
             localStorage.removeItem('promoQRIS_used');
@@ -1397,7 +1624,6 @@
             closeAdminMenu();
         }
 
-        // Lihat status promo
         function viewPromoStatus() {
             const promoUsed = localStorage.getItem('promoQRIS_used');
             const promoDate = localStorage.getItem('promoQRIS_date');
@@ -1411,38 +1637,38 @@
             showToast(`📊 Status: ${status}`, false);
         }
 
-        // Hapus semua data localStorage
+        function adminAddCashback() {
+            const amount = prompt('Masukkan nominal cashback (Rp):', '10000');
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                addCashback(parseInt(amount), 'Tambah Manual (Admin)');
+                showToast(`✅ Cashback Rp ${parseInt(amount).toLocaleString()} ditambahkan!`, false);
+            }
+        }
+
         function clearAllData() {
             if (confirm('Yakin ingin menghapus semua data?')) {
                 localStorage.clear();
-                showToast('✅ Semua data dihapus!', false);
+                cashbackBalance = 0;
+                cashbackHistory = [];
+                updateCashbackDisplay();
                 checkPromoStatus();
+                showToast('✅ Semua data dihapus!', false);
                 closeAdminMenu();
             }
         }
 
-        // --- FUNGSI PROMO QRIS DENGAN CEK STATUS ---
+        // --- OPEN PROMO QRIS ---
         function openPromoQRIS() {
             playTick();
             
-            // Cek ketersediaan promo
             if (!isPromoAvailable()) {
-                // Ambil tanggal penggunaan
                 const usedDate = localStorage.getItem('promoQRIS_date');
                 const formattedDate = usedDate ? new Date(usedDate).toLocaleDateString('id-ID') : 'sebelumnya';
-                
-                // Tampilkan notifikasi bahwa promo sudah digunakan
                 showToast('⚠️ Promo Cashback 50% sudah pernah digunakan pada ' + formattedDate, true);
-                
-                // Tetap buka QRIS tapi tanpa promo
-                setTimeout(() => {
-                    openSheet('qris');
-                }, 500);
-                
+                setTimeout(() => { openSheet('qris'); }, 500);
                 return;
             }
             
-            // Buat modal promo
             const promoModal = document.createElement('div');
             promoModal.className = 'modal-overlay';
             promoModal.id = 'promoModal';
@@ -1495,16 +1721,13 @@
             
             document.body.appendChild(promoModal);
             
-            // Tampilkan modal
             setTimeout(() => {
                 promoModal.classList.add('active');
             }, 10);
             
-            // Tambahkan event listener untuk tombol nominal
             const nominalBtns = promoModal.querySelectorAll('.promo-nominal-btn');
-            let selectedNominal = 50000; // Default
+            let selectedNominal = 50000;
             
-            // Set default selected
             if (nominalBtns.length > 0) {
                 nominalBtns[0].style.background = '#10b981';
                 nominalBtns[0].style.transform = 'scale(0.95)';
@@ -1512,13 +1735,11 @@
             
             nominalBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // Hapus style active dari semua button
                     nominalBtns.forEach(b => {
                         b.style.background = '#2563eb';
                         b.style.transform = 'scale(1)';
                     });
                     
-                    // Style untuk button yang dipilih
                     this.style.background = '#10b981';
                     this.style.transform = 'scale(0.95)';
                     
@@ -1526,34 +1747,22 @@
                 });
             });
             
-            // Tombol apply promo
             document.getElementById('applyPromoBtn').onclick = () => {
                 playTick();
-                
-                // Tandai promo sudah digunakan
-                markPromoAsUsed();
-                
+                markPromoAsUsed(selectedNominal);
                 closePromoModal();
-                
-                // Buka sheet QRIS
                 openSheet('qris');
                 
-                // Setelah sheet terbuka, set nominal
                 setTimeout(() => {
                     const amountInput = document.getElementById('qrisAmount');
-                    
                     if (amountInput) {
                         amountInput.value = selectedNominal;
-                        
                         const event = new Event('input', { bubbles: true });
                         amountInput.dispatchEvent(event);
+                        showToast(`🎉 Cashback Rp ${(selectedNominal * 0.5).toLocaleString()} ditambahkan!`, false);
                         
-                        showToast(`🎉 Promo Cashback 50%! Rp ${(selectedNominal * 0.5).toLocaleString()} cashback`, false);
-                        
-                        // Highlight
                         amountInput.style.border = '2px solid #10b981';
                         amountInput.style.backgroundColor = '#f0fdf4';
-                        
                         setTimeout(() => {
                             if (amountInput) {
                                 amountInput.style.border = '1px solid #ddd';
@@ -1567,7 +1776,6 @@
             };
         }
 
-        // --- FUNGSI MENUTUP MODAL PROMO ---
         function closePromoModal() {
             playTick();
             const modal = document.getElementById('promoModal');
@@ -1702,7 +1910,7 @@
             }, 3000);
         }
 
-        // --- GENERATE QRIS FINAL ---
+        // --- GENERATE QRIS ---
         async function generateAndDownloadQRIS() {
             const amountInput = document.getElementById('qrisAmount');
             const amount = parseInt(amountInput.value);
@@ -1838,7 +2046,6 @@
             }
         }
 
-        // --- FUNGSI DOWNLOAD QR ---
         function downloadQRCode() {
             if (!currentQRImage || currentQrisAmount === 0) {
                 showToast('Silakan generate QR Code terlebih dahulu', true);
@@ -1865,7 +2072,6 @@
             }
         }
 
-        // --- KONFIRMASI WHATSAPP UNTUK QRIS ---
         function confirmPayment() {
             if (!currentQrisAmount || currentQrisAmount === 0) {
                 showToast('Silakan generate QR Code terlebih dahulu', true);
@@ -1911,7 +2117,7 @@
             showToast(`✅ WhatsApp terbuka! Kirim bukti transfer.`);
         }
 
-        // --- OPEN SHEET DENGAN PAYPAL DI SEMUA MENU ---
+        // --- OPEN SHEET ---
         window.openSheet = (mode) => {
             playTick();
             let html = '';
@@ -2080,7 +2286,7 @@
             }
         });
 
-        // EXPOSE FUNCTIONS TO GLOBAL SCOPE
+        // EXPOSE FUNCTIONS
         window.openChat = openChat;
         window.openPromoQRIS = openPromoQRIS;
         window.closePromoModal = closePromoModal;
@@ -2093,14 +2299,18 @@
         window.playTick = playTick;
         window.copyIt = copyIt;
         window.sendChat = sendChat;
-        
-        // Admin functions (tersembunyi)
+        window.openClaimModal = openClaimModal;
+        window.closeClaimModal = closeClaimModal;
+        window.claimCashbackTo = claimCashbackTo;
+        window.showCashbackHistory = showCashbackHistory;
+        window.closeCashbackHistory = closeCashbackHistory;
         window.showAdminPasswordModal = showAdminPasswordModal;
         window.closeAdminModal = closeAdminModal;
         window.checkAdminPassword = checkAdminPassword;
         window.adminResetPromo = adminResetPromo;
         window.closeAdminMenu = closeAdminMenu;
         window.viewPromoStatus = viewPromoStatus;
+        window.adminAddCashback = adminAddCashback;
         window.clearAllData = clearAllData;
 
         console.log('JHON Payment System Ready!');
