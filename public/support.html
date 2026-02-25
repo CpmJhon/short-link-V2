@@ -63,7 +63,6 @@
         }
         .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
         
-        /* Currency selector from support.html */
         .currency-selector {
             width: 110px; height: 36px;
             background: rgba(255,255,255,0.05); 
@@ -1220,19 +1219,19 @@
             shopee: { name: 'ShopeePay', num: '085894955362', img: 'pay.jpg' },
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
-            linkaja: { name: 'LinkAja', num: '085591916436', img: 'link.jpg' },
-            paypal: { name: 'PayPal', num: 'paypal.me/cpmjhon', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
+            linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
+            paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
             
             // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
-            sea2: { name: 'SeaBank', num: '901120214185', img: 'bank.jpg' },
-            bri: { name: 'BRI', num: 'Tidak Tersedia', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
+            sea2: { name: 'SeaBank', num: '9016xxx', img: 'bank.jpg' },
+            bri: { name: 'BRI', num: '1234xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
             
             // PULSA
-            pulsa: { name: 'Telkomsel', num: 'Tidak Tersedia', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
+            pulsa: { name: 'Telkomsel', num: '0825xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
             indosat: { name: 'Indosat', num: '085894955362', img: 'indosat.jpg' },
-            tri: { name: 'Tri (3)', num: 'Tidak Tersedia', img: 'tri.jpg' },
-            smartfren: { name: 'Smartfren', num: 'Tidak Tersedia', img: 'smr.jpg' }
+            tri: { name: 'Tri (3)', num: '089xxx', img: 'tri.jpg' },
+            smartfren: { name: 'Smartfren', num: '088xxx', img: 'smr.jpg' }
         };
 
         // --- VARIABEL GLOBAL ---
@@ -1271,7 +1270,6 @@
             const registeredEmails = JSON.parse(localStorage.getItem('registeredEmails') || '[]');
             
             if (!registeredEmails.includes(email)) {
-                // Daftarkan email baru
                 registeredEmails.push(email);
                 localStorage.setItem('registeredEmails', JSON.stringify(registeredEmails));
             }
