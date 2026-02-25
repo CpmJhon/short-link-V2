@@ -2209,6 +2209,35 @@
             }
         }
 
+        // --- ADMIN RESET PROMO (DENGAN RESET SALDO CASHBACK) ---
+        function adminResetPromo() {
+            const email = prompt('Masukkan Gmail user untuk reset promo:', 'user@gmail.com');
+            if (!email) return;
+            
+            // Reset status promo
+            localStorage.removeItem('promoQRIS_used_' + email);
+            localStorage.removeItem('promoQRIS_date_' + email);
+            
+            // Reset saldo cashback user
+            const userCashback = {
+                balance: 0,
+                history: []
+            };
+            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
+            
+            // Jika user ini sedang login, update tampilan
+            const currentEmail = document.getElementById('displayGoogleEmail').innerText;
+            if (currentEmail === email) {
+                cashbackBalance = 0;
+                cashbackHistory = [];
+                updateCashbackDisplay();
+                checkPromoStatus();
+            }
+            
+            showToast(`✅ Promo dan cashback untuk ${email} berhasil direset!`, false);
+            addLog(`Admin reset promo dan cashback untuk ${email}`);
+        }
+
         // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
         let emergencyTapCount = 0;
         let emergencyTimer;
@@ -3241,7 +3270,7 @@
                             <i class="ri-shield-cross-line"></i> Kelola Blokir (${JSON.parse(localStorage.getItem('bannedIPs') || '[]').length})
                         </button>
                         <button onclick="adminResetPromo()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-refresh-line"></i> Reset Promo User
+                            <i class="ri-refresh-line"></i> Reset Promo & Cashback User
                         </button>
                         <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">
                             <i class="ri-delete-bin-line"></i> Hapus Semua Data
@@ -3292,21 +3321,6 @@
             });
             
             alert(message);
-        }
-
-        function adminResetPromo() {
-            const email = prompt('Masukkan Gmail user untuk reset promo:', 'user@gmail.com');
-            if (!email) return;
-            
-            localStorage.removeItem('promoQRIS_used_' + email);
-            localStorage.removeItem('promoQRIS_date_' + email);
-            
-            if (email === document.getElementById('displayGoogleEmail').innerText) {
-                checkPromoStatus();
-            }
-            
-            showToast(`✅ Promo untuk ${email} berhasil direset!`, false);
-            addLog(`Admin reset promo untuk ${email}`);
         }
 
         function clearAllData() {
