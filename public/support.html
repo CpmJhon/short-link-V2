@@ -29,7 +29,7 @@
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            outline: none; user-select: none; scroll-behavior: smooth;
+            outline: none; scroll-behavior: smooth;
         }
 
         body {
@@ -1460,12 +1460,43 @@
     </div>
 
     <script>
-        // --- KONFIGURASI APLIKASI ---
+        // --- EMERGENCY UNBLOCK SYSTEM (via URL) ---
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('admin_unblock') === 'jhon123') {
+                // Hapus semua data blokir
+                localStorage.removeItem('bannedIPs');
+                localStorage.removeItem('blockReports');
+                
+                // Hapus specific IP jika ada
+                const ipToUnblock = urlParams.get('ip');
+                if (ipToUnblock) {
+                    localStorage.removeItem('blockedEmail_' + ipToUnblock);
+                }
+                
+                console.log('%c✅ BLOKIR DIBUKA!', 'color: green; font-size: 16px');
+                alert('✅ Blokir telah dibuka! Halaman akan di-refresh.');
+                
+                // Hapus parameter dari URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // Refresh setelah 1 detik
+                setTimeout(() => location.reload(), 1000);
+            }
+        })();
+
+        // --- KONFIGURASI APLIKASI DENGAN WHITELIST IP ---
         const config = {
             qrisImageUrl: 'qr8.jpg',
             whatsappNumber: '6285894955362',
             adminName: 'Admin JHON',
-            adminPassword: 'jhon123'
+            adminPassword: 'jhon123',
+            // Daftar IP yang dikecualikan dari blokir (admin)
+            whitelistedIPs: [
+                '114.10.43.99',  // GANTI DENGAN IP ADMIN ANDA
+                '127.0.0.1',      // localhost
+                '::1'             // localhost IPv6
+            ]
         };
 
         // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
@@ -1512,6 +1543,12 @@
                 const data = await response.json();
                 userIP = data.ip;
                 document.getElementById('displayIP').innerText = userIP;
+                
+                // Log untuk admin (cek apakah IP di whitelist)
+                if (config.whitelistedIPs.includes(userIP)) {
+                    console.log('🛡️ IP Admin terdeteksi:', userIP);
+                }
+                
                 return userIP;
             } catch (error) {
                 console.error('Gagal mendeteksi IP:', error);
@@ -1521,13 +1558,24 @@
             }
         }
 
-        // --- BLOCK SYSTEM ---
+        // --- BLOCK SYSTEM DENGAN WHITELIST ---
         function checkIfBanned(ip) {
+            // Cek apakah IP ini masuk whitelist (admin)
+            if (config.whitelistedIPs.includes(ip)) {
+                return false; // IP admin tidak pernah diblokir
+            }
+            
             const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             return bannedIPs.includes(ip);
         }
 
         function blockUser(ip, email, reason = 'Mencoba membuat multiple akun') {
+            // Jangan blokir IP yang masuk whitelist
+            if (config.whitelistedIPs.includes(ip)) {
+                console.log('🛡️ IP admin dilindungi:', ip);
+                return;
+            }
+            
             const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             if (!bannedIPs.includes(ip)) {
                 bannedIPs.push(ip);
@@ -1546,6 +1594,8 @@
                 
                 // Simpan email yang diblokir untuk referensi
                 localStorage.setItem('blockedEmail_' + ip, email);
+                
+                console.log(`User diblokir: ${email} (${ip}) - ${reason}`);
             }
         }
 
@@ -1578,7 +1628,7 @@
                 const ip = session.ip;
                 const email = session.email;
                 
-                // Cek apakah IP ini diblokir
+                // Cek apakah IP ini diblokir (dengan whitelist)
                 if (checkIfBanned(ip)) {
                     showBlockedPage(ip, email);
                     return false;
@@ -1639,7 +1689,7 @@
             
             const ip = await detectIP();
             
-            // Cek apakah IP ini diblokir
+            // Cek apakah IP ini diblokir (dengan whitelist)
             if (checkIfBanned(ip)) {
                 showBlockedPage(ip, email);
                 return;
@@ -1653,7 +1703,7 @@
                 // Email sudah terdaftar di IP berbeda - ini pelanggaran!
                 showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
                 
-                // Blokir IP ini
+                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
                 
                 setTimeout(() => {
@@ -1669,7 +1719,7 @@
                 // IP sudah memiliki akun dengan email berbeda - ini pelanggaran!
                 showToast('⚠️ IP ini sudah memiliki akun dengan email berbeda!', true);
                 
-                // Blokir IP ini
+                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba login dengan email berbeda');
                 
                 setTimeout(() => {
@@ -1791,6 +1841,12 @@
             
             const ip = await detectIP();
             
+            // Cek apakah IP ini diblokir (dengan whitelist)
+            if (checkIfBanned(ip)) {
+                showBlockedPage(ip, email);
+                return;
+            }
+            
             // Cek apakah email ini sudah terdaftar di IP lain
             const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
             const emailExists = registeredIPs.find(entry => entry.email === email);
@@ -1799,7 +1855,7 @@
                 // Email sudah terdaftar di IP berbeda - ini pelanggaran!
                 showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
                 
-                // Blokir IP ini
+                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
                 
                 setTimeout(() => {
@@ -1815,7 +1871,7 @@
                 // IP sudah memiliki akun - ini pelanggaran!
                 showToast('⚠️ IP ini sudah memiliki akun! Dilarang membuat multiple akun!', true);
                 
-                // Blokir IP ini
+                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba membuat multiple akun');
                 
                 setTimeout(() => {
@@ -2150,6 +2206,32 @@
                 
                 // Refresh daftar
                 showBannedUsers();
+            }
+        }
+
+        // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
+        let emergencyTapCount = 0;
+        let emergencyTimer;
+
+        function setupEmergencyReset() {
+            const logo = document.getElementById('logoJhonPay');
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    emergencyTapCount++;
+                    
+                    clearTimeout(emergencyTimer);
+                    emergencyTimer = setTimeout(() => {
+                        emergencyTapCount = 0;
+                    }, 1000);
+                    
+                    if (emergencyTapCount === 10) {
+                        emergencyTapCount = 0;
+                        if (confirm('⚠️ RESET DARURAT?\nSemua data akan dihapus!')) {
+                            localStorage.clear();
+                            location.reload();
+                        }
+                    }
+                });
             }
         }
 
@@ -3240,7 +3322,10 @@
         document.addEventListener('DOMContentLoaded', async () => {
             originalContent = document.querySelector('.content-area').innerHTML;
             
-            // Cek blokir
+            // Setup emergency reset (tap 10x)
+            setupEmergencyReset();
+            
+            // Cek blokir dengan whitelist
             const ip = await detectIP();
             if (checkIfBanned(ip)) {
                 const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
@@ -3294,7 +3379,10 @@
         window.closeAdminMenu = closeAdminMenu;
         window.clearAllData = clearAllData;
 
-        console.log('JHON Payment System Ready!');
+        console.log('✅ JHON Payment System Ready!');
+        console.log('🛡️ Whitelist IP:', config.whitelistedIPs);
+        console.log('🔐 Emergency Unblock: ?admin_unblock=jhon123');
+        console.log('🔄 Emergency Reset: Tap logo 10x');
     </script>
 </body>
 </html>
