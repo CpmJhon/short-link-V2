@@ -29,7 +29,7 @@
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            outline: none; scroll-behavior: smooth;
+            outline: none; user-select: none; scroll-behavior: smooth;
         }
 
         body {
@@ -52,7 +52,7 @@
             .app-frame { height: 95vh; border-radius: 35px; border: 4px solid #333; }
         }
 
-        /* Blokiran Page */
+        /* --- BLOCKED PAGE --- */
         .blocked-page {
             position: fixed;
             top: 0;
@@ -474,14 +474,6 @@
         .btn-action:hover { transform: scale(0.95); }
         .btn-action.whatsapp {
             background: #25D366;
-            color: white;
-        }
-        .btn-action.block {
-            background: var(--danger);
-            color: white;
-        }
-        .btn-action.unblock {
-            background: var(--success);
             color: white;
         }
 
@@ -1026,6 +1018,7 @@
 </head>
 <body>
 
+    <!-- BLOCKED PAGE -->
     <div id="blockedPage" class="blocked-page" style="display: none;">
         <i class="ri-shield-cross-line blocked-icon"></i>
         <div class="blocked-title">AKUN ANDA DIBLOKIR</div>
@@ -1044,14 +1037,14 @@
     <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
     <div class="app-frame" id="mainApp">
-        <!-- HEADER -->
+        <!-- HEADER - Like support.html with currency selector -->
         <div class="header-area">
             <div class="btn-icon ripple" id="btnMenu">
                 <i class="ri-menu-3-line"></i>
             </div>
             <div style="font-weight:800; font-size:16px; letter-spacing:1px; cursor: pointer;" id="logoJhonPay">JHON<span style="color:var(--text-muted);">PAY</span></div>
             
-            <!-- Currency selector -->
+            <!-- Currency selector from support.html -->
             <div class="currency-selector ripple" id="currencySelector">
                 <div class="currency-flag"></div>
                 <div class="currency-text">ID / IDR</div>
@@ -1064,7 +1057,7 @@
                 <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
                 <div class="p-info">
                     <h2>
-                        <span id="displayUsername"></span>
+                        <span id="displayUsername">Memuat...</span>
                     </h2>
                     <div class="google-email">
                         <i class="ri-google-fill"></i>
@@ -1382,17 +1375,22 @@
             adminPassword: 'jhon123'
         };
 
-        // --- DATA PAYMENT DENGAN PAYPAL ---
+        // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
         const dataPay = {
+            // E-WALLET
             dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
             shopee: { name: 'ShopeePay', num: '085894955362', img: 'pay.jpg' },
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
             paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
+            
+            // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
             sea2: { name: 'SeaBank', num: '9016xxx', img: 'bank.jpg' },
             bri: { name: 'BRI', num: '1234xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
+            
+            // PULSA
             pulsa: { name: 'Telkomsel', num: '0825xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
             indosat: { name: 'Indosat', num: '085894955362', img: 'indosat.jpg' },
             tri: { name: 'Tri (3)', num: '089xxx', img: 'tri.jpg' },
@@ -1451,6 +1449,9 @@
                     reportedBy: 'system'
                 });
                 localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                // Simpan email yang diblokir untuk referensi
+                localStorage.setItem('blockedEmail_' + ip, email);
             }
         }
 
@@ -1458,6 +1459,9 @@
             let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
             localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+            
+            // Hapus email referensi
+            localStorage.removeItem('blockedEmail_' + ip);
         }
 
         function showBlockedPage(ip, email) {
@@ -1568,7 +1572,12 @@
             }
             
             // Daftarkan user baru
-            registeredIPs.push({ ip: ip, email: email, date: new Date().toISOString() });
+            registeredIPs.push({ 
+                ip: ip, 
+                email: email, 
+                username: email.split('@')[0],
+                date: new Date().toISOString() 
+            });
             localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
             localStorage.setItem('userEmail_' + ip, email);
             
@@ -2125,6 +2134,7 @@
             checkPromoStatus();
         }
 
+        // --- OPEN PROMO QRIS (dengan tombol Nanti Saja) ---
         function openPromoQRIS() {
             playTick();
             
@@ -2185,7 +2195,10 @@
                         </p>
                     </div>
                     
-                    <button class="modal-btn confirm" id="applyPromoBtn" style="background: #10b981; width: 100%;">Gunakan Promo</button>
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" onclick="closePromoModal()">Nanti Saja</button>
+                        <button class="modal-btn confirm" id="applyPromoBtn" style="background: #10b981;">Gunakan Promo</button>
+                    </div>
                 </div>
             `;
             
@@ -2568,7 +2581,7 @@
             showToast(`✅ WhatsApp terbuka! Kirim bukti transfer.`);
         }
 
-        // --- OPEN SHEET ---
+        // --- OPEN SHEET DENGAN PAYPAL DI SEMUA MENU ---
         window.openSheet = (mode) => {
             playTick();
             let html = '';
@@ -2889,7 +2902,7 @@
             let message = '📋 DAFTAR USER TERDAFTAR:\n\n';
             registeredIPs.forEach((entry, index) => {
                 const userCashback = JSON.parse(localStorage.getItem('userCashback_' + entry.email) || '{"balance":0}');
-                message += `${index + 1}. ${entry.email}\n   IP: ${entry.ip}\n   Saldo: Rp ${userCashback.balance.toLocaleString()}\n   Bergabung: ${new Date(entry.date).toLocaleDateString('id-ID')}\n\n`;
+                message += `${index + 1}. ${entry.email}\n   Username: ${entry.username}\n   IP: ${entry.ip}\n   Saldo: Rp ${userCashback.balance.toLocaleString()}\n   Bergabung: ${new Date(entry.date).toLocaleDateString('id-ID')}\n\n`;
             });
             
             alert(message);
