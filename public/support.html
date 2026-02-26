@@ -1469,16 +1469,25 @@
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('admin_unblock') === 'jhon123') {
+                // Hapus SEMUA data yang berkaitan dengan blokir
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.includes('banned') || key.includes('block') || key.includes('Block')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                // Hapus juga data spesifik
                 localStorage.removeItem('bannedIPs');
                 localStorage.removeItem('blockReports');
+                localStorage.removeItem('bannedIPs_old');
                 
-                const ipToUnblock = urlParams.get('ip');
-                if (ipToUnblock) {
-                    localStorage.removeItem('blockedEmail_' + ipToUnblock);
-                }
+                console.log('%c✅ SEMUA BLOKIR DIBUKA!', 'color: green; font-size: 16px');
+                console.log('Keys removed:', keysToRemove);
                 
-                console.log('%c✅ BLOKIR DIBUKA!', 'color: green; font-size: 16px');
-                alert('✅ Blokir telah dibuka! Halaman akan di-refresh.');
+                alert('✅ Semua blokir telah dibuka! Halaman akan di-refresh.');
                 
                 window.history.replaceState({}, document.title, window.location.pathname);
                 setTimeout(() => location.reload(), 1000);
@@ -1554,8 +1563,13 @@
             if (config.whitelistedIPs.includes(ip)) {
                 return false;
             }
+            
+            // Cek di semua kemungkinan tempat penyimpanan
             const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-            return bannedIPs.includes(ip);
+            const bannedIPsOld = JSON.parse(localStorage.getItem('bannedIPs_old') || '[]');
+            const blockedList = JSON.parse(localStorage.getItem('blockedList') || '[]');
+            
+            return bannedIPs.includes(ip) || bannedIPsOld.includes(ip) || blockedList.includes(ip);
         }
 
         function blockUser(ip, email, reason = 'Mencoba membuat multiple akun') {
@@ -1564,12 +1578,23 @@
                 return;
             }
             
-            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            // Simpan di multiple tempat untuk redundansi
+            let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             if (!bannedIPs.includes(ip)) {
                 bannedIPs.push(ip);
                 localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
                 
-                const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                // Backup di tempat lain
+                let bannedIPsOld = JSON.parse(localStorage.getItem('bannedIPs_old') || '[]');
+                bannedIPsOld.push(ip);
+                localStorage.setItem('bannedIPs_old', JSON.stringify(bannedIPsOld));
+                
+                let blockedList = JSON.parse(localStorage.getItem('blockedList') || '[]');
+                blockedList.push(ip);
+                localStorage.setItem('blockedList', JSON.stringify(blockedList));
+                
+                // Simpan laporan pemblokiran
+                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
                 blockReports.unshift({
                     ip: ip,
                     email: email,
@@ -1578,7 +1603,10 @@
                     reportedBy: 'system'
                 });
                 localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                // Simpan email yang diblokir untuk referensi
                 localStorage.setItem('blockedEmail_' + ip, email);
+                localStorage.setItem('blocked_' + ip, 'true');
                 
                 console.log(`User diblokir: ${email} (${ip}) - ${reason}`);
                 showToast(`⚠️ User ${email} telah diblokir!`, true);
@@ -1586,10 +1614,53 @@
         }
 
         function unblockUser(ip) {
+            // Hapus dari SEMUA tempat penyimpanan
             let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
             localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+            
+            let bannedIPsOld = JSON.parse(localStorage.getItem('bannedIPs_old') || '[]');
+            bannedIPsOld = bannedIPsOld.filter(bannedIP => bannedIP !== ip);
+            localStorage.setItem('bannedIPs_old', JSON.stringify(bannedIPsOld));
+            
+            let blockedList = JSON.parse(localStorage.getItem('blockedList') || '[]');
+            blockedList = blockedList.filter(bannedIP => bannedIP !== ip);
+            localStorage.setItem('blockedList', JSON.stringify(blockedList));
+            
+            // Hapus semua key terkait IP ini
             localStorage.removeItem('blockedEmail_' + ip);
+            localStorage.removeItem('blocked_' + ip);
+            
+            // Hapus dari laporan
+            let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            blockReports = blockReports.filter(report => report.ip !== ip);
+            localStorage.setItem('blockReports', JSON.stringify(blockReports));
+        }
+
+        // --- FUNGSI UNBLOCK TOTAL (HAPUS SEMUA BLOKIR) ---
+        function unblockAll() {
+            if (confirm('⚠️ Yakin ingin membuka SEMUA blokir?')) {
+                // Hapus semua key yang berkaitan dengan blokir
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.includes('banned') || key.includes('block') || key.includes('Block') || key.includes('Blocked')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                // Hapus juga data spesifik
+                localStorage.removeItem('bannedIPs');
+                localStorage.removeItem('bannedIPs_old');
+                localStorage.removeItem('blockReports');
+                localStorage.removeItem('blockedList');
+                
+                showToast(`✅ Semua blokir telah dibuka! (${keysToRemove.length} key dihapus)`, false);
+                addLog('Admin membuka semua blokir');
+                
+                console.log('Keys removed:', keysToRemove);
+            }
         }
 
         function showBlockedPage(ip, email) {
@@ -2135,24 +2206,14 @@
 
         function adminUnblockUser(ip, email) {
             if (confirm(`Yakin ingin membuka blokir untuk ${email}?`)) {
-                let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-                bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
-                localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
-                
-                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-                blockReports = blockReports.filter(report => report.ip !== ip);
-                localStorage.setItem('blockReports', JSON.stringify(blockReports));
-                
-                localStorage.removeItem('blockedEmail_' + ip);
-                
+                unblockUser(ip);
                 showToast(`✅ Blokir untuk ${email} dibuka!`, false);
                 addLog(`Admin membuka blokir ${email} (${ip})`);
-                
                 showBannedUsers();
             }
         }
 
-        // --- MANUAL UNBLOCK FUNCTION (INPUT IP) - TOMBOL BARU ---
+        // --- MANUAL UNBLOCK FUNCTION (INPUT IP) ---
         function manualUnblock() {
             playTick();
             closeAdminMenu();
@@ -2168,40 +2229,43 @@
             }
             
             // Cek apakah IP ini ada di banned list
-            let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-            let isBanned = bannedIPs.includes(ip);
-            
-            // Hapus dari bannedIPs
-            bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
-            localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
-            
-            // Hapus dari blockReports
-            let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-            let foundReport = null;
-            blockReports = blockReports.filter(report => {
-                if (report.ip === ip) {
-                    foundReport = report;
-                    return false;
-                }
-                return true;
-            });
-            localStorage.setItem('blockReports', JSON.stringify(blockReports));
-            
-            // Hapus email referensi
-            const blockedEmail = localStorage.getItem('blockedEmail_' + ip);
-            localStorage.removeItem('blockedEmail_' + ip);
+            let isBanned = checkIfBanned(ip);
             
             if (isBanned) {
+                unblockUser(ip);
                 showToast(`✅ IP ${ip} berhasil dibuka blokirnya!`, false);
-                addLog(`Admin membuka blokir IP: ${ip} (${blockedEmail || 'Unknown'})`);
-                
-                if (foundReport) {
-                    setTimeout(() => {
-                        showToast(`📋 Email: ${foundReport.email} | Alasan: ${foundReport.reason}`, false);
-                    }, 500);
-                }
+                addLog(`Admin membuka blokir IP: ${ip}`);
             } else {
                 showToast(`ℹ️ IP ${ip} tidak ditemukan dalam daftar blokir`, false);
+            }
+        }
+
+        // --- UNBLOCK ALL FUNCTION ---
+        function unblockAll() {
+            playTick();
+            closeAdminMenu();
+            
+            if (confirm('⚠️ Yakin ingin membuka SEMUA blokir?\n\nIni akan menghapus semua data blokir!')) {
+                // Hapus semua key yang berkaitan dengan blokir
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.includes('banned') || key.includes('block') || key.includes('Block') || key.includes('Blocked')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                // Hapus juga data spesifik
+                localStorage.removeItem('bannedIPs');
+                localStorage.removeItem('bannedIPs_old');
+                localStorage.removeItem('blockReports');
+                localStorage.removeItem('blockedList');
+                
+                showToast(`✅ Semua blokir telah dibuka! (${keysToRemove.length} key dihapus)`, false);
+                addLog('Admin membuka semua blokir');
+                
+                console.log('Keys removed:', keysToRemove);
             }
         }
 
@@ -2209,10 +2273,12 @@
         function debugBannedIPs() {
             console.log('🔍 DEBUG INFO:');
             console.log('Banned IPs:', JSON.parse(localStorage.getItem('bannedIPs') || '[]'));
+            console.log('Banned IPs Old:', JSON.parse(localStorage.getItem('bannedIPs_old') || '[]'));
+            console.log('Blocked List:', JSON.parse(localStorage.getItem('blockedList') || '[]'));
             console.log('Block Reports:', JSON.parse(localStorage.getItem('blockReports') || '[]'));
             
             const allKeys = Object.keys(localStorage);
-            const blockKeys = allKeys.filter(key => key.includes('blockedEmail_') || key.includes('banned') || key.includes('block'));
+            const blockKeys = allKeys.filter(key => key.includes('blocked') || key.includes('banned') || key.includes('Block'));
             console.log('Block Related Keys:', blockKeys);
             
             alert('✅ Cek console untuk detail (F12)');
@@ -2394,9 +2460,14 @@
                             <span style="background: white; color: #ef4444; padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-left: 5px;">${bannedCount}</span>
                         </button>
                         
-                        <!-- MANUAL UNBLOCK - TOMBOL BARU -->
+                        <!-- MANUAL UNBLOCK - Input IP -->
                         <button onclick="manualUnblock()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
                             <i class="ri-lock-unlock-line"></i> Buka Blokir Manual (Input IP)
+                        </button>
+                        
+                        <!-- UNBLOCK ALL - Tombol Baru -->
+                        <button onclick="unblockAll()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                            <i class="ri-delete-back-line"></i> Buka SEMUA Blokir (Force)
                         </button>
                         
                         <!-- Reset Promo -->
@@ -3505,6 +3576,7 @@
         window.closeBannedUsersModal = closeBannedUsersModal;
         window.adminUnblockUser = adminUnblockUser;
         window.manualUnblock = manualUnblock;
+        window.unblockAll = unblockAll;
         window.debugBannedIPs = debugBannedIPs;
         window.adminResetPromo = adminResetPromo;
         window.clearAllData = clearAllData;
