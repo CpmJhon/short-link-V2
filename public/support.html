@@ -195,6 +195,11 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .google-email:hover {
+            background: rgba(255,255,255,0.1);
         }
         .google-email i {
             color: #ea4335;
@@ -766,7 +771,7 @@
             padding: 25px;
             width: 90%;
             max-width: 320px;
-            border: 2px solid #333;
+            border: 1px solid #333;
         }
         .admin-password-box h3 {
             color: #fff;
@@ -1041,7 +1046,7 @@
                     <h2>
                         <span id="displayUsername">Guest</span>
                     </h2>
-                    <div class="google-email">
+                    <div class="google-email" onclick="showGoogleEmailModal()">
                         <i class="ri-google-fill"></i>
                         <span id="displayGoogleEmail">Belum login</span>
                     </div>
@@ -1464,11 +1469,9 @@
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('admin_unblock') === 'jhon123') {
-                // Hapus semua data blokir
                 localStorage.removeItem('bannedIPs');
                 localStorage.removeItem('blockReports');
                 
-                // Hapus specific IP jika ada
                 const ipToUnblock = urlParams.get('ip');
                 if (ipToUnblock) {
                     localStorage.removeItem('blockedEmail_' + ipToUnblock);
@@ -1477,10 +1480,7 @@
                 console.log('%c✅ BLOKIR DIBUKA!', 'color: green; font-size: 16px');
                 alert('✅ Blokir telah dibuka! Halaman akan di-refresh.');
                 
-                // Hapus parameter dari URL
                 window.history.replaceState({}, document.title, window.location.pathname);
-                
-                // Refresh setelah 1 detik
                 setTimeout(() => location.reload(), 1000);
             }
         })();
@@ -1491,30 +1491,24 @@
             whatsappNumber: '6285894955362',
             adminName: 'Admin JHON',
             adminPassword: 'jhon123',
-            // Daftar IP yang dikecualikan dari blokir (admin)
             whitelistedIPs: [
-                '114.10.43.99',  // GANTI DENGAN IP ADMIN ANDA
-                '127.0.0.1',      // localhost
-                '::1'             // localhost IPv6
+                '114.10.43.99',
+                '127.0.0.1',
+                '::1'
             ]
         };
 
         // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
         const dataPay = {
-            // E-WALLET
             dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
             shopee: { name: 'ShopeePay', num: '085894955362', img: 'pay.jpg' },
             gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
             ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
             linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
             paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
-            
-            // BANK
             sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
             sea2: { name: 'SeaBank', num: '9016xxx', img: 'bank.jpg' },
             bri: { name: 'BRI', num: '1234xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
-            
-            // PULSA
             pulsa: { name: 'Telkomsel', num: '0825xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
             indosat: { name: 'Indosat', num: '085894955362', img: 'indosat.jpg' },
             tri: { name: 'Tri (3)', num: '089xxx', img: 'tri.jpg' },
@@ -1531,8 +1525,6 @@
         let cashbackUseAmount = 50000;
         let userIP = '';
         let isLoggedIn = false;
-
-        // --- CASHBACK SYSTEM ---
         let cashbackBalance = 0;
         let cashbackHistory = [];
 
@@ -1544,7 +1536,6 @@
                 userIP = data.ip;
                 document.getElementById('displayIP').innerText = userIP;
                 
-                // Log untuk admin (cek apakah IP di whitelist)
                 if (config.whitelistedIPs.includes(userIP)) {
                     console.log('🛡️ IP Admin terdeteksi:', userIP);
                 }
@@ -1560,17 +1551,14 @@
 
         // --- BLOCK SYSTEM DENGAN WHITELIST ---
         function checkIfBanned(ip) {
-            // Cek apakah IP ini masuk whitelist (admin)
             if (config.whitelistedIPs.includes(ip)) {
-                return false; // IP admin tidak pernah diblokir
+                return false;
             }
-            
             const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             return bannedIPs.includes(ip);
         }
 
         function blockUser(ip, email, reason = 'Mencoba membuat multiple akun') {
-            // Jangan blokir IP yang masuk whitelist
             if (config.whitelistedIPs.includes(ip)) {
                 console.log('🛡️ IP admin dilindungi:', ip);
                 return;
@@ -1581,7 +1569,6 @@
                 bannedIPs.push(ip);
                 localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
                 
-                // Simpan laporan pemblokiran
                 const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
                 blockReports.unshift({
                     ip: ip,
@@ -1591,8 +1578,6 @@
                     reportedBy: 'system'
                 });
                 localStorage.setItem('blockReports', JSON.stringify(blockReports));
-                
-                // Simpan email yang diblokir untuk referensi
                 localStorage.setItem('blockedEmail_' + ip, email);
                 
                 console.log(`User diblokir: ${email} (${ip}) - ${reason}`);
@@ -1603,8 +1588,6 @@
             let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
             localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
-            
-            // Hapus email referensi
             localStorage.removeItem('blockedEmail_' + ip);
         }
 
@@ -1628,13 +1611,11 @@
                 const ip = session.ip;
                 const email = session.email;
                 
-                // Cek apakah IP ini diblokir (dengan whitelist)
                 if (checkIfBanned(ip)) {
                     showBlockedPage(ip, email);
                     return false;
                 }
                 
-                // Cek apakah session masih valid
                 const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
                 const validSession = registeredIPs.find(entry => entry.ip === ip && entry.email === email);
                 
@@ -1649,7 +1630,6 @@
                 }
             }
             
-            // Tidak ada session valid
             isLoggedIn = false;
             document.getElementById('displayGoogleEmail').innerText = 'Belum login';
             document.getElementById('displayUsername').innerText = 'Guest';
@@ -1689,46 +1669,30 @@
             
             const ip = await detectIP();
             
-            // Cek apakah IP ini diblokir (dengan whitelist)
             if (checkIfBanned(ip)) {
                 showBlockedPage(ip, email);
                 return;
             }
             
-            // Cek apakah email ini sudah terdaftar di IP lain
             const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
             const emailExists = registeredIPs.find(entry => entry.email === email);
             
             if (emailExists && emailExists.ip !== ip) {
-                // Email sudah terdaftar di IP berbeda - ini pelanggaran!
                 showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
-                
-                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                setTimeout(() => location.reload(), 2000);
                 return;
             }
             
-            // Cek apakah IP ini sudah memiliki akun dengan email berbeda
             const ipExists = registeredIPs.find(entry => entry.ip === ip);
             
             if (ipExists && ipExists.email !== email) {
-                // IP sudah memiliki akun dengan email berbeda - ini pelanggaran!
                 showToast('⚠️ IP ini sudah memiliki akun dengan email berbeda!', true);
-                
-                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba login dengan email berbeda');
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                setTimeout(() => location.reload(), 2000);
                 return;
             }
             
-            // Jika user baru (belum terdaftar)
             if (!ipExists) {
                 registeredIPs.push({ 
                     ip: ip, 
@@ -1739,7 +1703,6 @@
                 localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
             }
             
-            // Simpan session
             const session = {
                 ip: ip,
                 email: email,
@@ -1747,7 +1710,6 @@
             };
             localStorage.setItem('userSession', JSON.stringify(session));
             
-            // Update tampilan
             document.getElementById('displayGoogleEmail').innerText = email;
             document.getElementById('displayUsername').innerText = email.split('@')[0];
             document.getElementById('displayIP').innerText = ip;
@@ -1756,10 +1718,7 @@
             closeLoginModal();
             showToast(`✅ Selamat datang ${email.split('@')[0]}!`, false);
             
-            // Load cashback user
             loadUserCashback(email);
-            
-            // Log aktivitas
             addLog(`User login: ${email} (IP: ${ip})`);
         }
 
@@ -1776,10 +1735,8 @@
         function logoutUser() {
             playTick();
             
-            // Hapus session
             localStorage.removeItem('userSession');
             
-            // Update tampilan
             isLoggedIn = false;
             document.getElementById('displayGoogleEmail').innerText = 'Belum login';
             document.getElementById('displayUsername').innerText = 'Guest';
@@ -1789,30 +1746,19 @@
             closeLogoutModal();
             showToast('✅ Anda telah keluar', false);
             
-            // Tampilkan modal login setelah 1 detik
-            setTimeout(() => {
-                showLoginModal();
-            }, 1000);
-            
+            setTimeout(() => showLoginModal(), 1000);
             addLog('User logout');
         }
 
-        // Override fungsi checkUserVerification yang lama
         async function checkUserVerification() {
-            // Cek status login dulu
             if (checkLoginStatus()) {
                 return true;
             }
-            
-            // Tampilkan modal login untuk guest
-            setTimeout(() => {
-                showLoginModal();
-            }, 1000);
-            
+            setTimeout(() => showLoginModal(), 1000);
             return false;
         }
 
-        // --- GOOGLE EMAIL SYSTEM (untuk first time users) ---
+        // --- GOOGLE EMAIL SYSTEM ---
         function showGoogleEmailModal() {
             playTick();
             const modal = document.getElementById('googleEmailModal');
@@ -1841,46 +1787,30 @@
             
             const ip = await detectIP();
             
-            // Cek apakah IP ini diblokir (dengan whitelist)
             if (checkIfBanned(ip)) {
                 showBlockedPage(ip, email);
                 return;
             }
             
-            // Cek apakah email ini sudah terdaftar di IP lain
             const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
             const emailExists = registeredIPs.find(entry => entry.email === email);
             
             if (emailExists && emailExists.ip !== ip) {
-                // Email sudah terdaftar di IP berbeda - ini pelanggaran!
                 showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
-                
-                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                setTimeout(() => location.reload(), 2000);
                 return;
             }
             
-            // Cek apakah IP ini sudah memiliki akun
             const ipExists = registeredIPs.find(entry => entry.ip === ip);
             
             if (ipExists) {
-                // IP sudah memiliki akun - ini pelanggaran!
                 showToast('⚠️ IP ini sudah memiliki akun! Dilarang membuat multiple akun!', true);
-                
-                // Blokir IP ini (kecuali admin)
                 blockUser(ip, email, 'Mencoba membuat multiple akun');
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                setTimeout(() => location.reload(), 2000);
                 return;
             }
             
-            // Daftarkan user baru
             registeredIPs.push({ 
                 ip: ip, 
                 email: email, 
@@ -1889,7 +1819,6 @@
             });
             localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
             
-            // Simpan session
             const session = {
                 ip: ip,
                 email: email,
@@ -1905,7 +1834,6 @@
             closeGoogleEmailModal();
             showToast(`✅ Selamat datang ${email.split('@')[0]}!`, false);
             
-            // Log aktivitas
             addLog(`User baru: ${email} (IP: ${ip})`);
         }
 
@@ -2154,13 +2082,28 @@
             document.getElementById('cashbackHistoryModal').classList.remove('active');
         }
 
-        // --- BANNED USERS ADMIN ---
+        // --- BANNED USERS ADMIN (FIXED) ---
         function showBannedUsers() {
+            playTick();
+            closeAdminMenu();
+            
             const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
             const list = document.getElementById('bannedUsersList');
             
+            if (!list) {
+                // Buat elemen jika belum ada
+                const modal = document.getElementById('bannedUsersModal');
+                const listContainer = document.createElement('div');
+                listContainer.id = 'bannedUsersList';
+                listContainer.className = 'cashback-history';
+                modal.querySelector('.modal-box').appendChild(listContainer);
+            }
+            
+            const bannedList = document.getElementById('bannedUsersList');
+            if (!bannedList) return;
+            
             if (blockReports.length === 0) {
-                list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada user terblokir</p>';
+                bannedList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">🚫 Belum ada user yang diblokir</p>';
             } else {
                 let html = '';
                 blockReports.forEach((report, index) => {
@@ -2179,7 +2122,7 @@
                         </div>
                     `;
                 });
-                list.innerHTML = html;
+                bannedList.innerHTML = html;
             }
             
             document.getElementById('bannedUsersModal').classList.add('active');
@@ -2191,15 +2134,16 @@
         }
 
         function adminUnblockUser(ip, email) {
-            playTick();
-            
             if (confirm(`Yakin ingin membuka blokir untuk ${email}?`)) {
-                unblockUser(ip);
+                let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+                bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
+                localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
                 
-                // Hapus dari laporan
                 let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
                 blockReports = blockReports.filter(report => report.ip !== ip);
                 localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                localStorage.removeItem('blockedEmail_' + ip);
                 
                 showToast(`✅ Blokir untuk ${email} dibuka!`, false);
                 addLog(`Admin membuka blokir ${email} (${ip})`);
@@ -2209,23 +2153,32 @@
             }
         }
 
-        // --- ADMIN RESET PROMO (DENGAN RESET SALDO CASHBACK) ---
+        // --- ADMIN RESET PROMO (FIXED) ---
         function adminResetPromo() {
-            const email = prompt('Masukkan Gmail user untuk reset promo:', 'user@gmail.com');
+            playTick();
+            closeAdminMenu();
+            
+            const email = prompt('Masukkan Gmail user untuk reset:', 'user@gmail.com');
             if (!email) return;
             
-            // Reset status promo
+            const emailRegex = /^[^\s@]+@gmail\.com$/;
+            if (!emailRegex.test(email)) {
+                showToast('❌ Harus menggunakan email @gmail.com', true);
+                return;
+            }
+            
             localStorage.removeItem('promoQRIS_used_' + email);
             localStorage.removeItem('promoQRIS_date_' + email);
             
-            // Reset saldo cashback user
             const userCashback = {
                 balance: 0,
                 history: []
             };
             localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
             
-            // Jika user ini sedang login, update tampilan
+            showToast(`✅ Promo dan cashback untuk ${email} berhasil direset!`, false);
+            addLog(`Admin reset promo dan cashback untuk ${email}`);
+            
             const currentEmail = document.getElementById('displayGoogleEmail').innerText;
             if (currentEmail === email) {
                 cashbackBalance = 0;
@@ -2233,9 +2186,255 @@
                 updateCashbackDisplay();
                 checkPromoStatus();
             }
+        }
+
+        function clearAllData() {
+            playTick();
+            closeAdminMenu();
             
-            showToast(`✅ Promo dan cashback untuk ${email} berhasil direset!`, false);
-            addLog(`Admin reset promo dan cashback untuk ${email}`);
+            if (confirm('⚠️ PERINGATAN: Semua data akan dihapus permanen!\n\nYakin ingin melanjutkan?')) {
+                localStorage.clear();
+                showToast('✅ Semua data dihapus!', false);
+                addLog('Admin menghapus semua data');
+                
+                setTimeout(() => location.reload(), 1500);
+            }
+        }
+
+        window.unblockUser = function(email) {
+            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            const user = blockReports.find(report => report.email === email);
+            
+            if (user) {
+                adminUnblockUser(user.ip, user.email);
+            } else {
+                console.log('User tidak ditemukan:', email);
+            }
+        };
+
+        // --- ADMIN ACCESS (TAP 5X LOGO) ---
+        let adminTapCount = 0;
+        let adminTapTimer;
+
+        function setupAdminAccess() {
+            const logo = document.getElementById('logoJhonPay');
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    adminTapCount++;
+                    
+                    clearTimeout(adminTapTimer);
+                    adminTapTimer = setTimeout(() => {
+                        adminTapCount = 0;
+                    }, 1000);
+                    
+                    if (adminTapCount === 5) {
+                        adminTapCount = 0;
+                        showAdminPasswordModal();
+                    }
+                });
+            }
+        }
+
+        function showAdminPasswordModal() {
+            playTick();
+            
+            let modal = document.getElementById('adminPasswordModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.getElementById('adminPassword').focus();
+                return;
+            }
+            
+            modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.id = 'adminPasswordModal';
+            modal.innerHTML = `
+                <div class="modal-box" style="max-width: 320px;">
+                    <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center;">🔐 Admin Access</h3>
+                    <input type="password" id="adminPassword" class="modal-input" placeholder="Masukkan password" style="background: #2a2a2a; border: 1px solid #444; color: #fff; width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="modal-btn cancel" onclick="closeAdminModal()" style="flex: 1; padding: 12px; border-radius: 12px; border: none; background: #333; color: #fff; font-weight: 600; cursor: pointer;">Batal</button>
+                        <button class="modal-btn confirm" onclick="checkAdminPassword()" style="flex: 1; padding: 12px; border-radius: 12px; border: none; background: #2563eb; color: #fff; font-weight: 600; cursor: pointer;">Masuk</button>
+                    </div>
+                    <p style="color: #666; font-size: 10px; text-align: center; margin-top: 10px;">* Khusus administrator</p>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            setTimeout(() => {
+                modal.classList.add('active');
+                document.getElementById('adminPassword').focus();
+            }, 10);
+        }
+
+        function closeAdminModal() {
+            playTick();
+            const modal = document.getElementById('adminPasswordModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === config.adminPassword) {
+                playTick();
+                closeAdminModal();
+                showAdminMenu();
+            } else {
+                playTick();
+                showToast('❌ Password salah!', true);
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function showAdminMenu() {
+            playTick();
+            
+            const bannedCount = JSON.parse(localStorage.getItem('bannedIPs') || '[]').length;
+            
+            const adminModal = document.createElement('div');
+            adminModal.className = 'modal-overlay';
+            adminModal.id = 'adminMenuModal';
+            adminModal.innerHTML = `
+                <div class="modal-box" style="max-width: 320px; max-height: 80vh; overflow-y: auto;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="ri-shield-user-line" style="font-size: 48px; color: #2563eb; margin-bottom: 10px; display: block;"></i>
+                        <h3 style="color: #fff; font-size: 20px; font-weight: 700;">Admin Panel</h3>
+                        <p style="color: #9ca3af; font-size: 12px; margin-top: 5px;">Kelola pengguna dan cashback</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button onclick="adminAddCashback()" style="width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                            <i class="ri-add-circle-line"></i> Tambah Cashback ke User
+                        </button>
+                        
+                        <button onclick="viewAllUsers()" style="width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                            <i class="ri-group-line"></i> Lihat Semua User
+                        </button>
+                        
+                        <button onclick="showBannedUsers()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                            <i class="ri-shield-cross-line"></i> Kelola Blokir 
+                            <span style="background: white; color: #ef4444; padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 700;">${bannedCount}</span>
+                        </button>
+                        
+                        <button onclick="adminResetPromo()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                            <i class="ri-refresh-line"></i> Reset Promo & Cashback User
+                        </button>
+                        
+                        <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; justify-content: center;">
+                            <i class="ri-delete-bin-line"></i> Hapus Semua Data
+                        </button>
+                    </div>
+                    
+                    <button class="modal-btn cancel" onclick="closeAdminMenu()" style="width: 100%; padding: 12px; border-radius: 12px; border: none; background: #333; color: #fff; font-weight: 600; cursor: pointer;">Tutup</button>
+                </div>
+            `;
+            
+            document.body.appendChild(adminModal);
+            
+            setTimeout(() => {
+                adminModal.classList.add('active');
+            }, 10);
+        }
+
+        function closeAdminMenu() {
+            playTick();
+            const modal = document.getElementById('adminMenuModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        function adminAddCashback() {
+            playTick();
+            closeAdminMenu();
+            
+            const email = prompt('Masukkan Gmail user target:', 'user@gmail.com');
+            if (!email) return;
+            
+            const emailRegex = /^[^\s@]+@gmail\.com$/;
+            if (!emailRegex.test(email)) {
+                showToast('❌ Harus menggunakan email @gmail.com', true);
+                return;
+            }
+            
+            const amount = prompt('Masukkan nominal cashback (Rp):', '10000');
+            if (!amount || isNaN(amount) || parseInt(amount) <= 0) return;
+            
+            const nominal = parseInt(amount);
+            
+            let userCashback = JSON.parse(localStorage.getItem('userCashback_' + email) || '{"balance":0,"history":[]}');
+            userCashback.balance += nominal;
+            userCashback.history.unshift({
+                date: new Date().toISOString(),
+                amount: nominal,
+                from: '💰 Diberikan oleh Admin',
+                email: email,
+                status: 'tersedia'
+            });
+            
+            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
+            
+            const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
+            const emailExists = registeredIPs.find(entry => entry.email === email);
+            
+            if (!emailExists) {
+                registeredIPs.push({ 
+                    ip: 'manual-registration', 
+                    email: email, 
+                    username: email.split('@')[0],
+                    date: new Date().toISOString() 
+                });
+                localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
+            }
+            
+            showToast(`✅ Cashback Rp ${nominal.toLocaleString()} untuk ${email} ditambahkan!`, false);
+            addLog(`Admin memberi cashback Rp ${nominal.toLocaleString()} ke ${email}`);
+            
+            const currentEmail = document.getElementById('displayGoogleEmail').innerText;
+            if (currentEmail === email) {
+                cashbackBalance = userCashback.balance;
+                cashbackHistory = userCashback.history;
+                updateCashbackDisplay();
+            }
+        }
+
+        function viewAllUsers() {
+            playTick();
+            closeAdminMenu();
+            
+            const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
+            
+            if (registeredIPs.length === 0) {
+                alert('📋 Belum ada user terdaftar');
+                return;
+            }
+            
+            let message = '📋 DAFTAR USER TERDAFTAR:\n\n';
+            registeredIPs.forEach((entry, index) => {
+                const userCashback = JSON.parse(localStorage.getItem('userCashback_' + entry.email) || '{"balance":0}');
+                message += `${index + 1}. ${entry.email}\n`;
+                message += `   👤 Username: ${entry.username}\n`;
+                message += `   🌐 IP: ${entry.ip}\n`;
+                message += `   💰 Saldo: Rp ${userCashback.balance.toLocaleString()}\n`;
+                message += `   📅 Bergabung: ${new Date(entry.date).toLocaleDateString('id-ID')}\n\n`;
+            });
+            
+            alert(message);
         }
 
         // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
@@ -2377,7 +2576,7 @@
                         <h2>
                             <span id="displayUsername">${document.getElementById('displayUsername').innerText}</span>
                         </h2>
-                        <div class="google-email">
+                        <div class="google-email" onclick="showGoogleEmailModal()">
                             <i class="ri-google-fill"></i>
                             <span id="displayGoogleEmail">${document.getElementById('displayGoogleEmail').innerText}</span>
                         </div>
@@ -2474,6 +2673,11 @@
         }
 
         function openChat() {
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
             playTick();
             document.getElementById('fabChat').click();
         }
@@ -2519,7 +2723,7 @@
             checkPromoStatus();
         }
 
-        // --- OPEN PROMO QRIS (dengan tombol Nanti Saja) ---
+        // --- OPEN PROMO QRIS ---
         function openPromoQRIS() {
             playTick();
             
@@ -3164,182 +3368,12 @@
             }
         });
 
-        // --- ADMIN ACCESS (TAP 5X LOGO) ---
-        let adminTapCount = 0;
-        let adminTapTimer;
-
-        function setupAdminAccess() {
-            const logo = document.getElementById('logoJhonPay');
-            if (logo) {
-                logo.addEventListener('click', function() {
-                    adminTapCount++;
-                    
-                    clearTimeout(adminTapTimer);
-                    adminTapTimer = setTimeout(() => {
-                        adminTapCount = 0;
-                    }, 1000);
-                    
-                    if (adminTapCount === 5) {
-                        adminTapCount = 0;
-                        showAdminPasswordModal();
-                    }
-                });
-            }
-        }
-
-        function showAdminPasswordModal() {
-            playTick();
-            
-            let modal = document.getElementById('adminPasswordModal');
-            if (modal) {
-                modal.classList.add('active');
-                document.getElementById('adminPassword').focus();
-                return;
-            }
-            
-            modal = document.createElement('div');
-            modal.className = 'admin-password-modal';
-            modal.id = 'adminPasswordModal';
-            modal.innerHTML = `
-                <div class="admin-password-box">
-                    <h3>🔐 Admin Access</h3>
-                    <input type="password" id="adminPassword" class="admin-password-input" placeholder="Masukkan password" maxlength="20">
-                    <div class="admin-password-buttons">
-                        <button class="admin-password-btn cancel" onclick="closeAdminModal()">Batal</button>
-                        <button class="admin-password-btn confirm" onclick="checkAdminPassword()">Masuk</button>
-                    </div>
-                    <p style="color: #666; font-size: 10px; text-align: center; margin-top: 10px;">* Khusus administrator</p>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            setTimeout(() => {
-                modal.classList.add('active');
-                document.getElementById('adminPassword').focus();
-            }, 10);
-        }
-
-        function closeAdminModal() {
-            playTick();
-            const modal = document.getElementById('adminPasswordModal');
-            if (modal) {
-                modal.classList.remove('active');
-                setTimeout(() => {
-                    if (modal.parentNode) {
-                        document.body.removeChild(modal);
-                    }
-                }, 300);
-            }
-        }
-
-        function checkAdminPassword() {
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password === config.adminPassword) {
-                playTick();
-                closeAdminModal();
-                showAdminMenu();
-            } else {
-                playTick();
-                showToast('❌ Password salah!', true);
-                document.getElementById('adminPassword').value = '';
-                document.getElementById('adminPassword').focus();
-            }
-        }
-
-        function showAdminMenu() {
-            const adminModal = document.createElement('div');
-            adminModal.className = 'modal-overlay';
-            adminModal.id = 'adminMenuModal';
-            adminModal.innerHTML = `
-                <div class="modal-box" style="max-width: 320px;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="ri-shield-user-line" style="font-size: 48px; color: #2563eb;"></i>
-                        <h3 style="color: #fff; margin-top: 10px;">Admin Panel</h3>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <button onclick="adminAddCashback()" style="width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-add-circle-line"></i> Tambah Cashback
-                        </button>
-                        <button onclick="viewAllUsers()" style="width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-group-line"></i> Lihat Semua User
-                        </button>
-                        <button onclick="showBannedUsers()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-shield-cross-line"></i> Kelola Blokir (${JSON.parse(localStorage.getItem('bannedIPs') || '[]').length})
-                        </button>
-                        <button onclick="adminResetPromo()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-refresh-line"></i> Reset Promo & Cashback User
-                        </button>
-                        <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-delete-bin-line"></i> Hapus Semua Data
-                        </button>
-                    </div>
-                    
-                    <button class="modal-btn cancel" onclick="closeAdminMenu()" style="width: 100%;">Tutup</button>
-                </div>
-            `;
-            
-            document.body.appendChild(adminModal);
-            
-            setTimeout(() => {
-                adminModal.classList.add('active');
-            }, 10);
-        }
-
-        function closeAdminMenu() {
-            const modal = document.getElementById('adminMenuModal');
-            if (modal) {
-                modal.classList.remove('active');
-                setTimeout(() => {
-                    if (modal.parentNode) {
-                        document.body.removeChild(modal);
-                    }
-                }, 300);
-            }
-        }
-
-        function adminAddCashback() {
-            const email = prompt('Masukkan Gmail user:', 'user@gmail.com');
-            if (!email) return;
-            
-            const amount = prompt('Masukkan nominal cashback (Rp):', '10000');
-            if (!amount || isNaN(amount) || parseInt(amount) <= 0) return;
-            
-            addCashback(parseInt(amount), email, 'Diberikan oleh Admin');
-            showToast(`✅ Cashback Rp ${parseInt(amount).toLocaleString()} untuk ${email} ditambahkan!`, false);
-        }
-
-        function viewAllUsers() {
-            const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
-            
-            let message = '📋 DAFTAR USER TERDAFTAR:\n\n';
-            registeredIPs.forEach((entry, index) => {
-                const userCashback = JSON.parse(localStorage.getItem('userCashback_' + entry.email) || '{"balance":0}');
-                message += `${index + 1}. ${entry.email}\n   Username: ${entry.username}\n   IP: ${entry.ip}\n   Saldo: Rp ${userCashback.balance.toLocaleString()}\n   Bergabung: ${new Date(entry.date).toLocaleDateString('id-ID')}\n\n`;
-            });
-            
-            alert(message);
-        }
-
-        function clearAllData() {
-            if (confirm('⚠️ PERINGATAN: Semua data akan dihapus permanen!\n\nYakin ingin melanjutkan?')) {
-                localStorage.clear();
-                showToast('✅ Semua data dihapus!', false);
-                closeAdminMenu();
-                location.reload();
-            }
-        }
-
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', async () => {
             originalContent = document.querySelector('.content-area').innerHTML;
             
-            // Setup emergency reset (tap 10x)
             setupEmergencyReset();
             
-            // Cek blokir dengan whitelist
             const ip = await detectIP();
             if (checkIfBanned(ip)) {
                 const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
@@ -3347,7 +3381,6 @@
                 return;
             }
             
-            // Cek status login
             await checkUserVerification();
             
             setupAdminAccess();
@@ -3384,13 +3417,14 @@
         window.showAdminPasswordModal = showAdminPasswordModal;
         window.closeAdminModal = closeAdminModal;
         window.checkAdminPassword = checkAdminPassword;
+        window.showAdminMenu = showAdminMenu;
+        window.closeAdminMenu = closeAdminMenu;
         window.adminAddCashback = adminAddCashback;
         window.viewAllUsers = viewAllUsers;
         window.showBannedUsers = showBannedUsers;
         window.closeBannedUsersModal = closeBannedUsersModal;
         window.adminUnblockUser = adminUnblockUser;
         window.adminResetPromo = adminResetPromo;
-        window.closeAdminMenu = closeAdminMenu;
         window.clearAllData = clearAllData;
 
         console.log('✅ JHON Payment System Ready!');
