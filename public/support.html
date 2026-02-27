@@ -63,7 +63,6 @@
         }
         .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
         
-        /* Currency selector from support.html */
         .currency-selector {
             width: 110px; height: 36px;
             background: rgba(255,255,255,0.05); 
@@ -1271,7 +1270,6 @@
             const registeredEmails = JSON.parse(localStorage.getItem('registeredEmails') || '[]');
             
             if (!registeredEmails.includes(email)) {
-                // Daftarkan email baru
                 registeredEmails.push(email);
                 localStorage.setItem('registeredEmails', JSON.stringify(registeredEmails));
             }
