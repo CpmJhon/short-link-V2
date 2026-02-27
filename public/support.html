@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://api.ipify.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://api.ipify.org;">
+    <meta name="description" content="JHON WEB PAYMENT - Sistem Pembayaran Digital">
+    <meta name="theme-color" content="#121212">
+    <title>JHON WEB PAYMENT</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="asset/css/style.css">
+</head>
+<body>
+
+    <!-- BLOCKED PAGE (Original) -->
+    <div id="blockedPage" class="blocked-page" style="display: none;">
+        <i class="ri-shield-cross-line blocked-icon"></i>
+        <div class="blocked-title">AKUN ANDA DIBLOKIR</div>
+        <div class="blocked-message">
+            Terdeteksi mencoba membuat lebih dari 1 akun dengan perangkat yang sama.
+        </div>
+        <div class="blocked-details" id="blockedDetails"></div>
+        <div class="blocked-contact">
+            <p>Hubungi admin untuk pembukaan blokir:</p>
+            <a href="https://wa.me/6285894955362" target="_blank">
+                <i class="ri-whatsapp-fill"></i> 085894955362
+            </a>
+        </div>
+    </div>
+
+    <!-- Audio Element (Original) -->
+    <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <!-- Main App Frame (Original Structure) -->
+    <div class="app-frame" id="mainApp">
+        <!-- HEADER (Original) -->
+        <div class="header-area">
+            <div class="btn-icon ripple" id="btnMenu">
+                <i class="ri-menu-3-line"></i>
+            </div>
+            <div style="font-weight:800; font-size:16px; letter-spacing:1px; cursor: pointer;" id="logoJhonPay">JHON<span style="color:var(--text-muted);">PAY</span></div>
+            
+            <div style="display: flex; gap: 8px;">
+                <div class="currency-selector ripple" id="currencySelector">
+                    <div class="currency-flag"></div>
+                    <div class="currency-text">ID / IDR</div>
+                </div>
+                <div class="btn-icon ripple" id="btnLogout" style="display: none;" onclick="showLogoutConfirm()">
+                    <i class="ri-logout-box-r-line"></i>
+                </div>
+                <div class="btn-icon ripple" id="notifBell">
+                    <i class="ri-notification-3-line"></i>
+                    <span class="notif-badge" id="notifBadge">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT AREA (Original) -->
+        <div class="content-area" id="contentArea">
+            <!-- Content will be loaded here -->
+        </div>
+
+        <!-- FLOATING CHAT BUTTON (Original) -->
+        <div class="fab-container">
+            <button class="btn-fab ripple" id="fabChat">
+                <i class="ri-customer-service-2-fill"></i>
+            </button>
+        </div>
+
+        <!-- CHAT WINDOW (Original) -->
+        <div class="chat-modal" id="chatWin">
+            <div class="cm-header">
+                <span>Live Support</span>
+                <i class="ri-close-line" id="closeChat" style="cursor:pointer; font-size:18px;"></i>
+            </div>
+            <div class="cm-body" id="chatBody">
+                <div class="bubble b-bot">Halo! Ada yang bisa kami bantu?</div>
+            </div>
+            <div class="cm-footer">
+                <button class="c-chip" onclick="sendChat('konfirmasi')">Konfirmasi</button>
+                <button class="c-chip" onclick="sendChat('masalah')">Kendala</button>
+                <button class="c-chip" onclick="sendChat('admin')">Admin</button>
+            </div>
+        </div>
+
+        <!-- NOTIFICATION PANEL (Original) -->
+        <div class="notif-panel" id="notifPanel">
+            <div class="notif-box">
+                <div class="nb-header">
+                    <h3>Notifikasi</h3>
+                    <i class="ri-close-circle-fill nb-close" onclick="toggleNotifPanel()"></i>
+                </div>
+                <div class="nb-body" id="notifList">
+                    <div class="empty-state">Belum ada aktivitas terbaru</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU OVERLAY (Original) -->
+        <div class="menu-overlay" id="menuOverlay">
+            <div class="menu-panel">
+                <div class="menu-header">
+                    <div class="menu-title">Menu</div>
+                    <div class="menu-close" id="menuClose">
+                        <i class="ri-close-line"></i>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="showHomePage()">
+                    <h4>Beranda</h4>
+                    <p>Kembali ke halaman utama</p>
+                </div>
+                <div class="menu-item" onclick="showUsagePage()">
+                    <h4>Cara Penggunaan</h4>
+                    <p>Panduan lengkap cara menggunakan layanan</p>
+                </div>
+                <div class="menu-item" onclick="toggleNotifPanel()">
+                    <h4>Notifikasi</h4>
+                    <p>Lihat aktivitas terbaru</p>
+                </div>
+                <div class="menu-item" onclick="showCashbackHistory()">
+                    <h4>💰 Riwayat Cashback</h4>
+                    <p>Lihat history cashback Anda</p>
+                </div>
+                <div class="menu-item" onclick="showTransactionHistory()">
+                    <h4>📊 Riwayat Transaksi</h4>
+                    <p>Lihat semua transaksi Anda</p>
+                </div>
+                <div class="menu-item" onclick="exportUserData()">
+                    <h4>📥 Export Data</h4>
+                    <p>Download data transaksi Anda</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL INPUT NOMINAL (Original) -->
+        <div class="modal-overlay" id="paymentModal">
+            <div class="modal-box">
+                <h3>Konfirmasi Pembayaran</h3>
+                <input type="number" id="modalNominal" class="modal-input" placeholder="Masukkan nominal" min="1000" max="10000000" step="1000">
+                <input type="text" id="modalMetode" class="modal-input" placeholder="Metode pembayaran" readonly style="background: #333;">
+                <div class="payment-summary" id="paymentSummary" style="display: none;">
+                    <p>Cashback tersedia: <span id="availableCashback">Rp 0</span></p>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="useCashbackCheck">
+                        <span class="checkmark"></span>
+                        Gunakan cashback
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closePaymentModal()">Batal</button>
+                    <button class="modal-btn confirm" onclick="sendPaymentConfirmation()">Kirim</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL CASHBACK HISTORY (Original) -->
+        <div class="modal-overlay" id="cashbackHistoryModal">
+            <div class="modal-box" style="max-width: 400px; max-height: 80vh;">
+                <h3>💰 Riwayat Cashback</h3>
+                <div id="cashbackHistoryList" class="cashback-history"></div>
+                <button class="modal-btn cancel" onclick="closeCashbackHistory()" style="width: 100%; margin-top: 15px;">Tutup</button>
+            </div>
+        </div>
+
+        <!-- MODAL TRANSACTION HISTORY (New) -->
+        <div class="modal-overlay" id="transactionHistoryModal">
+            <div class="modal-box" style="max-width: 450px; max-height: 80vh;">
+                <div class="modal-header">
+                    <h3>📊 Riwayat Transaksi</h3>
+                    <button class="modal-close" onclick="closeTransactionHistory()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="transaction-filters">
+                        <select id="transactionFilter" onchange="filterTransactions()">
+                            <option value="all">Semua</option>
+                            <option value="qris">QRIS</option>
+                            <option value="ewallet">E-Wallet</option>
+                            <option value="bank">Bank</option>
+                            <option value="pulsa">Pulsa</option>
+                        </select>
+                        <button class="btn-icon-small" onclick="exportTransactions()">
+                            <i class="ri-download-line"></i>
+                        </button>
+                    </div>
+                    <div id="transactionList" class="transaction-list"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn cancel" onclick="closeTransactionHistory()">Tutup</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL USE CASHBACK (Original) -->
+        <div class="modal-overlay" id="useCashbackModal">
+            <div class="modal-box" style="max-width: 400px; max-height: 80vh; display: flex; flex-direction: column;">
+                <h3 style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; flex-shrink: 0;">
+                    💸 Gunakan Cashback
+                </h3>
+                
+                <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+                            border-radius: 16px; padding: 15px; margin-bottom: 20px; text-align: center; flex-shrink: 0;">
+                    <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 5px;">Saldo Cashback Anda</p>
+                    <p style="color: white; font-size: 32px; font-weight: 800; line-height: 1.2;">
+                        Rp <span id="cashbackAmount">0</span>
+                    </p>
+                </div>
+                
+                <!-- Scrollable Menu Container -->
+                <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; min-height: 0;">
+                    
+                    <!-- QRIS Option -->
+                    <div class="cashback-use-option" id="useQRISOption" onclick="selectCashbackUse('qris')">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
+                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                <i class="ri-qr-scan-2-line" style="font-size: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">Scan QRIS</h4>
+                                <p style="color: #9ca3af; font-size: 12px;">Pembayaran via QRIS</p>
+                            </div>
+                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
+                                Diskon
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
+                            <div>
+                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="qrisOriginal">Rp 50.000</span>
+                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="qrisFinal">Rp 40.000</span>
+                            </div>
+                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- E-Wallet Option -->
+                    <div class="cashback-use-option" id="useEWalletOption" onclick="selectCashbackUse('ewallet')">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                <i class="ri-wallet-3-fill" style="font-size: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">E-Wallet</h4>
+                                <p style="color: #9ca3af; font-size: 12px;">Dana, OVO, GoPay, dll</p>
+                            </div>
+                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
+                                Diskon
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
+                            <div>
+                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="ewalletOriginal">Rp 50.000</span>
+                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="ewalletFinal">Rp 40.000</span>
+                            </div>
+                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Transfer Bank Option -->
+                    <div class="cashback-use-option" id="useBankOption" onclick="selectCashbackUse('bank')">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                <i class="ri-bank-card-fill" style="font-size: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">Transfer Bank</h4>
+                                <p style="color: #9ca3af; font-size: 12px;">Semua bank</p>
+                            </div>
+                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
+                                Diskon
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
+                            <div>
+                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="bankOriginal">Rp 50.000</span>
+                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="bankFinal">Rp 40.000</span>
+                            </div>
+                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Up Pulsa Option -->
+                    <div class="cashback-use-option" id="usePulsaOption" onclick="selectCashbackUse('pulsa')">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                                <i class="ri-smartphone-fill" style="font-size: 24px; color: white;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">Top Up Pulsa</h4>
+                                <p style="color: #9ca3af; font-size: 12px;">Semua operator</p>
+                            </div>
+                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
+                                Diskon
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
+                            <div>
+                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="pulsaOriginal">Rp 50.000</span>
+                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="pulsaFinal">Rp 40.000</span>
+                            </div>
+                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 10px; margin-top: 10px; flex-shrink: 0;">
+                    <button class="modal-btn cancel" onclick="closeUseCashbackModal()" 
+                            style="flex: 1; padding: 14px; border-radius: 14px; border: none; 
+                                   background: #333; color: #fff; font-weight: 600; font-size: 15px;
+                                   cursor: pointer; transition: all 0.2s;">
+                        Batalkan
+                    </button>
+                    <button class="modal-btn confirm" id="applyCashbackBtn" onclick="applyCashbackToPayment()" 
+                            style="flex: 1; padding: 14px; border-radius: 14px; border: none; 
+                                   background: #10b981; color: #fff; font-weight: 600; font-size: 15px;
+                                   cursor: pointer; transition: all 0.2s;">
+                        Gunakan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL GOOGLE EMAIL (Original) -->
+        <div class="modal-overlay" id="googleEmailModal">
+            <div class="modal-box">
+                <h3>🔐 Verifikasi Gmail</h3>
+                <div class="google-email-display">
+                    <i class="ri-google-fill"></i>
+                    <p>Masukkan Gmail Anda untuk verifikasi</p>
+                    <p style="color: #fbbf24; font-size: 11px; margin-top: 10px;">
+                        <i class="ri-information-line"></i> 1 AKUN PER IP - DILARANG MULTIPLE AKUN
+                    </p>
+                </div>
+                <input type="email" id="googleEmailInput" class="google-email-input" placeholder="contoh@gmail.com">
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closeGoogleEmailModal()">Batal</button>
+                    <button class="modal-btn confirm" onclick="saveGoogleEmail()" style="background: #ea4335;">Verifikasi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL LOGIN (Original) -->
+        <div class="modal-overlay" id="loginModal">
+            <div class="modal-box" style="max-width: 350px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
+                                border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+                        <i class="ri-google-fill" style="font-size: 40px; color: white;"></i>
+                    </div>
+                    <h3 style="color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 5px;">Selamat Datang</h3>
+                    <p style="color: #9ca3af; font-size: 13px;">Masuk dengan Gmail Anda untuk melanjutkan</p>
+                </div>
+                
+                <div style="background: #1e1e1e; border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="color: #9ca3af; font-size: 12px; margin-bottom: 5px; display: block;">Email Gmail</label>
+                        <input type="email" id="loginEmailInput" class="modal-input" placeholder="contoh@gmail.com" 
+                               style="background: #2a2a2a; border: 1px solid #444; color: #fff; width: 100%; padding: 14px; 
+                                      border-radius: 12px; font-size: 15px;">
+                    </div>
+                    <p style="color: #fbbf24; font-size: 11px; text-align: center;">
+                        <i class="ri-information-line"></i> 1 AKUN PER IP - DILARANG MULTIPLE AKUN
+                    </p>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closeLoginModal()" style="flex: 1;">Batal</button>
+                    <button class="modal-btn confirm" onclick="loginUser()" style="flex: 1; background: #ea4335;">Masuk</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL LOGOUT CONFIRMATION (Original) -->
+        <div class="modal-overlay" id="logoutModal">
+            <div class="modal-box" style="max-width: 320px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="ri-logout-box-r-line" style="font-size: 48px; color: #ef4444; margin-bottom: 10px; display: block;"></i>
+                    <h3 style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 8px;">Keluar Akun</h3>
+                    <p style="color: #9ca3af; font-size: 14px;">Apakah Anda yakin ingin keluar?</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closeLogoutModal()" style="flex: 1;">Batal</button>
+                    <button class="modal-btn confirm" onclick="logoutUser()" style="flex: 1; background: #ef4444;">Keluar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL BANNED USERS (Original) -->
+        <div class="modal-overlay" id="bannedUsersModal">
+            <div class="modal-box" style="max-width: 400px; max-height: 80vh; overflow-y: auto;">
+                <h3>🚫 User Terblokir</h3>
+                <div id="bannedUsersList" class="cashback-history"></div>
+                <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="width: 100%; margin-top: 15px;">Tutup</button>
+            </div>
+        </div>
+
+        <!-- MODAL ADMIN PASSWORD (Original) -->
+        <div class="admin-password-modal" id="adminPasswordModal">
+            <div class="admin-password-box">
+                <h3>🔐 Admin Access</h3>
+                <input type="password" id="adminPassword" class="admin-password-input" placeholder="Masukkan password" maxlength="20">
+                <div class="admin-password-buttons">
+                    <button class="admin-password-btn cancel" onclick="closeAdminModal()">Batal</button>
+                    <button class="admin-password-btn confirm" onclick="checkAdminPassword()">Masuk</button>
+                </div>
+                <p style="color: #666; font-size: 10px; text-align: center; margin-top: 10px;">* Khusus administrator</p>
+            </div>
+        </div>
+
+        <!-- SHEET OVERLAY (Original) -->
+        <div class="sheet-overlay" id="sheet">
+            <div class="sheet-panel">
+                <div style="width:40px; height:5px; background:#ccc; border-radius:10px; margin:0 auto 15px;"></div>
+                <div style="text-align:center; margin-bottom:25px;">
+                    <h3 style="color:#000; font-size:16px; font-weight:800;" id="sheetTitle">Payment</h3>
+                </div>
+                <div id="sheetList"></div>
+                <button class="ripple" id="btnCloseSheet" style="width:100%; padding:15px; border-radius:12px; border:none; background:#000; color:#fff; font-weight:700; margin-top:15px;">Tutup</button>
+            </div>
+        </div>
+
+        <!-- LOADING OVERLAY (New) -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Memproses...</div>
+        </div>
+
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="asset/js/script.js"></script>
+</body>
+</html>
