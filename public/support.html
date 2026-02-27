@@ -3,21 +3,1097 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://api.ipify.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://api.ipify.org;">
-    <meta name="description" content="JHON WEB PAYMENT - Sistem Pembayaran Digital">
-    <meta name="theme-color" content="#121212">
     <title>JHON WEB PAYMENT</title>
     
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="asset/css/style.css">
+
+    <style>
+        /* --- ULTIMATE THEME VARS --- */
+        :root {
+            --bg-main: #121212;
+            --bg-deep: #0a0a0a;
+            --card-light: #e5e5e5;
+            --card-surface: #1e1e1e;
+            --text-on-light: #1f2937;
+            --text-on-dark: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #2563eb;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius-box: 24px;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            outline: none; scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-deep);
+            color: var(--text-on-dark);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .app-frame {
+            width: 100%; max-width: 480px; height: 100vh;
+            background: var(--bg-main);
+            position: relative; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        @media(min-width: 500px) {
+            body { align-items: center; }
+            .app-frame { height: 95vh; border-radius: 35px; border: 4px solid #333; }
+        }
+
+        /* --- BLOCKED PAGE (Sesuai Screenshot) --- */
+        .blocked-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+        }
+        .blocked-icon {
+            font-size: 80px;
+            color: var(--danger);
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .blocked-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .blocked-message {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .blocked-details {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--danger);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 25px;
+        }
+        .blocked-details p {
+            margin: 8px 0;
+            color: var(--text-on-dark);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .blocked-details i {
+            color: var(--danger);
+            width: 20px;
+            font-size: 16px;
+        }
+        .blocked-contact {
+            background: var(--card-surface);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            max-width: 350px;
+        }
+        .blocked-contact p {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .blocked-contact a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 10px;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+        .blocked-contact a:hover {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        /* --- BANNED USERS LIST (Sesuai Screenshot) --- */
+        .banned-user-item {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--danger);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .banned-user-item .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .banned-user-item .email {
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 16px;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .banned-user-item .email i {
+            font-size: 18px;
+        }
+        .banned-user-item .ip {
+            color: var(--text-on-dark);
+            font-size: 14px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.2);
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .banned-user-item .ip i {
+            color: var(--accent);
+        }
+        .banned-user-item .reason {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .banned-user-item .reason i {
+            color: var(--warning);
+        }
+        .banned-user-item .date {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid rgba(239, 68, 68, 0.2);
+            padding-top: 10px;
+        }
+        .banned-user-item .date i {
+            color: var(--text-muted);
+        }
+        .unblock-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid transparent;
+        }
+        .unblock-btn:hover {
+            background: transparent;
+            border-color: var(--success);
+            color: var(--success);
+            transform: scale(0.98);
+        }
+        .unblock-btn i {
+            font-size: 16px;
+        }
+
+        /* --- MODAL BANNED USERS --- */
+        #bannedUsersModal .modal-box {
+            max-width: 420px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        #bannedUsersModal .modal-box h3 {
+            color: var(--danger);
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #bannedUsersModal .modal-box h3 i {
+            font-size: 28px;
+        }
+
+        /* --- HEADER --- */
+        .header-area {
+            padding: 30px 24px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .btn-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-on-dark); display: flex; align-items: center; justify-content: center;
+            font-size: 20px; cursor: pointer; transition: 0.2s; position: relative;
+        }
+        .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        
+        .currency-selector {
+            width: 110px; height: 36px;
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 8px;
+            padding: 0 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .currency-selector:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .currency-flag {
+            width: 20px; height: 20px;
+            border-radius: 4px;
+            background: linear-gradient(to bottom, #ff4b55 50%, #ffffff 50%);
+        }
+        .currency-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-on-dark);
+        }
+
+        .notif-badge {
+            position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px;
+            background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-main);
+            color: white; font-size: 9px; font-weight: bold; display: flex; 
+            align-items: center; justify-content: center; opacity: 0; transition: 0.3s;
+        }
+        .notif-badge.show { opacity: 1; }
+
+        /* --- CONTENT AREA --- */
+        .content-area {
+            flex: 1; overflow-y: auto; padding: 0 24px 100px;
+            scrollbar-width: none;
+        }
+        .content-area::-webkit-scrollbar { display: none; }
+
+        /* --- PROFILE SECTION --- */
+        .profile-section {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
+        }
+        .p-img {
+            width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--text-on-dark);
+            object-fit: cover;
+        }
+        .p-info {
+            flex: 1;
+        }
+        .p-info h2 { 
+            font-size: 18px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 2px;
+        }
+        .google-email {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .google-email i {
+            color: #ea4335;
+        }
+        .ip-address {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .ip-address i {
+            color: var(--accent);
+        }
+        .p-info p { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+        .status-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
+
+        .social-bar {
+            margin-top: 8px; display: flex; gap: 10px;
+        }
+        .soc-icon {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; text-decoration: none; transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .soc-icon:active { transform: scale(0.9); background: var(--accent); border-color: var(--accent); }
+
+        /* --- CASHBACK BALANCE --- */
+        .cashback-balance {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cashback-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cashback-icon {
+            width: 45px; height: 45px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        .cashback-text h4 {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .cashback-text p {
+            color: rgba(255,255,255,0.9);
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .cashback-use-btn {
+            background: white;
+            color: #059669;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .cashback-use-btn:hover { transform: scale(1.05); background: #f0fdf4; }
+        .cashback-use-btn:active { transform: scale(0.95); }
+        .cashback-use-btn.disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* --- MARQUEE --- */
+        .marquee-container {
+            background: #1e1e1e; border-radius: 8px; overflow: hidden; white-space: nowrap;
+            padding: 8px 0; margin-bottom: 25px; border-left: 3px solid var(--accent); margin-top: 15px;
+        }
+        .marquee-text {
+            display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite;
+            font-size: 11px; color: var(--text-muted); font-family: monospace;
+        }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* --- MENU GRID --- */
+        .menu-title { font-size: 14px; font-weight: 700; margin-bottom: 15px; color: var(--text-on-dark); letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.8; }
+        
+        .menu-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+
+        .menu-card {
+            background: var(--card-light);
+            border-radius: var(--radius-box);
+            padding: 20px; height: 130px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden;
+            transition: transform 0.2s; cursor: pointer;
+        }
+        .menu-card:active { transform: scale(0.96); }
+        
+        .mc-icon {
+            width: 40px; height: 40px; background: #fff;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 1;
+        }
+        
+        .mc-text h3 { font-size: 15px; font-weight: 800; color: var(--text-on-light); margin-bottom: 3px; z-index: 1; position: relative;}
+        .mc-text p { font-size: 11px; font-weight: 500; color: #666; z-index: 1; position: relative;}
+        .menu-card::before {
+            content: ''; position: absolute; top: -20px; right: -20px;
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(0,0,0,0.05); z-index: 0;
+        }
+
+        /* --- QRIS WIDGET --- */
+        .card-qris-full {
+            grid-column: span 2; height: 90px;
+            background: #222;
+            display: flex; flex-direction: row; align-items: center; justify-content: space-between;
+            padding: 0 25px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .qris-left {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.1);
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #fff;
+        }
+        .qris-right { text-align: right; }
+        .qris-right h3 { color: #fff; font-size: 18px; margin-bottom: 2px; }
+        .qris-right p { color: #888; font-size: 12px; }
+
+        /* --- INFO WIDGET --- */
+        .info-features {
+            margin-top: 15px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+        }
+        .feat-item {
+            background: #fff; border-radius: 16px; padding: 15px 10px;
+            text-align: center; cursor: pointer; transition: 0.2s;
+        }
+        .feat-item:active { transform: translateY(3px); background: #f0f0f0; }
+        .feat-icon { 
+            font-size: 20px; color: var(--accent); margin-bottom: 5px; 
+            display: inline-block;
+        }
+        .feat-text h5 { color: #222; font-size: 11px; font-weight: 700; }
+        .feat-text p { color: #666; font-size: 9px; }
+
+        /* --- PROMO BANNER --- */
+        .promo-banner {
+            margin-top: 25px;
+            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 20px; padding: 20px;
+            position: relative; overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .promo-banner:active { transform: scale(0.98); }
+        .promo-banner h4 { color: white; font-size: 16px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 2; }
+        .promo-banner p { color: rgba(255,255,255,0.8); font-size: 11px; position: relative; z-index: 2; max-width: 70%; }
+        .promo-deco { position: absolute; bottom: -10px; right: -10px; font-size: 80px; color: rgba(255,255,255,0.1); transform: rotate(-15deg); }
+        .promo-banner.disabled {
+            background: linear-gradient(90deg, #4b5563 0%, #6b7280 100%);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .promo-banner.disabled:active { transform: none; }
+
+        /* --- NOTIFICATION PANEL --- */
+        .notif-panel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 200;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        .notif-panel.active { opacity: 1; pointer-events: auto; }
+        .notif-box {
+            width: 85%; max-width: 350px; background: #1a1a1a;
+            border-radius: 24px; border: 1px solid #333;
+            overflow: hidden; max-height: 60vh; display: flex; flex-direction: column;
+        }
+        .nb-header {
+            padding: 15px 20px; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #222;
+        }
+        .nb-header h3 { font-size: 14px; color: #fff; font-weight: 700; }
+        .nb-close { cursor: pointer; color: #888; font-size: 20px; padding: 5px; }
+        .nb-body { padding: 10px; overflow-y: auto; }
+        .notif-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .ni-icon {
+            width: 30px; height: 30px; background: rgba(37,99,235,0.2); 
+            color: #60a5fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        }
+        .ni-text h5 { color: #ddd; font-size: 12px; margin-bottom: 2px; }
+        .ni-text p { color: #777; font-size: 10px; }
+        .empty-state { text-align: center; padding: 30px; color: #555; font-size: 12px; }
+
+        /* --- FLOATING CHAT --- */
+        .fab-container { position: fixed; bottom: 25px; right: 25px; z-index: 90; }
+        .btn-fab {
+            width: 58px; height: 58px; border-radius: 20px;
+            background: var(--text-on-dark); color: var(--bg-deep);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: none; cursor: pointer; transition: 0.3s;
+        }
+        .btn-fab:hover { transform: scale(1.1) rotate(5deg); }
+        
+        /* --- CHAT WINDOW --- */
+        .chat-modal {
+            position: fixed; bottom: 90px; right: 25px; width: 300px; height: 400px;
+            background: #1a1a1a; border-radius: 24px; border: 1px solid #333;
+            display: flex; flex-direction: column; overflow: hidden;
+            transform: scale(0); opacity: 0; transform-origin: bottom right;
+            transition: 0.3s ease; z-index: 90;
+        }
+        .chat-modal.active { transform: scale(1); opacity: 1; }
+        .cm-header { padding: 15px; background: #222; display: flex; justify-content: space-between; color: white; font-weight: 700; font-size: 13px; }
+        .cm-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .cm-footer { padding: 10px; background: #222; display: flex; gap: 5px; overflow-x: auto; }
+        .bubble { padding: 8px 12px; border-radius: 10px; font-size: 11px; max-width: 85%; }
+        .b-bot { background: #333; color: #ddd; align-self: flex-start; }
+        .b-user { background: var(--text-on-dark); color: #000; align-self: flex-end; }
+        .c-chip { background: transparent; border: 1px solid #444; color: #aaa; padding: 5px 10px; border-radius: 20px; font-size: 10px; cursor: pointer; white-space: nowrap; }
+
+        /* --- BOTTOM SHEET --- */
+        .sheet-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 100;
+            opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        .sheet-overlay.active { opacity: 1; pointer-events: auto; }
+        .sheet-panel {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: #e5e5e5; border-radius: 30px 30px 0 0;
+            padding: 25px; transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 80vh; overflow-y: auto;
+        }
+        .sheet-overlay.active .sheet-panel { transform: translateY(0); }
+        .pay-item {
+            background: #fff; padding: 15px; border-radius: 16px;
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .pi-left { display: flex; align-items: center; gap: 12px; }
+        .pi-img { width: 40px; height: 40px; object-fit: contain; }
+        .pi-info h5 { font-size: 14px; color: #000; font-weight: 700; }
+        .pi-info p { font-size: 12px; color: #666; font-family: monospace; }
+        .btn-action {
+            width: 34px; height: 34px; background: #f3f4f6; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; color: #333; 
+            border: none; font-size: 16px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-action:hover { transform: scale(0.95); }
+        .btn-action.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        /* --- QRIS INPUT STYLES --- */
+        .qris-input-container {
+            margin-bottom: 20px; text-align: left;
+        }
+        .qris-label {
+            color: #000; font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;
+        }
+        .qris-input {
+            width: 100%; padding: 12px 15px; border-radius: 12px; 
+            border: 1px solid #ddd; font-size: 16px; font-weight: 600; 
+            color: #000; background: #f9f9f9;
+        }
+        .qris-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+        .qris-hint {
+            color: #666; font-size: 11px; margin-top: 5px;
+        }
+        .qris-generate-btn {
+            width: 100%; padding: 12px; border-radius: 12px; 
+            border: none; background: #000; color: #fff; 
+            font-weight: 700; margin-top: 10px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .qris-generate-btn:disabled {
+            background: #ccc !important;
+            cursor: not-allowed !important;
+        }
+        .qris-generate-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+        .qris-container {
+            display: none; text-align: center;
+        }
+        
+        .qr-display-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .qris-nominal-display {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 0 auto 15px auto;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 700;
+            min-width: 180px;
+        }
+
+        .qris-image {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .qris-info {
+            margin-top: 10px; font-size: 12px; color: #555;
+        }
+        .whatsapp-confirm-btn {
+            width: 100%; padding: 12px; border-radius: 12px; 
+            border: none; background: #2563eb; color: #fff; 
+            font-weight: 700; margin-top: 10px; display: flex; 
+            align-items: center; justify-content: center; gap: 8px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .whatsapp-confirm-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .download-qr-btn {
+            width: 100%; padding: 12px; border-radius: 12px; 
+            border: 1px solid #10b981; background: transparent; 
+            color: #10b981; font-weight: 700; margin-top: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            gap: 8px; cursor: pointer; transition: all 0.2s;
+        }
+        .download-qr-btn:hover {
+            background: #10b981;
+            color: #fff;
+        }
+        .qris-actions {
+            display: flex; gap: 10px; margin-top: 15px;
+        }
+        .qris-loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.error {
+            background: #ef4444;
+        }
+        .toast.warning {
+            background: #f59e0b;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 150;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        .menu-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .menu-panel {
+            position: absolute; top: 0; left: 0; width: 80%; height: 100%;
+            background: var(--bg-deep); border-right: 1px solid #333;
+            transform: translateX(-100%); transition: transform 0.3s ease;
+            padding: 20px; overflow-y: auto;
+        }
+        .menu-overlay.active .menu-panel {
+            transform: translateX(0);
+        }
+        .menu-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 20px; border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        .menu-close {
+            width: 32px; height: 32px; background: rgba(255,255,255,0.1);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            color: var(--text-on-dark); cursor: pointer;
+            font-size: 20px;
+        }
+        .menu-title {
+            font-size: 18px; font-weight: 700; color: var(--text-on-dark);
+        }
+        .menu-item {
+            padding: 15px 0; border-bottom: 1px solid #333;
+            cursor: pointer; transition: 0.2s;
+        }
+        .menu-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .menu-item h4 {
+            font-size: 16px; font-weight: 600; color: var(--text-on-dark);
+            margin-bottom: 5px;
+        }
+        .menu-item p {
+            font-size: 13px; color: var(--text-muted);
+        }
+
+        /* Modal Input Nominal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 25px;
+            width: 90%;
+            max-width: 350px;
+            border: 1px solid #333;
+        }
+        .modal-box h3 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .modal-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-btn.confirm {
+            background: var(--accent);
+            color: #fff;
+        }
+        .modal-btn.cancel {
+            background: #333;
+            color: #fff;
+        }
+        .modal-btn.danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .modal-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Admin Password Modal */
+        .admin-password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .admin-password-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .admin-password-box {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 25px;
+            width: 90%;
+            max-width: 320px;
+            border: 2px solid #333;
+        }
+        .admin-password-box h3 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .admin-password-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .admin-password-input:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        .admin-password-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .admin-password-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .admin-password-btn.confirm {
+            background: #2563eb;
+            color: #fff;
+        }
+        .admin-password-btn.cancel {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Promo Nominal Buttons */
+        .promo-nominal-btn {
+            transition: all 0.2s ease;
+        }
+        .promo-nominal-btn:hover {
+            transform: scale(0.95);
+        }
+        .promo-nominal-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Cashback History */
+        .cashback-history {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .cashback-history-item {
+            background: #222;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cashback-history-item .date {
+            color: #888;
+            font-size: 11px;
+        }
+        .cashback-history-item .amount {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .cashback-history-item .status {
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .status-tersedia {
+            background: #10b981;
+            color: white;
+        }
+        .status-digunakan {
+            background: #2563eb;
+            color: white;
+        }
+        .cashback-history-item .email {
+            color: #ea4335;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+        .cashback-history-item .ip {
+            color: var(--accent);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* Cashback Use Modal - Improved UI */
+        .cashback-use-option {
+            background: #1e1e1e;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .cashback-use-option:hover {
+            background: #2a2a2a;
+            border-color: var(--accent);
+        }
+        .cashback-use-option.selected {
+            border: 2px solid #10b981;
+            background: #1a2a1a;
+            transform: scale(0.98);
+        }
+        .cashback-use-option.selected .method-icon {
+            transform: scale(1.05);
+        }
+
+        /* Scrollbar Styling */
+        .modal-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-box::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        .modal-box::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 4px;
+        }
+        .modal-box::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+        }
+
+        /* Google Email Modal */
+        .google-email-display {
+            background: #222;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .google-email-display i {
+            font-size: 48px;
+            color: #ea4335;
+            margin-bottom: 10px;
+        }
+        .google-email-display p {
+            color: #fff;
+            font-size: 14px;
+            word-break: break-all;
+        }
+        .google-email-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .google-email-input:focus {
+            border-color: #ea4335;
+            outline: none;
+        }
+
+        /* Utility */
+        .ripple { position: relative; overflow: hidden; }
+        .ripple span { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+    </style>
 </head>
 <body>
 
-    <!-- BLOCKED PAGE (Original) -->
+    <!-- BLOCKED PAGE (Sesuai Screenshot) -->
     <div id="blockedPage" class="blocked-page" style="display: none;">
         <i class="ri-shield-cross-line blocked-icon"></i>
         <div class="blocked-title">AKUN ANDA DIBLOKIR</div>
@@ -33,12 +1109,10 @@
         </div>
     </div>
 
-    <!-- Audio Element (Original) -->
     <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
-    <!-- Main App Frame (Original Structure) -->
     <div class="app-frame" id="mainApp">
-        <!-- HEADER (Original) -->
+        <!-- HEADER - With Logout Button -->
         <div class="header-area">
             <div class="btn-icon ripple" id="btnMenu">
                 <i class="ri-menu-3-line"></i>
@@ -46,33 +1120,141 @@
             <div style="font-weight:800; font-size:16px; letter-spacing:1px; cursor: pointer;" id="logoJhonPay">JHON<span style="color:var(--text-muted);">PAY</span></div>
             
             <div style="display: flex; gap: 8px;">
+                <!-- Currency selector -->
                 <div class="currency-selector ripple" id="currencySelector">
                     <div class="currency-flag"></div>
                     <div class="currency-text">ID / IDR</div>
                 </div>
+                <!-- Logout Button (hidden by default) -->
                 <div class="btn-icon ripple" id="btnLogout" style="display: none;" onclick="showLogoutConfirm()">
                     <i class="ri-logout-box-r-line"></i>
-                </div>
-                <div class="btn-icon ripple" id="notifBell">
-                    <i class="ri-notification-3-line"></i>
-                    <span class="notif-badge" id="notifBadge">0</span>
                 </div>
             </div>
         </div>
 
-        <!-- CONTENT AREA (Original) -->
-        <div class="content-area" id="contentArea">
-            <!-- Content will be loaded here -->
+        <div class="content-area">
+            
+            <div class="profile-section">
+                <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
+                <div class="p-info">
+                    <h2>
+                        <span id="displayUsername">Guest</span>
+                    </h2>
+                    <div class="google-email">
+                        <i class="ri-google-fill"></i>
+                        <span id="displayGoogleEmail">Belum login</span>
+                    </div>
+                    <div class="ip-address">
+                        <i class="ri-computer-line"></i>
+                        <span id="displayIP">Mendeteksi IP...</span>
+                    </div>
+                    <p><span class="status-dot"></span> Online</p>
+                    <div class="social-bar">
+                        <a href="https://instagram.com/cpm_jhon" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                            <i class="ri-instagram-fill"></i>
+                        </a>
+                        <a href="https://t.me/cpm_jhon21" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                            <i class="ri-telegram-fill"></i>
+                        </a>
+                        <a href="https://wa.me/6285894955362" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                            <i class="ri-whatsapp-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASHBACK BALANCE SECTION -->
+            <div id="cashbackBalanceContainer" style="display: none;"></div>
+
+            <div class="marquee-container">
+                <div class="marquee-text">
+                    INFO: 1 AKUN PER IP • DILARANG MEMBUAT MULTIPLE AKUN • PELANGGARAN AKAN DIBLOKIR PERMANEN
+                </div>
+            </div>
+
+            <div class="menu-title">Main Service</div>
+            <div class="menu-grid">
+                <div class="menu-card card-qris-full ripple" onclick="openSheet('qris')">
+                    <div class="qris-left"><i class="ri-qr-scan-2-line"></i></div>
+                    <div class="qris-right">
+                        <h3>Scan QRIS</h3>
+                        <p>Instant Payment</p>
+                    </div>
+                </div>
+
+                <div class="menu-card ripple" onclick="openSheet('dana_only')">
+                    <div class="mc-icon" style="color:#10b981;"><i class="ri-wallet-3-fill"></i></div>
+                    <div class="mc-text">
+                        <h3>E-Wallet</h3>
+                        <p>Dana / OVO / GoPay</p>
+                    </div>
+                </div>
+
+                <div class="menu-card ripple" onclick="openSheet('bank')">
+                    <div class="mc-icon" style="color:#f59e0b;"><i class="ri-bank-card-fill"></i></div>
+                    <div class="mc-text">
+                        <h3>Transfer</h3>
+                        <p>Semua Bank</p>
+                    </div>
+                </div>
+
+                 <div class="menu-card ripple" onclick="openSheet('pulsa')">
+                    <div class="mc-icon" style="color:#ef4444;"><i class="ri-smartphone-fill"></i></div>
+                    <div class="mc-text">
+                        <h3>Top Up</h3>
+                        <p>Pulsa All Op</p>
+                    </div>
+                </div>
+
+                <div class="menu-card ripple" onclick="openSheet('all')">
+                    <div class="mc-icon" style="color:#6366f1;"><i class="ri-grid-fill"></i></div>
+                    <div class="mc-text">
+                        <h3>Lainnya</h3>
+                        <p>Lihat Menu</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-features">
+                <div class="feat-item ripple" onclick="playTick()">
+                    <i class="ri-flashlight-fill feat-icon"></i>
+                    <div class="feat-text">
+                        <h5>Proses Cepat</h5>
+                        <p>Instant Process</p>
+                    </div>
+                </div>
+                <div class="feat-item ripple" onclick="playTick()">
+                    <i class="ri-shield-check-fill feat-icon"></i>
+                    <div class="feat-text">
+                        <h5>Aman 100%</h5>
+                        <p>Terverifikasi</p>
+                    </div>
+                </div>
+                <div class="feat-item ripple" onclick="openChat()">
+                    <i class="ri-customer-service-fill feat-icon"></i>
+                    <div class="feat-text">
+                        <h5>Admin 24/7</h5>
+                        <p>Siap Membantu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROMO BANNER -->
+            <div class="promo-banner ripple" id="promoBanner" onclick="openPromoQRIS()">
+                <h4>Promo Cashback 50%</h4>
+                <p>Khusus pengguna baru untuk transaksi pertama via QRIS.</p>
+                <i class="ri-coupon-3-line promo-deco"></i>
+            </div>
+
+            <div style="height:30px;"></div>
         </div>
 
-        <!-- FLOATING CHAT BUTTON (Original) -->
         <div class="fab-container">
             <button class="btn-fab ripple" id="fabChat">
                 <i class="ri-customer-service-2-fill"></i>
             </button>
         </div>
 
-        <!-- CHAT WINDOW (Original) -->
         <div class="chat-modal" id="chatWin">
             <div class="cm-header">
                 <span>Live Support</span>
@@ -88,7 +1270,7 @@
             </div>
         </div>
 
-        <!-- NOTIFICATION PANEL (Original) -->
+        <!-- Notification Panel -->
         <div class="notif-panel" id="notifPanel">
             <div class="notif-box">
                 <div class="nb-header">
@@ -101,7 +1283,7 @@
             </div>
         </div>
 
-        <!-- MENU OVERLAY (Original) -->
+        <!-- Menu Overlay -->
         <div class="menu-overlay" id="menuOverlay">
             <div class="menu-panel">
                 <div class="menu-header">
@@ -126,31 +1308,15 @@
                     <h4>💰 Riwayat Cashback</h4>
                     <p>Lihat history cashback Anda</p>
                 </div>
-                <div class="menu-item" onclick="showTransactionHistory()">
-                    <h4>📊 Riwayat Transaksi</h4>
-                    <p>Lihat semua transaksi Anda</p>
-                </div>
-                <div class="menu-item" onclick="exportUserData()">
-                    <h4>📥 Export Data</h4>
-                    <p>Download data transaksi Anda</p>
-                </div>
             </div>
         </div>
 
-        <!-- MODAL INPUT NOMINAL (Original) -->
+        <!-- Modal Input Nominal -->
         <div class="modal-overlay" id="paymentModal">
             <div class="modal-box">
                 <h3>Konfirmasi Pembayaran</h3>
-                <input type="number" id="modalNominal" class="modal-input" placeholder="Masukkan nominal" min="1000" max="10000000" step="1000">
+                <input type="number" id="modalNominal" class="modal-input" placeholder="Masukkan nominal" min="1">
                 <input type="text" id="modalMetode" class="modal-input" placeholder="Metode pembayaran" readonly style="background: #333;">
-                <div class="payment-summary" id="paymentSummary" style="display: none;">
-                    <p>Cashback tersedia: <span id="availableCashback">Rp 0</span></p>
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="useCashbackCheck">
-                        <span class="checkmark"></span>
-                        Gunakan cashback
-                    </label>
-                </div>
                 <div class="modal-buttons">
                     <button class="modal-btn cancel" onclick="closePaymentModal()">Batal</button>
                     <button class="modal-btn confirm" onclick="sendPaymentConfirmation()">Kirim</button>
@@ -158,44 +1324,16 @@
             </div>
         </div>
 
-        <!-- MODAL CASHBACK HISTORY (Original) -->
+        <!-- Modal Cashback History -->
         <div class="modal-overlay" id="cashbackHistoryModal">
-            <div class="modal-box" style="max-width: 400px; max-height: 80vh;">
+            <div class="modal-box" style="max-width: 400px;">
                 <h3>💰 Riwayat Cashback</h3>
                 <div id="cashbackHistoryList" class="cashback-history"></div>
-                <button class="modal-btn cancel" onclick="closeCashbackHistory()" style="width: 100%; margin-top: 15px;">Tutup</button>
+                <button class="modal-btn cancel" onclick="closeCashbackHistory()" style="width: 100%;">Tutup</button>
             </div>
         </div>
 
-        <!-- MODAL TRANSACTION HISTORY (New) -->
-        <div class="modal-overlay" id="transactionHistoryModal">
-            <div class="modal-box" style="max-width: 450px; max-height: 80vh;">
-                <div class="modal-header">
-                    <h3>📊 Riwayat Transaksi</h3>
-                    <button class="modal-close" onclick="closeTransactionHistory()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="transaction-filters">
-                        <select id="transactionFilter" onchange="filterTransactions()">
-                            <option value="all">Semua</option>
-                            <option value="qris">QRIS</option>
-                            <option value="ewallet">E-Wallet</option>
-                            <option value="bank">Bank</option>
-                            <option value="pulsa">Pulsa</option>
-                        </select>
-                        <button class="btn-icon-small" onclick="exportTransactions()">
-                            <i class="ri-download-line"></i>
-                        </button>
-                    </div>
-                    <div id="transactionList" class="transaction-list"></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="modal-btn cancel" onclick="closeTransactionHistory()">Tutup</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- MODAL USE CASHBACK (Original) -->
+        <!-- Modal Use Cashback - Improved UI with Scroll -->
         <div class="modal-overlay" id="useCashbackModal">
             <div class="modal-box" style="max-width: 400px; max-height: 80vh; display: flex; flex-direction: column;">
                 <h3 style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; flex-shrink: 0;">
@@ -333,7 +1471,7 @@
             </div>
         </div>
 
-        <!-- MODAL GOOGLE EMAIL (Original) -->
+        <!-- Modal Google Email (for first time users) -->
         <div class="modal-overlay" id="googleEmailModal">
             <div class="modal-box">
                 <h3>🔐 Verifikasi Gmail</h3>
@@ -352,7 +1490,7 @@
             </div>
         </div>
 
-        <!-- MODAL LOGIN (Original) -->
+        <!-- Modal Login (for returning users) -->
         <div class="modal-overlay" id="loginModal">
             <div class="modal-box" style="max-width: 350px;">
                 <div style="text-align: center; margin-bottom: 20px;">
@@ -383,7 +1521,7 @@
             </div>
         </div>
 
-        <!-- MODAL LOGOUT CONFIRMATION (Original) -->
+        <!-- Modal Logout Confirmation -->
         <div class="modal-overlay" id="logoutModal">
             <div class="modal-box" style="max-width: 320px;">
                 <div style="text-align: center; margin-bottom: 20px;">
@@ -398,49 +1536,2070 @@
             </div>
         </div>
 
-        <!-- MODAL BANNED USERS (Original) -->
+        <!-- Modal Banned Users (Admin Only) - IMPROVED VERSION -->
         <div class="modal-overlay" id="bannedUsersModal">
-            <div class="modal-box" style="max-width: 400px; max-height: 80vh; overflow-y: auto;">
-                <h3>🚫 User Terblokir</h3>
-                <div id="bannedUsersList" class="cashback-history"></div>
-                <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="width: 100%; margin-top: 15px;">Tutup</button>
-            </div>
-        </div>
-
-        <!-- MODAL ADMIN PASSWORD (Original) -->
-        <div class="admin-password-modal" id="adminPasswordModal">
-            <div class="admin-password-box">
-                <h3>🔐 Admin Access</h3>
-                <input type="password" id="adminPassword" class="admin-password-input" placeholder="Masukkan password" maxlength="20">
-                <div class="admin-password-buttons">
-                    <button class="admin-password-btn cancel" onclick="closeAdminModal()">Batal</button>
-                    <button class="admin-password-btn confirm" onclick="checkAdminPassword()">Masuk</button>
+            <div class="modal-box" style="max-width: 420px; max-height: 80vh; overflow-y: auto;">
+                <h3>
+                    <i class="ri-shield-cross-line"></i>
+                    USER TERBLOKIR
+                </h3>
+                <div id="bannedUsersList" class="cashback-history">
+                    <p style="color: #888; text-align: center; padding: 20px;">Memuat data...</p>
                 </div>
-                <p style="color: #666; font-size: 10px; text-align: center; margin-top: 10px;">* Khusus administrator</p>
-            </div>
-        </div>
-
-        <!-- SHEET OVERLAY (Original) -->
-        <div class="sheet-overlay" id="sheet">
-            <div class="sheet-panel">
-                <div style="width:40px; height:5px; background:#ccc; border-radius:10px; margin:0 auto 15px;"></div>
-                <div style="text-align:center; margin-bottom:25px;">
-                    <h3 style="color:#000; font-size:16px; font-weight:800;" id="sheetTitle">Payment</h3>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="flex: 1;">Tutup</button>
+                    <button class="modal-btn danger" onclick="if(confirm('Hapus SEMUA blokir?')) { clearAllBanned(); }" style="flex: 1;">
+                        <i class="ri-delete-bin-line"></i> Hapus Semua
+                    </button>
                 </div>
-                <div id="sheetList"></div>
-                <button class="ripple" id="btnCloseSheet" style="width:100%; padding:15px; border-radius:12px; border:none; background:#000; color:#fff; font-weight:700; margin-top:15px;">Tutup</button>
             </div>
-        </div>
-
-        <!-- LOADING OVERLAY (New) -->
-        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Memproses...</div>
         </div>
 
     </div>
 
-    <!-- Main JavaScript -->
-    <script src="asset/js/script.js"></script>
+    <div class="sheet-overlay" id="sheet">
+        <div class="sheet-panel">
+            <div style="width:40px; height:5px; background:#ccc; border-radius:10px; margin:0 auto 15px;"></div>
+            <div style="text-align:center; margin-bottom:25px;">
+                <h3 style="color:#000; font-size:16px; font-weight:800;" id="sheetTitle">Payment</h3>
+            </div>
+            <div id="sheetList"></div>
+            <button class="ripple" id="btnCloseSheet" style="width:100%; padding:15px; border-radius:12px; border:none; background:#000; color:#fff; font-weight:700; margin-top:15px;">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        // --- EMERGENCY UNBLOCK SYSTEM (via URL) ---
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('admin_unblock') === 'jhon123') {
+                // Hapus semua data blokir
+                localStorage.removeItem('bannedIPs');
+                localStorage.removeItem('blockReports');
+                
+                // Hapus specific IP jika ada
+                const ipToUnblock = urlParams.get('ip');
+                if (ipToUnblock) {
+                    localStorage.removeItem('blockedEmail_' + ipToUnblock);
+                    
+                    // Hapus dari bannedIPs juga
+                    let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+                    bannedIPs = bannedIPs.filter(ip => ip !== ipToUnblock);
+                    localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+                    
+                    // Hapus dari blockReports
+                    let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                    blockReports = blockReports.filter(report => report.ip !== ipToUnblock);
+                    localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                }
+                
+                console.log('%c✅ BLOKIR DIBUKA!', 'color: green; font-size: 16px');
+                alert('✅ Blokir telah dibuka! Halaman akan di-refresh.');
+                
+                // Hapus parameter dari URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // Refresh setelah 1 detik
+                setTimeout(() => location.reload(), 1000);
+            }
+        })();
+
+        // --- KONFIGURASI APLIKASI DENGAN WHITELIST IP ---
+        const config = {
+            qrisImageUrl: 'qr8.jpg',
+            whatsappNumber: '6285894955362',
+            adminName: 'Admin JHON',
+            adminPassword: 'jhon123',
+            // Daftar IP yang dikecualikan dari blokir (admin)
+            whitelistedIPs: [
+                '114.10.43.99',  // IP admin
+                '127.0.0.1',      // localhost
+                '::1'             // localhost IPv6
+            ]
+        };
+
+        // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
+        const dataPay = {
+            // E-WALLET
+            dana: { name: 'DANA', num: '085591916436', img: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg' },
+            shopee: { name: 'ShopeePay', num: '085894955362', img: 'pay.jpg' },
+            gopay: { name: 'GoPay', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg' },
+            ovo: { name: 'OVO', num: '085894955362', img: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg' },
+            linkaja: { name: 'LinkAja', num: '0877xxx', img: 'link.jpg' },
+            paypal: { name: 'PayPal', num: 'paypal.me/jhonpayment', img: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg' },
+            
+            // BANK
+            sea: { name: 'BCA', num: '3781910587', img: 'bca.jpg' },
+            sea2: { name: 'SeaBank', num: '9016xxx', img: 'bank.jpg' },
+            bri: { name: 'BRI', num: '1234xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg' },
+            
+            // PULSA
+            pulsa: { name: 'Telkomsel', num: '0825xxx', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg' },
+            indosat: { name: 'Indosat', num: '085894955362', img: 'indosat.jpg' },
+            tri: { name: 'Tri (3)', num: '089xxx', img: 'tri.jpg' },
+            smartfren: { name: 'Smartfren', num: '088xxx', img: 'smr.jpg' }
+        };
+
+        // --- VARIABEL GLOBAL ---
+        let currentQrisAmount = 0;
+        let currentQRImage = '';
+        let originalContent = '';
+        let selectedPaymentMethod = '';
+        let selectedPaymentName = '';
+        let selectedCashbackUse = '';
+        let cashbackUseAmount = 50000;
+        let userIP = '';
+        let isLoggedIn = false;
+
+        // --- CASHBACK SYSTEM ---
+        let cashbackBalance = 0;
+        let cashbackHistory = [];
+
+        // --- IP DETECTION ---
+        async function detectIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                userIP = data.ip;
+                document.getElementById('displayIP').innerText = userIP;
+                
+                // Log untuk admin (cek apakah IP di whitelist)
+                if (config.whitelistedIPs.includes(userIP)) {
+                    console.log('🛡️ IP Admin terdeteksi:', userIP);
+                }
+                
+                return userIP;
+            } catch (error) {
+                console.error('Gagal mendeteksi IP:', error);
+                userIP = 'unknown-' + Math.random().toString(36).substring(7);
+                document.getElementById('displayIP').innerText = userIP;
+                return userIP;
+            }
+        }
+
+        // --- BLOCK SYSTEM DENGAN WHITELIST (IMPROVED) ---
+        function checkIfBanned(ip) {
+            // Cek apakah IP ini masuk whitelist (admin)
+            if (config.whitelistedIPs.includes(ip)) {
+                return false; // IP admin tidak pernah diblokir
+            }
+            
+            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            return bannedIPs.includes(ip);
+        }
+
+        function blockUser(ip, email, reason = 'Mencoba membuat multiple akun') {
+            // Jangan blokir IP yang masuk whitelist
+            if (config.whitelistedIPs.includes(ip)) {
+                console.log('🛡️ IP admin dilindungi:', ip);
+                return;
+            }
+            
+            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            if (!bannedIPs.includes(ip)) {
+                bannedIPs.push(ip);
+                localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+                
+                // Simpan laporan pemblokiran dengan LENGKAP
+                const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                blockReports.unshift({
+                    ip: ip,
+                    email: email || 'Unknown',
+                    reason: reason,
+                    date: new Date().toISOString(),
+                    reportedBy: 'system'
+                });
+                localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                // Simpan email yang diblokir untuk referensi
+                localStorage.setItem('blockedEmail_' + ip, email || 'Unknown');
+                
+                console.log(`🚫 User diblokir: ${email} (${ip}) - ${reason}`);
+                
+                // Tampilkan notifikasi ke user
+                showToast(`⚠️ Akun diblokir karena ${reason}`, true);
+                
+                // Refresh halaman setelah 2 detik untuk menampilkan halaman blokir
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
+        }
+
+        function unblockUser(ip) {
+            let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
+            localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+            
+            // Hapus email referensi
+            localStorage.removeItem('blockedEmail_' + ip);
+        }
+
+        function showBlockedPage(ip, email) {
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('blockedPage').style.display = 'flex';
+            
+            const details = document.getElementById('blockedDetails');
+            details.innerHTML = `
+                <p><i class="ri-computer-line"></i> IP: ${ip}</p>
+                <p><i class="ri-google-fill"></i> Email: ${email || 'Unknown'}</p>
+                <p><i class="ri-time-line"></i> Waktu: ${new Date().toLocaleString('id-ID')}</p>
+            `;
+        }
+
+        // --- BANNED USERS ADMIN (IMPROVED VERSION - Sesuai Screenshot) ---
+        function showBannedUsers() {
+            playTick();
+            
+            // Ambil data dari localStorage
+            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            
+            console.log('📋 Data Banned IPs:', bannedIPs);
+            console.log('📋 Data Block Reports:', blockReports);
+            
+            const list = document.getElementById('bannedUsersList');
+            if (!list) return;
+            
+            if (bannedIPs.length === 0 && blockReports.length === 0) {
+                list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada user terblokir</p>';
+            } else {
+                let html = '';
+                const processedIPs = new Set(); // Untuk tracking IP yang sudah ditampilkan
+                
+                // Tampilkan dari blockReports dulu (lebih lengkap)
+                if (blockReports.length > 0) {
+                    blockReports.forEach((report, index) => {
+                        const date = new Date(report.date).toLocaleString('id-ID');
+                        processedIPs.add(report.ip);
+                        html += `
+                            <div class="banned-user-item">
+                                <div class="header">
+                                    <span class="email">
+                                        <i class="ri-google-fill"></i> ${report.email || 'Unknown'}
+                                    </span>
+                                    <button class="unblock-btn" onclick="adminUnblockUser('${report.ip}', '${report.email || 'Unknown'}')">
+                                        <i class="ri-lock-unlock-line"></i> Buka Blokir
+                                    </button>
+                                </div>
+                                <div class="ip">
+                                    <i class="ri-computer-line"></i> IP: ${report.ip}
+                                </div>
+                                <div class="reason">
+                                    <i class="ri-alert-line"></i> Alasan: ${report.reason || 'Multiple akun'}
+                                </div>
+                                <div class="date">
+                                    <i class="ri-time-line"></i> ${date}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Tampilkan dari bannedIPs yang mungkin tidak ada di reports
+                bannedIPs.forEach(ip => {
+                    if (!processedIPs.has(ip)) {
+                        const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
+                        html += `
+                            <div class="banned-user-item">
+                                <div class="header">
+                                    <span class="email">
+                                        <i class="ri-google-fill"></i> ${blockedEmail}
+                                    </span>
+                                    <button class="unblock-btn" onclick="adminUnblockUser('${ip}', '${blockedEmail}')">
+                                        <i class="ri-lock-unlock-line"></i> Buka Blokir
+                                    </button>
+                                </div>
+                                <div class="ip">
+                                    <i class="ri-computer-line"></i> IP: ${ip}
+                                </div>
+                                <div class="reason">
+                                    <i class="ri-alert-line"></i> Alasan: Multiple akun (otomatis)
+                                </div>
+                                <div class="date">
+                                    <i class="ri-time-line"></i> ${new Date().toLocaleString('id-ID')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                list.innerHTML = html;
+            }
+            
+            document.getElementById('bannedUsersModal').classList.add('active');
+        }
+
+        // --- ADMIN UNBLOCK USER (IMPROVED) ---
+        function adminUnblockUser(ip, email) {
+            playTick();
+            
+            if (confirm(`Yakin ingin membuka blokir untuk ${email} (IP: ${ip})?`)) {
+                // Hapus dari bannedIPs
+                let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+                bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
+                localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+                
+                // Hapus dari blockReports
+                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                blockReports = blockReports.filter(report => report.ip !== ip);
+                localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                // Hapus email referensi
+                localStorage.removeItem('blockedEmail_' + ip);
+                
+                showToast(`✅ Blokir untuk ${email} (IP: ${ip}) dibuka!`, false);
+                addLog(`Admin membuka blokir ${email} (${ip})`);
+                
+                // Refresh daftar
+                showBannedUsers();
+            }
+        }
+
+        // --- CLEAR ALL BANNED ---
+        function clearAllBanned() {
+            // Hapus semua data blokir tapi pertahankan whitelist admin
+            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            const filteredIPs = bannedIPs.filter(ip => config.whitelistedIPs.includes(ip));
+            localStorage.setItem('bannedIPs', JSON.stringify(filteredIPs));
+            
+            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            const filteredReports = blockReports.filter(report => config.whitelistedIPs.includes(report.ip));
+            localStorage.setItem('blockReports', JSON.stringify(filteredReports));
+            
+            // Hapus semua blockedEmail kecuali admin
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('blockedEmail_')) {
+                    const ip = key.replace('blockedEmail_', '');
+                    if (!config.whitelistedIPs.includes(ip)) {
+                        localStorage.removeItem(key);
+                    }
+                }
+            }
+            
+            showToast('✅ Semua data blokir telah dihapus!', false);
+            showBannedUsers();
+        }
+
+        // --- LOGIN/LOGOUT SYSTEM ---
+        function checkLoginStatus() {
+            const savedSession = localStorage.getItem('userSession');
+            if (savedSession) {
+                const session = JSON.parse(savedSession);
+                const ip = session.ip;
+                const email = session.email;
+                
+                // Cek apakah IP ini diblokir (dengan whitelist)
+                if (checkIfBanned(ip)) {
+                    showBlockedPage(ip, email);
+                    return false;
+                }
+                
+                // Cek apakah session masih valid
+                const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
+                const validSession = registeredIPs.find(entry => entry.ip === ip && entry.email === email);
+                
+                if (validSession) {
+                    isLoggedIn = true;
+                    document.getElementById('displayGoogleEmail').innerText = email;
+                    document.getElementById('displayUsername').innerText = email.split('@')[0];
+                    document.getElementById('displayIP').innerText = ip;
+                    document.getElementById('btnLogout').style.display = 'flex';
+                    loadUserCashback(email);
+                    return true;
+                }
+            }
+            
+            // Tidak ada session valid
+            isLoggedIn = false;
+            document.getElementById('displayGoogleEmail').innerText = 'Belum login';
+            document.getElementById('displayUsername').innerText = 'Guest';
+            document.getElementById('btnLogout').style.display = 'none';
+            document.getElementById('cashbackBalanceContainer').style.display = 'none';
+            
+            return false;
+        }
+
+        function showLoginModal() {
+            playTick();
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.classList.add('active');
+                setTimeout(() => document.getElementById('loginEmailInput').focus(), 100);
+            }
+        }
+
+        function closeLoginModal() {
+            playTick();
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('loginEmailInput').value.trim();
+            const emailRegex = /^[^\s@]+@gmail\.com$/;
+            
+            if (!email) {
+                showToast('Email tidak boleh kosong', true);
+                return;
+            }
+            
+            if (!emailRegex.test(email)) {
+                showToast('Harus menggunakan email @gmail.com', true);
+                return;
+            }
+            
+            const ip = await detectIP();
+            
+            // Cek apakah IP ini diblokir (dengan whitelist)
+            if (checkIfBanned(ip)) {
+                showBlockedPage(ip, email);
+                return;
+            }
+            
+            // Cek apakah email ini sudah terdaftar di IP lain
+            const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
+            const emailExists = registeredIPs.find(entry => entry.email === email);
+            
+            if (emailExists && emailExists.ip !== ip) {
+                // Email sudah terdaftar di IP berbeda - ini pelanggaran!
+                showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
+                
+                // Blokir IP ini (kecuali admin)
+                blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+            
+            // Cek apakah IP ini sudah memiliki akun dengan email berbeda
+            const ipExists = registeredIPs.find(entry => entry.ip === ip);
+            
+            if (ipExists && ipExists.email !== email) {
+                // IP sudah memiliki akun dengan email berbeda - ini pelanggaran!
+                showToast('⚠️ IP ini sudah memiliki akun dengan email berbeda!', true);
+                
+                // Blokir IP ini (kecuali admin)
+                blockUser(ip, email, 'Mencoba login dengan email berbeda');
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+            
+            // Jika user baru (belum terdaftar)
+            if (!ipExists) {
+                registeredIPs.push({ 
+                    ip: ip, 
+                    email: email, 
+                    username: email.split('@')[0],
+                    date: new Date().toISOString() 
+                });
+                localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
+            }
+            
+            // Simpan session
+            const session = {
+                ip: ip,
+                email: email,
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('userSession', JSON.stringify(session));
+            
+            // Update tampilan
+            document.getElementById('displayGoogleEmail').innerText = email;
+            document.getElementById('displayUsername').innerText = email.split('@')[0];
+            document.getElementById('displayIP').innerText = ip;
+            document.getElementById('btnLogout').style.display = 'flex';
+            
+            closeLoginModal();
+            showToast(`✅ Selamat datang ${email.split('@')[0]}!`, false);
+            
+            // Load cashback user
+            loadUserCashback(email);
+            
+            // Log aktivitas
+            addLog(`User login: ${email} (IP: ${ip})`);
+        }
+
+        function showLogoutConfirm() {
+            playTick();
+            document.getElementById('logoutModal').classList.add('active');
+        }
+
+        function closeLogoutModal() {
+            playTick();
+            document.getElementById('logoutModal').classList.remove('active');
+        }
+
+        function logoutUser() {
+            playTick();
+            
+            // Hapus session
+            localStorage.removeItem('userSession');
+            
+            // Update tampilan
+            isLoggedIn = false;
+            document.getElementById('displayGoogleEmail').innerText = 'Belum login';
+            document.getElementById('displayUsername').innerText = 'Guest';
+            document.getElementById('btnLogout').style.display = 'none';
+            document.getElementById('cashbackBalanceContainer').style.display = 'none';
+            
+            closeLogoutModal();
+            showToast('✅ Anda telah keluar', false);
+            
+            // Tampilkan modal login setelah 1 detik
+            setTimeout(() => {
+                showLoginModal();
+            }, 1000);
+            
+            addLog('User logout');
+        }
+
+        // Override fungsi checkUserVerification yang lama
+        async function checkUserVerification() {
+            // Cek status login dulu
+            if (checkLoginStatus()) {
+                return true;
+            }
+            
+            // Tampilkan modal login untuk guest
+            setTimeout(() => {
+                showLoginModal();
+            }, 1000);
+            
+            return false;
+        }
+
+        // --- GOOGLE EMAIL SYSTEM (untuk first time users) ---
+        function showGoogleEmailModal() {
+            playTick();
+            const modal = document.getElementById('googleEmailModal');
+            modal.classList.add('active');
+            setTimeout(() => document.getElementById('googleEmailInput').focus(), 100);
+        }
+
+        function closeGoogleEmailModal() {
+            playTick();
+            document.getElementById('googleEmailModal').classList.remove('active');
+        }
+
+        async function saveGoogleEmail() {
+            const email = document.getElementById('googleEmailInput').value.trim();
+            const emailRegex = /^[^\s@]+@gmail\.com$/;
+            
+            if (!email) {
+                showToast('Email tidak boleh kosong', true);
+                return;
+            }
+            
+            if (!emailRegex.test(email)) {
+                showToast('Harus menggunakan email @gmail.com', true);
+                return;
+            }
+            
+            const ip = await detectIP();
+            
+            // Cek apakah email ini sudah terdaftar di IP lain
+            const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
+            const emailExists = registeredIPs.find(entry => entry.email === email);
+            
+            if (emailExists && emailExists.ip !== ip) {
+                // Email sudah terdaftar di IP berbeda - ini pelanggaran!
+                showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
+                
+                // Blokir IP ini (kecuali admin)
+                blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+            
+            // Cek apakah IP ini sudah memiliki akun
+            const ipExists = registeredIPs.find(entry => entry.ip === ip);
+            
+            if (ipExists) {
+                // IP sudah memiliki akun - ini pelanggaran!
+                showToast('⚠️ IP ini sudah memiliki akun! Dilarang membuat multiple akun!', true);
+                
+                // Blokir IP ini (kecuali admin)
+                blockUser(ip, email, 'Mencoba membuat multiple akun');
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+            
+            // Daftarkan user baru
+            registeredIPs.push({ 
+                ip: ip, 
+                email: email, 
+                username: email.split('@')[0],
+                date: new Date().toISOString() 
+            });
+            localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
+            
+            // Simpan session
+            const session = {
+                ip: ip,
+                email: email,
+                loginTime: new Date().toISOString()
+            };
+            localStorage.setItem('userSession', JSON.stringify(session));
+            
+            document.getElementById('displayGoogleEmail').innerText = email;
+            document.getElementById('displayUsername').innerText = email.split('@')[0];
+            document.getElementById('displayIP').innerText = ip;
+            document.getElementById('btnLogout').style.display = 'flex';
+            
+            closeGoogleEmailModal();
+            showToast(`✅ Selamat datang ${email.split('@')[0]}!`, false);
+            
+            // Log aktivitas
+            addLog(`User baru: ${email} (IP: ${ip})`);
+        }
+
+        // --- CASHBACK SYSTEM ---
+        function loadUserCashback(email) {
+            const userCashback = JSON.parse(localStorage.getItem('userCashback_' + email) || '{"balance":0,"history":[]}');
+            cashbackBalance = userCashback.balance;
+            cashbackHistory = userCashback.history;
+            updateCashbackDisplay();
+        }
+
+        function saveCashbackData(email) {
+            const userCashback = {
+                balance: cashbackBalance,
+                history: cashbackHistory
+            };
+            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
+        }
+
+        function addCashback(amount, email, from) {
+            const userCashback = JSON.parse(localStorage.getItem('userCashback_' + email) || '{"balance":0,"history":[]}');
+            userCashback.balance += amount;
+            userCashback.history.unshift({
+                date: new Date().toISOString(),
+                amount: amount,
+                from: from,
+                email: email,
+                status: 'tersedia'
+            });
+            
+            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
+            
+            const currentEmail = document.getElementById('displayGoogleEmail').innerText;
+            if (currentEmail === email) {
+                cashbackBalance = userCashback.balance;
+                cashbackHistory = userCashback.history;
+                updateCashbackDisplay();
+            }
+            
+            addLog(`Cashback Rp ${amount.toLocaleString()} ditambahkan ke ${email}`);
+        }
+
+        function useCashback(amount, for_) {
+            const email = document.getElementById('displayGoogleEmail').innerText;
+            
+            if (amount > cashbackBalance) {
+                showToast('Saldo cashback tidak mencukupi', true);
+                return false;
+            }
+            
+            const userCashback = JSON.parse(localStorage.getItem('userCashback_' + email) || '{"balance":0,"history":[]}');
+            userCashback.balance -= amount;
+            userCashback.history.unshift({
+                date: new Date().toISOString(),
+                amount: amount,
+                from: 'Digunakan untuk ' + for_,
+                email: email,
+                status: 'digunakan'
+            });
+            
+            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
+            
+            cashbackBalance = userCashback.balance;
+            cashbackHistory = userCashback.history;
+            updateCashbackDisplay();
+            
+            return true;
+        }
+
+        function updateCashbackDisplay() {
+            const container = document.getElementById('cashbackBalanceContainer');
+            if (!container) return;
+            
+            if (cashbackBalance > 0) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div class="cashback-balance">
+                        <div class="cashback-info">
+                            <div class="cashback-icon">
+                                <i class="ri-coupon-3-line"></i>
+                            </div>
+                            <div class="cashback-text">
+                                <h4>Saldo Cashback</h4>
+                                <p>Rp ${cashbackBalance.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <button class="cashback-use-btn" onclick="openUseCashbackModal()" ${cashbackBalance === 0 ? 'disabled' : ''}>
+                            Gunakan
+                        </button>
+                    </div>
+                `;
+            } else {
+                container.style.display = 'none';
+                container.innerHTML = '';
+            }
+        }
+
+        // --- CASHBACK USE MODAL ---
+        function openUseCashbackModal() {
+            if (cashbackBalance === 0) {
+                showToast('Tidak ada cashback untuk digunakan', true);
+                return;
+            }
+            
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            playTick();
+            
+            selectedCashbackUse = '';
+            document.querySelectorAll('.cashback-use-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            const cashbackAmount = cashbackBalance;
+            document.getElementById('cashbackAmount').innerText = cashbackAmount.toLocaleString();
+            
+            cashbackUseAmount = 50000;
+            const finalAmount = Math.max(0, cashbackUseAmount - cashbackAmount);
+            
+            document.getElementById('qrisOriginal').innerText = `Rp ${cashbackUseAmount.toLocaleString()}`;
+            document.getElementById('qrisFinal').innerText = `Rp ${finalAmount.toLocaleString()}`;
+            document.getElementById('ewalletOriginal').innerText = `Rp ${cashbackUseAmount.toLocaleString()}`;
+            document.getElementById('ewalletFinal').innerText = `Rp ${finalAmount.toLocaleString()}`;
+            document.getElementById('bankOriginal').innerText = `Rp ${cashbackUseAmount.toLocaleString()}`;
+            document.getElementById('bankFinal').innerText = `Rp ${finalAmount.toLocaleString()}`;
+            document.getElementById('pulsaOriginal').innerText = `Rp ${cashbackUseAmount.toLocaleString()}`;
+            document.getElementById('pulsaFinal').innerText = `Rp ${finalAmount.toLocaleString()}`;
+            
+            document.getElementById('useCashbackModal').classList.add('active');
+        }
+
+        function closeUseCashbackModal() {
+            playTick();
+            document.getElementById('useCashbackModal').classList.remove('active');
+        }
+
+        function selectCashbackUse(type) {
+            playTick();
+            selectedCashbackUse = type;
+            
+            document.querySelectorAll('.cashback-use-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            document.getElementById(`use${type.charAt(0).toUpperCase() + type.slice(1)}Option`).classList.add('selected');
+        }
+
+        function applyCashbackToPayment() {
+            if (!selectedCashbackUse) {
+                showToast('Pilih metode pembayaran terlebih dahulu', true);
+                return;
+            }
+            
+            playTick();
+            
+            const cashbackAmount = cashbackBalance;
+            const finalAmount = Math.max(0, cashbackUseAmount - cashbackAmount);
+            
+            if (!useCashback(cashbackAmount, selectedCashbackUse)) {
+                return;
+            }
+            
+            closeUseCashbackModal();
+            
+            if (selectedCashbackUse === 'qris') {
+                openSheet('qris');
+                setTimeout(() => {
+                    const amountInput = document.getElementById('qrisAmount');
+                    if (amountInput) {
+                        amountInput.value = finalAmount;
+                        const event = new Event('input', { bubbles: true });
+                        amountInput.dispatchEvent(event);
+                        
+                        amountInput.style.border = '2px solid #10b981';
+                        amountInput.style.backgroundColor = '#f0fdf4';
+                        setTimeout(() => {
+                            if (amountInput) {
+                                amountInput.style.border = '1px solid #ddd';
+                                amountInput.style.backgroundColor = '#f9f9f9';
+                            }
+                        }, 2000);
+                    }
+                }, 500);
+            } else if (selectedCashbackUse === 'ewallet') {
+                openSheet('dana_only');
+            } else if (selectedCashbackUse === 'bank') {
+                openSheet('bank');
+            } else if (selectedCashbackUse === 'pulsa') {
+                openSheet('pulsa');
+            }
+            
+            showToast(`💰 Cashback digunakan! Bayar Rp ${finalAmount.toLocaleString()}`, false);
+        }
+
+        // --- CASHBACK HISTORY ---
+        function showCashbackHistory() {
+            playTick();
+            menuOverlay.classList.remove('active');
+            
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            const historyList = document.getElementById('cashbackHistoryList');
+            if (!historyList) return;
+            
+            if (cashbackHistory.length === 0) {
+                historyList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada history cashback</p>';
+            } else {
+                let html = '';
+                cashbackHistory.forEach(item => {
+                    const date = new Date(item.date).toLocaleDateString('id-ID');
+                    const statusClass = item.status === 'tersedia' ? 'status-tersedia' : 'status-digunakan';
+                    const statusText = item.status === 'tersedia' ? 'Tersedia' : 'Digunakan';
+                    
+                    html += `
+                        <div class="cashback-history-item">
+                            <div>
+                                <div style="font-weight: 600; color: #fff; margin-bottom: 3px;">
+                                    ${item.from}
+                                </div>
+                                <div class="email"><i class="ri-google-fill"></i> ${item.email}</div>
+                                <div class="date">${date}</div>
+                            </div>
+                            <div>
+                                <span class="amount">Rp ${item.amount.toLocaleString()}</span>
+                                <span class="status ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                historyList.innerHTML = html;
+            }
+            
+            document.getElementById('cashbackHistoryModal').classList.add('active');
+        }
+
+        function closeCashbackHistory() {
+            playTick();
+            document.getElementById('cashbackHistoryModal').classList.remove('active');
+        }
+
+        // --- ADMIN RESET PROMO (DENGAN RESET SALDO CASHBACK) ---
+        function adminResetPromo() {
+            const email = prompt('Masukkan Gmail user untuk reset promo:', 'user@gmail.com');
+            if (!email) return;
+            
+            // Reset status promo
+            localStorage.removeItem('promoQRIS_used_' + email);
+            localStorage.removeItem('promoQRIS_date_' + email);
+            
+            // Reset saldo cashback user
+            const userCashback = {
+                balance: 0,
+                history: []
+            };
+            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
+            
+            // Jika user ini sedang login, update tampilan
+            const currentEmail = document.getElementById('displayGoogleEmail').innerText;
+            if (currentEmail === email) {
+                cashbackBalance = 0;
+                cashbackHistory = [];
+                updateCashbackDisplay();
+                checkPromoStatus();
+            }
+            
+            showToast(`✅ Promo dan cashback untuk ${email} berhasil direset!`, false);
+            addLog(`Admin reset promo dan cashback untuk ${email}`);
+        }
+
+        // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
+        let emergencyTapCount = 0;
+        let emergencyTimer;
+
+        function setupEmergencyReset() {
+            const logo = document.getElementById('logoJhonPay');
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    emergencyTapCount++;
+                    
+                    clearTimeout(emergencyTimer);
+                    emergencyTimer = setTimeout(() => {
+                        emergencyTapCount = 0;
+                    }, 1000);
+                    
+                    if (emergencyTapCount === 10) {
+                        emergencyTapCount = 0;
+                        if (confirm('⚠️ RESET DARURAT?\nSemua data akan dihapus!')) {
+                            localStorage.clear();
+                            location.reload();
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- HELPER FUNCTIONS ---
+        CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+            if (width < 2 * radius) radius = width / 2;
+            if (height < 2 * radius) radius = height / 2;
+            this.beginPath();
+            this.moveTo(x + radius, y);
+            this.arcTo(x + width, y, x + width, y + height, radius);
+            this.arcTo(x + width, y + height, x, y + height, radius);
+            this.arcTo(x, y + height, x, y, radius);
+            this.arcTo(x, y, x + width, y, radius);
+            this.closePath();
+            return this;
+        };
+
+        const audio = document.getElementById('clickSound');
+        const playTick = () => { 
+            audio.currentTime = 0; 
+            audio.play().catch(()=>{}); 
+        };
+
+        function getFormattedDate() {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const now = new Date();
+            const dayName = days[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            return `${dayName}, ${day} ${month} ${year}`;
+        }
+
+        function getFormattedTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        // --- NOTIFICATION SYSTEM ---
+        let notifCount = 0;
+        const notifBadge = document.getElementById('notifBadge');
+        const notifContainer = document.getElementById('notifList');
+
+        function addLog(actionName) {
+            notifCount++;
+            if(notifBadge) {
+                notifBadge.innerText = notifCount;
+                notifBadge.classList.add('show');
+            }
+            
+            const time = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            
+            if(notifContainer.querySelector('.empty-state')) {
+                notifContainer.innerHTML = '';
+            }
+
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `
+                <div class="ni-icon"><i class="ri-file-list-3-line"></i></div>
+                <div class="ni-text">
+                    <h5>${actionName}</h5>
+                    <p>Tercatat pada ${time}</p>
+                </div>
+            `;
+            notifContainer.prepend(item);
+        }
+
+        function toggleNotifPanel() {
+            playTick();
+            const p = document.getElementById('notifPanel');
+            p.classList.toggle('active');
+            if(p.classList.contains('active')) {
+                notifCount = 0;
+                if(notifBadge) notifBadge.classList.remove('show');
+            }
+        }
+
+        // --- MENU OVERLAY ---
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuClose = document.getElementById('menuClose');
+
+        document.getElementById('btnMenu').onclick = () => {
+            playTick();
+            menuOverlay.classList.add('active');
+        };
+
+        menuClose.onclick = () => {
+            playTick();
+            menuOverlay.classList.remove('active');
+        };
+
+        document.getElementById('currencySelector').onclick = () => {
+            playTick();
+            alert("Currency selector: ID / IDR");
+        };
+
+        // --- SHOW USAGE PAGE ---
+        function showUsagePage() {
+            playTick();
+            menuOverlay.classList.remove('active');
+            
+            if (!originalContent) {
+                originalContent = document.querySelector('.content-area').innerHTML;
+            }
+            
+            const usageHTML = `
+                <div class="profile-section">
+                    <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
+                    <div class="p-info">
+                        <h2>
+                            <span id="displayUsername">${document.getElementById('displayUsername').innerText}</span>
+                        </h2>
+                        <div class="google-email">
+                            <i class="ri-google-fill"></i>
+                            <span id="displayGoogleEmail">${document.getElementById('displayGoogleEmail').innerText}</span>
+                        </div>
+                        <div class="ip-address">
+                            <i class="ri-computer-line"></i>
+                            <span id="displayIP">${userIP}</span>
+                        </div>
+                        <p><span class="status-dot"></span> Online</p>
+                        <div class="social-bar">
+                            <a href="https://instagram.com/cpm_jhon" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                                <i class="ri-instagram-fill"></i>
+                            </a>
+                            <a href="https://t.me/cpm_jhon21" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                                <i class="ri-telegram-fill"></i>
+                            </a>
+                            <a href="https://wa.me/6285894955362" target="_blank" class="soc-icon ripple" onclick="playTick()">
+                                <i class="ri-whatsapp-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h3 style="color: var(--text-on-dark); font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center;">Cara Penggunaan</h3>
+                    
+                    <div style="background: var(--card-surface); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">1</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Login dengan Gmail</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Masuk menggunakan email @gmail.com. 1 IP hanya untuk 1 akun.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">2</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Pilih Metode Pembayaran</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Pilih metode pembayaran yang tersedia.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">3</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Dapatkan Cashback</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Klik banner promo untuk mendapatkan cashback 50%.</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px;">
+                            <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">4</div>
+                            <div>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Gunakan Cashback</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Klik tombol "Gunakan" untuk potongan harga.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: 16px; padding: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="ri-shield-keyhole-line" style="color: var(--danger); font-size: 20px;"></i>
+                            <h5 style="color: var(--danger); font-size: 14px; font-weight: 700;">Aturan Penting</h5>
+                        </div>
+                        <ul style="color: var(--text-muted); font-size: 12px; padding-left: 20px;">
+                            <li style="margin-bottom: 5px;">1 IP hanya untuk 1 akun</li>
+                            <li style="margin-bottom: 5px;">Dilarang membuat multiple akun</li>
+                            <li style="margin-bottom: 5px;">Pelanggaran akan diblokir permanen</li>
+                            <li>Hubungi admin untuk pembukaan blokir</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="ripple" onclick="showHomePage()" style="width:100%; padding:15px; border-radius:12px; border:none; background:#000; color:#fff; font-weight:700; margin-top:15px; cursor: pointer;">
+                        <i class="ri-arrow-left-line" style="margin-right: 5px;"></i> Kembali ke Beranda
+                    </button>
+                </div>
+            `;
+            
+            document.querySelector('.content-area').innerHTML = usageHTML;
+        }
+
+        function showHomePage() {
+            playTick();
+            menuOverlay.classList.remove('active');
+            
+            if (originalContent) {
+                document.querySelector('.content-area').innerHTML = originalContent;
+            } else {
+                location.reload();
+            }
+            
+            updateCashbackDisplay();
+            setTimeout(checkPromoStatus, 100);
+        }
+
+        function openChat() {
+            playTick();
+            document.getElementById('fabChat').click();
+        }
+
+        // --- PROMO FUNCTIONS ---
+        function checkPromoStatus() {
+            const promoBanner = document.getElementById('promoBanner');
+            if (!promoBanner) return;
+            
+            const email = document.getElementById('displayGoogleEmail').innerText;
+            if (email === 'Belum login') return;
+            
+            const promoUsed = localStorage.getItem('promoQRIS_used_' + email);
+            
+            if (promoUsed === 'true') {
+                promoBanner.classList.add('disabled');
+                const promoTitle = promoBanner.querySelector('h4');
+                const promoDesc = promoBanner.querySelector('p');
+                if (promoTitle) promoTitle.innerHTML = 'Promo Telah Digunakan';
+                if (promoDesc) promoDesc.innerHTML = 'Cashback 50% sudah diklaim.';
+            } else {
+                promoBanner.classList.remove('disabled');
+                const promoTitle = promoBanner.querySelector('h4');
+                const promoDesc = promoBanner.querySelector('p');
+                if (promoTitle) promoTitle.innerHTML = 'Promo Cashback 50%';
+                if (promoDesc) promoDesc.innerHTML = 'Khusus pengguna baru untuk transaksi pertama via QRIS.';
+            }
+        }
+
+        function isPromoAvailable() {
+            const email = document.getElementById('displayGoogleEmail').innerText;
+            if (email === 'Belum login') return false;
+            return localStorage.getItem('promoQRIS_used_' + email) !== 'true';
+        }
+
+        function markPromoAsUsed(amount) {
+            const email = document.getElementById('displayGoogleEmail').innerText;
+            localStorage.setItem('promoQRIS_used_' + email, 'true');
+            localStorage.setItem('promoQRIS_date_' + email, new Date().toISOString());
+            
+            addCashback(Math.floor(amount * 0.5), email, 'Promo Cashback 50%');
+            
+            checkPromoStatus();
+        }
+
+        // --- OPEN PROMO QRIS (dengan tombol Nanti Saja) ---
+        function openPromoQRIS() {
+            playTick();
+            
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            const email = document.getElementById('displayGoogleEmail').innerText;
+            if (!isPromoAvailable()) {
+                const usedDate = localStorage.getItem('promoQRIS_date_' + email);
+                const formattedDate = usedDate ? new Date(usedDate).toLocaleDateString('id-ID') : 'sebelumnya';
+                showToast('⚠️ Promo Cashback 50% sudah digunakan pada ' + formattedDate, true);
+                return;
+            }
+            
+            const promoModal = document.createElement('div');
+            promoModal.className = 'modal-overlay';
+            promoModal.id = 'promoModal';
+            promoModal.innerHTML = `
+                <div class="modal-box" style="max-width: 400px;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <i class="ri-coupon-3-line" style="font-size: 48px; color: #10b981;"></i>
+                    </div>
+                    <h3 style="color: #10b981; font-size: 22px; margin-bottom: 5px;">🎉 Promo Cashback 50%</h3>
+                    <p style="color: #fff; margin-bottom: 20px; text-align: center; font-size: 14px;">
+                        Khusus pengguna baru! Cashback 50% untuk transaksi pertama via QRIS
+                    </p>
+                    <p style="color: #fbbf24; font-size: 12px; text-align: center; margin-bottom: 20px; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px;">
+                        <i class="ri-information-line"></i> Promo hanya berlaku 1x per akun
+                    </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="color: #fff; font-size: 13px; margin-bottom: 8px; display: block;">Pilih Nominal:</label>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <button class="promo-nominal-btn" data-nominal="50000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 50.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 25rb</span>
+                            </button>
+                            <button class="promo-nominal-btn" data-nominal="100000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 100.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 50rb</span>
+                            </button>
+                            <button class="promo-nominal-btn" data-nominal="200000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 200.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 100rb</span>
+                            </button>
+                            <button class="promo-nominal-btn" data-nominal="500000" style="background: #2563eb; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Rp 500.000
+                                <span style="display: block; font-size: 10px; color: #a5d8ff;">Cashback 250rb</span>
+                            </button>
+                        </div>
+                        
+                        <p style="color: #10b981; font-size: 11px; text-align: center; margin-top: 10px;">
+                            <i class="ri-information-line"></i> Maksimal cashback Rp 250.000
+                        </p>
+                    </div>
+                    
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" onclick="closePromoModal()">Nanti Saja</button>
+                        <button class="modal-btn confirm" id="applyPromoBtn" style="background: #10b981;">Gunakan Promo</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(promoModal);
+            
+            setTimeout(() => {
+                promoModal.classList.add('active');
+            }, 10);
+            
+            const nominalBtns = promoModal.querySelectorAll('.promo-nominal-btn');
+            let selectedNominal = 50000;
+            
+            if (nominalBtns.length > 0) {
+                nominalBtns[0].style.background = '#10b981';
+                nominalBtns[0].style.transform = 'scale(0.95)';
+            }
+            
+            nominalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    nominalBtns.forEach(b => {
+                        b.style.background = '#2563eb';
+                        b.style.transform = 'scale(1)';
+                    });
+                    
+                    this.style.background = '#10b981';
+                    this.style.transform = 'scale(0.95)';
+                    
+                    selectedNominal = parseInt(this.dataset.nominal);
+                });
+            });
+            
+            document.getElementById('applyPromoBtn').onclick = () => {
+                playTick();
+                markPromoAsUsed(selectedNominal);
+                closePromoModal();
+                showToast(`🎉 Cashback Rp ${(selectedNominal * 0.5).toLocaleString()} ditambahkan!`, false);
+            };
+        }
+
+        function closePromoModal() {
+            playTick();
+            const modal = document.getElementById('promoModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        // --- SHEET LOGIC ---
+        const sheet = document.getElementById('sheet');
+        const list = document.getElementById('sheetList');
+        const title = document.getElementById('sheetTitle');
+
+        function rowHtml(key) {
+            const d = dataPay[key];
+            const imgUrl = d.img ? d.img : 'https://placehold.co/100'; 
+            return `
+                <div class="pay-item">
+                    <div class="pi-left">
+                        <img src="${imgUrl}" class="pi-img" onerror="this.src='https://placehold.co/100'">
+                        <div class="pi-info">
+                            <h5>${d.name}</h5>
+                            <p id="t-${key}">${d.num}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-action ripple" onclick="copyIt('t-${key}', '${d.name}')">
+                            <i class="ri-file-copy-line"></i>
+                        </button>
+                        <button class="btn-action whatsapp ripple" onclick="openPaymentModal('${key}', '${d.name}')">
+                            <i class="ri-whatsapp-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openPaymentModal(methodKey, methodName) {
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            playTick();
+            selectedPaymentMethod = methodKey;
+            selectedPaymentName = methodName;
+            
+            const modal = document.getElementById('paymentModal');
+            const metodeInput = document.getElementById('modalMetode');
+            const nominalInput = document.getElementById('modalNominal');
+            
+            metodeInput.value = methodName;
+            nominalInput.value = '';
+            modal.classList.add('active');
+        }
+
+        function closePaymentModal() {
+            playTick();
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        function sendPaymentConfirmation() {
+            const nominal = document.getElementById('modalNominal').value;
+            
+            if (!nominal || nominal <= 0) {
+                showToast('Masukkan nominal yang valid', true);
+                return;
+            }
+
+            const paymentData = dataPay[selectedPaymentMethod];
+            if (!paymentData) return;
+
+            const formattedDate = getFormattedDate();
+            const formattedTime = getFormattedTime();
+            const email = document.getElementById('displayGoogleEmail').innerText;
+
+            const message = encodeURIComponent(
+`📊 *BUKTI PEMBAYARAN*
+════════════════════
+         *PESAN TERKIRIM*
+════════════════════
+📧 *Email:* ${email}
+📨 *NOMINAL:* Rp ${parseInt(nominal).toLocaleString('id-ID')}
+
+════════════════════
+📧 *VIA PEMBAYARAN:* ${paymentData.name}
+
+════════════════════
+⏱️ *Waktu Transfer:* ${formattedTime} WIB
+
+════════════════════
+🗓️ *Tanggal:* ${formattedDate}
+
+════════════════════
+💾 *SS BUKTI PEMBAYARAN:* 
+(Silahkan lampirkan screenshot)
+
+════════════════════
+
+> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+
+════════════════════`
+            );
+
+            const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+
+            addLog(`Konfirmasi ${paymentData.name}: Rp ${parseInt(nominal).toLocaleString()} (${email})`);
+            
+            closePaymentModal();
+            showToast(`✅ Konfirmasi ${paymentData.name} terkirim!`);
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.innerHTML = `
+                <i class="ri-${isError ? 'error-warning-fill' : 'checkbox-circle-fill'}"></i>
+                ${message}
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // --- GENERATE QRIS ---
+        async function generateAndDownloadQRIS() {
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            const amountInput = document.getElementById('qrisAmount');
+            const amount = parseInt(amountInput.value);
+            
+            if (!amount || amount <= 0) {
+                showToast('Masukkan nominal yang valid', true);
+                return;
+            }
+            
+            currentQrisAmount = amount;
+            const generateBtn = document.getElementById('generateQR');
+            const qrContainer = document.getElementById('qrContainer');
+            const qrImage = document.getElementById('qrImage');
+            
+            generateBtn.innerHTML = '<i class="ri-loader-4-line qris-loading"></i> Membuat QR...';
+            generateBtn.disabled = true;
+            qrContainer.style.display = 'block';
+            
+            try {
+                const qrImg = new Image();
+                qrImg.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                    qrImg.onload = resolve;
+                    qrImg.onerror = reject;
+                    qrImg.src = config.qrisImageUrl + '?t=' + Date.now();
+                });
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 1000;
+                const ctx = canvas.getContext('2d');
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#2563eb';
+                ctx.roundRect(40, 40, canvas.width - 80, 90, 15);
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 42px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, 95);
+                
+                const targetSize = 550;
+                const qrRatio = qrImg.width / qrImg.height;
+                let qrWidth, qrHeight;
+                
+                if (qrRatio >= 1) {
+                    qrWidth = targetSize;
+                    qrHeight = targetSize / qrRatio;
+                } else {
+                    qrHeight = targetSize;
+                    qrWidth = targetSize * qrRatio;
+                }
+                
+                qrWidth = Math.max(qrWidth, 500);
+                qrHeight = Math.max(qrHeight, 500);
+                
+                const qrX = (canvas.width - qrWidth) / 2;
+                const qrY = 160;
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(qrX - 10, qrY - 10, qrWidth + 20, qrHeight + 20);
+                
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(qrImg, qrX, qrY, qrWidth, qrHeight);
+                
+                ctx.strokeStyle = '#2563eb';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(qrX - 2, qrY - 2, qrWidth + 4, qrHeight + 4);
+                
+                ctx.strokeStyle = '#dddddd';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(60, qrY + qrHeight + 40);
+                ctx.lineTo(canvas.width - 60, qrY + qrHeight + 40);
+                ctx.stroke();
+                
+                ctx.fillStyle = '#333333';
+                ctx.font = 'bold 28px Arial';
+                ctx.fillText('JHON PAYMENT', canvas.width / 2, qrY + qrHeight + 90);
+                
+                ctx.fillStyle = '#666666';
+                ctx.font = '20px Arial';
+                ctx.fillText('Scan QRIS untuk membayar', canvas.width / 2, qrY + qrHeight + 130);
+                
+                ctx.fillStyle = '#2563eb';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText(`Total: Rp ${amount.toLocaleString('id-ID')}`, canvas.width / 2, qrY + qrHeight + 170);
+                
+                ctx.fillStyle = '#10b981';
+                ctx.font = '18px Arial';
+                ctx.fillText('✓ Arahkan kamera ke QR code di atas', canvas.width / 2, qrY + qrHeight + 210);
+                
+                const dataUrl = canvas.toDataURL('image/png');
+                qrImage.src = dataUrl;
+                currentQRImage = dataUrl;
+                
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `QRIS-JHON-${amount}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast(`✅ QRIS siap! Rp ${amount.toLocaleString()}`);
+                
+                let nominalDisplay = document.getElementById('qrisNominalDisplay');
+                nominalDisplay.style.display = 'inline-block';
+                nominalDisplay.innerHTML = `<span>Rp ${amount.toLocaleString('id-ID')}</span>`;
+                
+                nominalDisplay.style.animation = 'pulse 0.5s ease';
+                qrImage.classList.add('qr-success-animation');
+                
+                setTimeout(() => {
+                    nominalDisplay.style.animation = '';
+                    qrImage.classList.remove('qr-success-animation');
+                }, 500);
+                
+                addLog(`QRIS Generated: Rp ${amount.toLocaleString()}`);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Gagal memuat QR code', true);
+                qrImage.src = config.qrisImageUrl + '?t=' + Date.now();
+                currentQRImage = config.qrisImageUrl;
+            } finally {
+                generateBtn.innerHTML = '<i class="ri-qr-code-line"></i> Generate Ulang QR';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function downloadQRCode() {
+            if (!currentQRImage || currentQrisAmount === 0) {
+                showToast('Silakan generate QR Code terlebih dahulu', true);
+                return;
+            }
+            
+            playTick();
+            
+            try {
+                const link = document.createElement('a');
+                link.href = currentQRImage;
+                link.download = `QRIS-JHON-${currentQrisAmount}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                addLog(`Download QR: Rp ${currentQrisAmount.toLocaleString()}`);
+                showToast(`✅ QRIS didownload! Rp ${currentQrisAmount.toLocaleString()}`);
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                window.open(currentQRImage, '_blank');
+                showToast('Buka gambar di tab baru, lalu save manual', false);
+            }
+        }
+
+        function confirmPayment() {
+            if (!currentQrisAmount || currentQrisAmount === 0) {
+                showToast('Silakan generate QR Code terlebih dahulu', true);
+                return;
+            }
+            
+            playTick();
+
+            const formattedDate = getFormattedDate();
+            const formattedTime = getFormattedTime();
+            const email = document.getElementById('displayGoogleEmail').innerText;
+
+            const message = encodeURIComponent(
+`📊 *BUKTI PEMBAYARAN*
+════════════════════
+         *PESAN TERKIRIM*
+════════════════════
+📧 *Email:* ${email}
+📨 *NOMINAL:* Rp ${currentQrisAmount.toLocaleString('id-ID')}
+
+════════════════════
+📧 *VIA PEMBAYARAN:* QRIS
+
+════════════════════
+⏱️ *Waktu Transfer:* ${formattedTime} WIB
+
+════════════════════
+🗓️ *Tanggal:* ${formattedDate}
+
+════════════════════
+💾 *SS BUKTI PEMBAYARAN:* 
+(Silahkan lampirkan screenshot)
+
+════════════════════
+
+> KIRIMKAN HASIL BUKTI PEMBAYARAN KEPADA ADMIN ${config.adminName}
+
+════════════════════`
+            );
+            
+            const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+            
+            addLog(`Konfirmasi QRIS: Rp ${currentQrisAmount.toLocaleString()} (${email})`);
+            showToast(`✅ WhatsApp terbuka! Kirim bukti transfer.`);
+        }
+
+        // --- OPEN SHEET DENGAN PAYPAL DI SEMUA MENU ---
+        window.openSheet = (mode) => {
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            playTick();
+            let html = '';
+            let logName = '';
+
+            if(mode === 'qris') {
+                title.innerText = "SCAN QRIS";
+                logName = "Membuka Menu QRIS";
+                html = `
+                    <div class="qris-input-container">
+                        <label class="qris-label">Masukkan Nominal (Rp)</label>
+                        <input type="number" id="qrisAmount" class="qris-input" placeholder="Contoh: 10000" min="1" value="">
+                        <p class="qris-hint">Masukkan jumlah nominal pembayaran</p>
+                        <button id="generateQR" class="qris-generate-btn ripple" onclick="generateAndDownloadQRIS()" disabled>
+                            <i class="ri-qr-code-line"></i> Generate QR
+                        </button>
+                    </div>
+                    
+                    <div id="qrContainer" class="qris-container">
+                        <div class="qr-display-wrapper">
+                            <div id="qrisNominalDisplay" class="qris-nominal-display" style="display:none;"></div>
+                            <img id="qrImage" class="qris-image" alt="QR Code" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNGM0Y0RjYiIHJ4PSIxMiIvPjx0ZXh0IHg9IjEyMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NDc0OEIiPkdlbmVyYXRlIFFSIGRhbGVoIHVsYTwvdGV4dD48L3N2Zz4=">
+                        </div>
+                        <p class="qris-info">QR akan otomatis terdownload setelah dibuat</p>
+                        
+                        <div class="qris-actions">
+                            <button class="download-qr-btn ripple" onclick="downloadQRCode()">
+                                <i class="ri-download-line"></i> Download QR
+                            </button>
+                            <button class="whatsapp-confirm-btn ripple" onclick="confirmPayment()">
+                                <i class="ri-whatsapp-fill"></i> Konfirmasi
+                            </button>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding: 10px; background: #f0f9ff; border-radius: 10px; border: 1px dashed #cbd5e1;">
+                            <p style="color: #64748b; font-size: 11px; margin: 0;">
+                                <i class="ri-information-line" style="color: #3b82f6;"></i> 
+                                Support semua e-wallet & bank
+                            </p>
+                        </div>
+                    </div>`;
+                
+                setTimeout(() => {
+                    const amountInput = document.getElementById('qrisAmount');
+                    const generateBtn = document.getElementById('generateQR');
+                    
+                    const checkInput = () => {
+                        const amount = parseInt(amountInput.value);
+                        generateBtn.disabled = !(amount > 0);
+                        generateBtn.style.opacity = amount > 0 ? '1' : '0.6';
+                    };
+                    
+                    amountInput.addEventListener('input', checkInput);
+                    amountInput.addEventListener('keyup', checkInput);
+                    amountInput.focus();
+                    
+                    currentQrisAmount = 0;
+                    currentQRImage = '';
+                    checkInput();
+                }, 100);
+                
+            } else if(mode === 'dana_only') {
+                title.innerText = "E-WALLET";
+                logName = "Menu E-Wallet";
+                html += rowHtml('dana');
+                html += rowHtml('shopee');
+                html += rowHtml('gopay');
+                html += rowHtml('ovo');
+                html += rowHtml('linkaja');
+                html += rowHtml('paypal');
+            } else if(mode === 'bank') {
+                title.innerText = "TRANSFER BANK";
+                logName = "Menu Bank";
+                html += rowHtml('sea');
+                html += rowHtml('sea2');
+                html += rowHtml('bri');
+                html += rowHtml('paypal');
+            } else if(mode === 'pulsa') {
+                title.innerText = "TOP UP PULSA";
+                logName = "Menu Pulsa";
+                html += rowHtml('pulsa');
+                html += rowHtml('indosat');
+                html += rowHtml('tri');
+                html += rowHtml('smartfren');
+            } else {
+                title.innerText = "SEMUA METODE";
+                logName = "Semua Menu";
+                Object.keys(dataPay).forEach(k => html += rowHtml(k));
+            }
+            
+            addLog(logName);
+            list.innerHTML = html;
+            sheet.classList.add('active');
+        };
+
+        document.getElementById('btnCloseSheet').onclick = () => {
+            sheet.classList.remove('active');
+            playTick();
+        };
+
+        window.copyIt = (id, label) => {
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            playTick();
+            const txt = document.getElementById(id).innerText;
+            if(txt.includes('Hubungi')) return;
+            navigator.clipboard.writeText(txt).then(() => {
+                showToast(`✅ ${label} berhasil disalin!`);
+            }).catch(() => {
+                showToast(`❌ Gagal menyalin ${label}`, true);
+            });
+        };
+
+        // --- CHAT SYSTEM ---
+        const fab = document.getElementById('fabChat');
+        const win = document.getElementById('chatWin');
+        const closeC = document.getElementById('closeChat');
+        const bodyC = document.getElementById('chatBody');
+
+        fab.onclick = () => { 
+            if (!isLoggedIn) {
+                showToast('Silakan login terlebih dahulu', true);
+                showLoginModal();
+                return;
+            }
+            
+            playTick(); 
+            win.classList.add('active'); 
+            fab.style.transform = 'scale(0)'; 
+        };
+        
+        closeC.onclick = () => { 
+            playTick(); 
+            win.classList.remove('active'); 
+            fab.style.transform = 'scale(1)'; 
+        };
+
+        window.sendChat = (msg) => {
+            playTick();
+            const u = document.createElement('div');
+            u.className = 'bubble b-user'; 
+            u.innerText = msg;
+            bodyC.appendChild(u);
+            bodyC.scrollTop = bodyC.scrollHeight;
+            
+            setTimeout(() => {
+                const b = document.createElement('div');
+                b.className = 'bubble b-bot';
+                if(msg === 'konfirmasi') {
+                    b.innerHTML = "✅ Setelah bayar, klik ikon WhatsApp di metode pembayaran untuk konfirmasi.";
+                } else if(msg === 'admin') {
+                    b.innerHTML = "📞 Hubungi admin via WhatsApp.";
+                } else {
+                    b.innerHTML = "⚠️ Kendala? Hubungi admin.";
+                }
+                bodyC.appendChild(b);
+                bodyC.scrollTop = bodyC.scrollHeight;
+                playTick();
+            }, 800);
+        };
+
+        // --- RIPPLE EFFECT ---
+        document.addEventListener('click', e => {
+            const btn = e.target.closest('.ripple');
+            if(btn) {
+                const c = document.createElement('span');
+                const d = Math.max(btn.clientWidth, btn.clientHeight);
+                c.style.width = c.style.height = d + 'px';
+                c.style.left = (e.clientX - btn.getBoundingClientRect().left - d/2) + 'px';
+                c.style.top = (e.clientY - btn.getBoundingClientRect().top - d/2) + 'px';
+                btn.appendChild(c);
+                setTimeout(()=>c.remove(), 600);
+            }
+        });
+
+        // --- ADMIN ACCESS (TAP 5X LOGO) ---
+        let adminTapCount = 0;
+        let adminTapTimer;
+
+        function setupAdminAccess() {
+            const logo = document.getElementById('logoJhonPay');
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    adminTapCount++;
+                    
+                    clearTimeout(adminTapTimer);
+                    adminTapTimer = setTimeout(() => {
+                        adminTapCount = 0;
+                    }, 1000);
+                    
+                    if (adminTapCount === 5) {
+                        adminTapCount = 0;
+                        showAdminPasswordModal();
+                    }
+                });
+            }
+        }
+
+        function showAdminPasswordModal() {
+            playTick();
+            
+            let modal = document.getElementById('adminPasswordModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.getElementById('adminPassword').focus();
+                return;
+            }
+            
+            modal = document.createElement('div');
+            modal.className = 'admin-password-modal';
+            modal.id = 'adminPasswordModal';
+            modal.innerHTML = `
+                <div class="admin-password-box">
+                    <h3>🔐 Admin Access</h3>
+                    <input type="password" id="adminPassword" class="admin-password-input" placeholder="Masukkan password" maxlength="20">
+                    <div class="admin-password-buttons">
+                        <button class="admin-password-btn cancel" onclick="closeAdminModal()">Batal</button>
+                        <button class="admin-password-btn confirm" onclick="checkAdminPassword()">Masuk</button>
+                    </div>
+                    <p style="color: #666; font-size: 10px; text-align: center; margin-top: 10px;">* Khusus administrator</p>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            setTimeout(() => {
+                modal.classList.add('active');
+                document.getElementById('adminPassword').focus();
+            }, 10);
+        }
+
+        function closeAdminModal() {
+            playTick();
+            const modal = document.getElementById('adminPasswordModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === config.adminPassword) {
+                playTick();
+                closeAdminModal();
+                showAdminMenu();
+            } else {
+                playTick();
+                showToast('❌ Password salah!', true);
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function showAdminMenu() {
+            const adminModal = document.createElement('div');
+            adminModal.className = 'modal-overlay';
+            adminModal.id = 'adminMenuModal';
+            adminModal.innerHTML = `
+                <div class="modal-box" style="max-width: 320px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="ri-shield-user-line" style="font-size: 48px; color: #2563eb;"></i>
+                        <h3 style="color: #fff; margin-top: 10px;">Admin Panel</h3>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button onclick="adminAddCashback()" style="width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-add-circle-line"></i> Tambah Cashback
+                        </button>
+                        <button onclick="viewAllUsers()" style="width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-group-line"></i> Lihat Semua User
+                        </button>
+                        <button onclick="showBannedUsers()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-shield-cross-line"></i> Kelola Blokir (${JSON.parse(localStorage.getItem('bannedIPs') || '[]').length})
+                        </button>
+                        <button onclick="adminResetPromo()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-refresh-line"></i> Reset Promo & Cashback User
+                        </button>
+                        <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">
+                            <i class="ri-delete-bin-line"></i> Hapus Semua Data
+                        </button>
+                    </div>
+                    
+                    <button class="modal-btn cancel" onclick="closeAdminMenu()" style="width: 100%;">Tutup</button>
+                </div>
+            `;
+            
+            document.body.appendChild(adminModal);
+            
+            setTimeout(() => {
+                adminModal.classList.add('active');
+            }, 10);
+        }
+
+        function closeAdminMenu() {
+            const modal = document.getElementById('adminMenuModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
+            }
+        }
+
+        function adminAddCashback() {
+            const email = prompt('Masukkan Gmail user:', 'user@gmail.com');
+            if (!email) return;
+            
+            const amount = prompt('Masukkan nominal cashback (Rp):', '10000');
+            if (!amount || isNaN(amount) || parseInt(amount) <= 0) return;
+            
+            addCashback(parseInt(amount), email, 'Diberikan oleh Admin');
+            showToast(`✅ Cashback Rp ${parseInt(amount).toLocaleString()} untuk ${email} ditambahkan!`, false);
+        }
+
+        function viewAllUsers() {
+            const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
+            
+            let message = '📋 DAFTAR USER TERDAFTAR:\n\n';
+            registeredIPs.forEach((entry, index) => {
+                const userCashback = JSON.parse(localStorage.getItem('userCashback_' + entry.email) || '{"balance":0}');
+                message += `${index + 1}. ${entry.email}\n   Username: ${entry.username}\n   IP: ${entry.ip}\n   Saldo: Rp ${userCashback.balance.toLocaleString()}\n   Bergabung: ${new Date(entry.date).toLocaleDateString('id-ID')}\n\n`;
+            });
+            
+            alert(message);
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ PERINGATAN: Semua data akan dihapus permanen!\n\nYakin ingin melanjutkan?')) {
+                localStorage.clear();
+                showToast('✅ Semua data dihapus!', false);
+                closeAdminMenu();
+                location.reload();
+            }
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            originalContent = document.querySelector('.content-area').innerHTML;
+            
+            // Setup emergency reset (tap 10x)
+            setupEmergencyReset();
+            
+            // Cek blokir dengan whitelist
+            const ip = await detectIP();
+            if (checkIfBanned(ip)) {
+                const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
+                showBlockedPage(ip, blockedEmail);
+                return;
+            }
+            
+            // Cek status login
+            await checkUserVerification();
+            
+            setupAdminAccess();
+        });
+
+        // EXPOSE FUNCTIONS
+        window.openChat = openChat;
+        window.openPromoQRIS = openPromoQRIS;
+        window.closePromoModal = closePromoModal;
+        window.openPaymentModal = openPaymentModal;
+        window.closePaymentModal = closePaymentModal;
+        window.sendPaymentConfirmation = sendPaymentConfirmation;
+        window.toggleNotifPanel = toggleNotifPanel;
+        window.showHomePage = showHomePage;
+        window.showUsagePage = showUsagePage;
+        window.playTick = playTick;
+        window.copyIt = copyIt;
+        window.sendChat = sendChat;
+        window.openUseCashbackModal = openUseCashbackModal;
+        window.closeUseCashbackModal = closeUseCashbackModal;
+        window.selectCashbackUse = selectCashbackUse;
+        window.applyCashbackToPayment = applyCashbackToPayment;
+        window.showCashbackHistory = showCashbackHistory;
+        window.closeCashbackHistory = closeCashbackHistory;
+        window.showGoogleEmailModal = showGoogleEmailModal;
+        window.closeGoogleEmailModal = closeGoogleEmailModal;
+        window.saveGoogleEmail = saveGoogleEmail;
+        window.showLoginModal = showLoginModal;
+        window.closeLoginModal = closeLoginModal;
+        window.loginUser = loginUser;
+        window.showLogoutConfirm = showLogoutConfirm;
+        window.closeLogoutModal = closeLogoutModal;
+        window.logoutUser = logoutUser;
+        window.showAdminPasswordModal = showAdminPasswordModal;
+        window.closeAdminModal = closeAdminModal;
+        window.checkAdminPassword = checkAdminPassword;
+        window.adminAddCashback = adminAddCashback;
+        window.viewAllUsers = viewAllUsers;
+        window.showBannedUsers = showBannedUsers;
+        window.closeBannedUsersModal = closeBannedUsersModal;
+        window.adminUnblockUser = adminUnblockUser;
+        window.clearAllBanned = clearAllBanned;
+        window.adminResetPromo = adminResetPromo;
+        window.closeAdminMenu = closeAdminMenu;
+        window.clearAllData = clearAllData;
+
+        console.log('✅ JHON Payment System Ready!');
+        console.log('🛡️ Whitelist IP:', config.whitelistedIPs);
+        console.log('🔐 Emergency Unblock: ?admin_unblock=jhon123');
+        console.log('🔄 Emergency Reset: Tap logo 10x');
+        console.log('📋 Cek Blokir: showBannedUsers()');
+    </script>
 </body>
 </html>
