@@ -29,7 +29,7 @@
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            outline: none; scroll-behavior: smooth;
+            outline: none; user-select: none; scroll-behavior: smooth;
         }
 
         body {
@@ -869,42 +869,66 @@
             margin-top: 3px;
         }
 
-        /* Cashback Use Modal - Improved UI */
+        /* Cashback Use Modal */
         .cashback-use-option {
-            background: #1e1e1e;
+            background: #222;
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 2px solid transparent;
-            transition: all 0.2s;
+            padding: 15px;
+            margin-bottom: 15px;
             cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid transparent;
         }
         .cashback-use-option:hover {
             background: #2a2a2a;
             border-color: var(--accent);
         }
         .cashback-use-option.selected {
-            border: 2px solid #10b981;
+            border-color: #10b981;
             background: #1a2a1a;
-            transform: scale(0.98);
         }
-        .cashback-use-option.selected .method-icon {
-            transform: scale(1.05);
+        .cashback-use-option .method {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
         }
-
-        /* Scrollbar Styling */
-        .modal-box::-webkit-scrollbar {
-            width: 4px;
+        .cashback-use-option .method-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
-        .modal-box::-webkit-scrollbar-track {
-            background: #1e1e1e;
+        .cashback-use-option .method-name {
+            font-weight: 600;
+            color: #fff;
         }
-        .modal-box::-webkit-scrollbar-thumb {
+        .cashback-use-option .price-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 52px;
+        }
+        .original-price {
+            color: #888;
+            font-size: 12px;
+            text-decoration: line-through;
+        }
+        .final-price {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .discount-badge {
             background: #10b981;
-            border-radius: 4px;
-        }
-        .modal-box::-webkit-scrollbar-thumb:hover {
-            background: #059669;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
         }
 
         /* Google Email Modal */
@@ -940,7 +964,7 @@
             outline: none;
         }
 
-        /* Banned Users List - Improved */
+        /* Banned Users List */
         .banned-user-item {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid var(--danger);
@@ -953,20 +977,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
         .banned-user-item .email {
             color: var(--danger);
             font-weight: 600;
-            font-size: 14px;
-            word-break: break-all;
         }
         .banned-user-item .ip {
             color: var(--text-muted);
-            font-size: 12px;
-            margin: 5px 0;
-            word-break: break-all;
+            font-size: 11px;
         }
         .banned-user-item .reason {
             color: var(--text-on-dark);
@@ -975,7 +993,7 @@
         }
         .banned-user-item .date {
             color: var(--text-muted);
-            font-size: 11px;
+            font-size: 10px;
         }
         .unblock-btn {
             background: var(--success);
@@ -987,7 +1005,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
-            white-space: nowrap;
         }
         .unblock-btn:hover {
             transform: scale(0.95);
@@ -1020,23 +1037,17 @@
     <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
     <div class="app-frame" id="mainApp">
-        <!-- HEADER - With Logout Button -->
+        <!-- HEADER - Like support.html with currency selector -->
         <div class="header-area">
             <div class="btn-icon ripple" id="btnMenu">
                 <i class="ri-menu-3-line"></i>
             </div>
             <div style="font-weight:800; font-size:16px; letter-spacing:1px; cursor: pointer;" id="logoJhonPay">JHON<span style="color:var(--text-muted);">PAY</span></div>
             
-            <div style="display: flex; gap: 8px;">
-                <!-- Currency selector -->
-                <div class="currency-selector ripple" id="currencySelector">
-                    <div class="currency-flag"></div>
-                    <div class="currency-text">ID / IDR</div>
-                </div>
-                <!-- Logout Button (hidden by default) -->
-                <div class="btn-icon ripple" id="btnLogout" style="display: none;" onclick="showLogoutConfirm()">
-                    <i class="ri-logout-box-r-line"></i>
-                </div>
+            <!-- Currency selector from support.html -->
+            <div class="currency-selector ripple" id="currencySelector">
+                <div class="currency-flag"></div>
+                <div class="currency-text">ID / IDR</div>
             </div>
         </div>
 
@@ -1046,17 +1057,17 @@
                 <img src="foto4.jpg" class="p-img" onerror="this.src='https://via.placeholder.com/55'">
                 <div class="p-info">
                     <h2>
-                        <span id="displayUsername">Guest</span>
+                        <span id="displayUsername">Memuat...</span>
                     </h2>
                     <div class="google-email">
                         <i class="ri-google-fill"></i>
-                        <span id="displayGoogleEmail">Belum login</span>
+                        <span id="displayGoogleEmail">Memuat...</span>
                     </div>
                     <div class="ip-address">
                         <i class="ri-computer-line"></i>
                         <span id="displayIP">Mendeteksi IP...</span>
                     </div>
-                    <p><span class="status-dot"></span> Online</p>
+                    <p><span class="status-dot"></span> Online & Verified</p>
                     <div class="social-bar">
                         <a href="https://instagram.com/cpm_jhon" target="_blank" class="soc-icon ripple" onclick="playTick()">
                             <i class="ri-instagram-fill"></i>
@@ -1241,145 +1252,80 @@
             </div>
         </div>
 
-        <!-- Modal Use Cashback - Improved UI with Scroll -->
+        <!-- Modal Use Cashback -->
         <div class="modal-overlay" id="useCashbackModal">
-            <div class="modal-box" style="max-width: 400px; max-height: 80vh; display: flex; flex-direction: column;">
-                <h3 style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 10px; text-align: center; flex-shrink: 0;">
-                    💸 Gunakan Cashback
-                </h3>
+            <div class="modal-box" style="max-width: 400px;">
+                <h3>💸 Gunakan Cashback</h3>
+                <p style="color: #10b981; text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 700;">
+                    Rp <span id="cashbackAmount">0</span>
+                </p>
                 
-                <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-                            border-radius: 16px; padding: 15px; margin-bottom: 20px; text-align: center; flex-shrink: 0;">
-                    <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 5px;">Saldo Cashback Anda</p>
-                    <p style="color: white; font-size: 32px; font-weight: 800; line-height: 1.2;">
-                        Rp <span id="cashbackAmount">0</span>
-                    </p>
-                </div>
-                
-                <!-- Scrollable Menu Container -->
-                <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; min-height: 0;">
-                    
-                    <!-- QRIS Option -->
+                <div style="margin-bottom: 20px;">
                     <div class="cashback-use-option" id="useQRISOption" onclick="selectCashbackUse('qris')">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
-                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-                                <i class="ri-qr-scan-2-line" style="font-size: 24px; color: white;"></i>
+                        <div class="method">
+                            <div class="method-icon" style="background: #2563eb; color: white;">
+                                <i class="ri-qr-scan-2-line"></i>
                             </div>
-                            <div style="flex: 1;">
-                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">Scan QRIS</h4>
-                                <p style="color: #9ca3af; font-size: 12px;">Pembayaran via QRIS</p>
-                            </div>
-                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
-                                Diskon
-                            </span>
+                            <div class="method-name">Scan QRIS</div>
                         </div>
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
-                            <div>
-                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="qrisOriginal">Rp 50.000</span>
-                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="qrisFinal">Rp 40.000</span>
-                            </div>
-                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        <div class="price-info">
+                            <span class="original-price" id="qrisOriginal">Rp 0</span>
+                            <span class="final-price" id="qrisFinal">Rp 0</span>
+                            <span class="discount-badge">Diskon</span>
                         </div>
                     </div>
-                    
-                    <!-- E-Wallet Option -->
+
                     <div class="cashback-use-option" id="useEWalletOption" onclick="selectCashbackUse('ewallet')">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-                                <i class="ri-wallet-3-fill" style="font-size: 24px; color: white;"></i>
+                        <div class="method">
+                            <div class="method-icon" style="background: #10b981; color: white;">
+                                <i class="ri-wallet-3-fill"></i>
                             </div>
-                            <div style="flex: 1;">
-                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">E-Wallet</h4>
-                                <p style="color: #9ca3af; font-size: 12px;">Dana, OVO, GoPay, dll</p>
-                            </div>
-                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
-                                Diskon
-                            </span>
+                            <div class="method-name">E-Wallet</div>
                         </div>
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
-                            <div>
-                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="ewalletOriginal">Rp 50.000</span>
-                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="ewalletFinal">Rp 40.000</span>
-                            </div>
-                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        <div class="price-info">
+                            <span class="original-price" id="ewalletOriginal">Rp 0</span>
+                            <span class="final-price" id="ewalletFinal">Rp 0</span>
+                            <span class="discount-badge">Diskon</span>
                         </div>
                     </div>
-                    
-                    <!-- Transfer Bank Option -->
+
                     <div class="cashback-use-option" id="useBankOption" onclick="selectCashbackUse('bank')">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
-                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-                                <i class="ri-bank-card-fill" style="font-size: 24px; color: white;"></i>
+                        <div class="method">
+                            <div class="method-icon" style="background: #f59e0b; color: white;">
+                                <i class="ri-bank-card-fill"></i>
                             </div>
-                            <div style="flex: 1;">
-                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">Transfer Bank</h4>
-                                <p style="color: #9ca3af; font-size: 12px;">Semua bank</p>
-                            </div>
-                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
-                                Diskon
-                            </span>
+                            <div class="method-name">Transfer Bank</div>
                         </div>
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
-                            <div>
-                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="bankOriginal">Rp 50.000</span>
-                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="bankFinal">Rp 40.000</span>
-                            </div>
-                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        <div class="price-info">
+                            <span class="original-price" id="bankOriginal">Rp 0</span>
+                            <span class="final-price" id="bankFinal">Rp 0</span>
+                            <span class="discount-badge">Diskon</span>
                         </div>
                     </div>
-                    
-                    <!-- Top Up Pulsa Option -->
+
                     <div class="cashback-use-option" id="usePulsaOption" onclick="selectCashbackUse('pulsa')">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                            <div class="method-icon" style="width: 48px; height: 48px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
-                                        border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-                                <i class="ri-smartphone-fill" style="font-size: 24px; color: white;"></i>
+                        <div class="method">
+                            <div class="method-icon" style="background: #ef4444; color: white;">
+                                <i class="ri-smartphone-fill"></i>
                             </div>
-                            <div style="flex: 1;">
-                                <h4 style="color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 4px;">Top Up Pulsa</h4>
-                                <p style="color: #9ca3af; font-size: 12px;">Semua operator</p>
-                            </div>
-                            <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
-                                Diskon
-                            </span>
+                            <div class="method-name">Top Up Pulsa</div>
                         </div>
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 60px;">
-                            <div>
-                                <span style="color: #9ca3af; font-size: 13px; text-decoration: line-through; margin-right: 8px;" id="pulsaOriginal">Rp 50.000</span>
-                                <span style="color: #10b981; font-size: 18px; font-weight: 700;" id="pulsaFinal">Rp 40.000</span>
-                            </div>
-                            <i class="ri-arrow-right-s-line" style="color: #10b981; font-size: 24px;"></i>
+                        <div class="price-info">
+                            <span class="original-price" id="pulsaOriginal">Rp 0</span>
+                            <span class="final-price" id="pulsaFinal">Rp 0</span>
+                            <span class="discount-badge">Diskon</span>
                         </div>
                     </div>
-                    
                 </div>
                 
-                <!-- Action Buttons -->
-                <div style="display: flex; gap: 10px; margin-top: 10px; flex-shrink: 0;">
-                    <button class="modal-btn cancel" onclick="closeUseCashbackModal()" 
-                            style="flex: 1; padding: 14px; border-radius: 14px; border: none; 
-                                   background: #333; color: #fff; font-weight: 600; font-size: 15px;
-                                   cursor: pointer; transition: all 0.2s;">
-                        Batalkan
-                    </button>
-                    <button class="modal-btn confirm" id="applyCashbackBtn" onclick="applyCashbackToPayment()" 
-                            style="flex: 1; padding: 14px; border-radius: 14px; border: none; 
-                                   background: #10b981; color: #fff; font-weight: 600; font-size: 15px;
-                                   cursor: pointer; transition: all 0.2s;">
-                        Gunakan
-                    </button>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closeUseCashbackModal()">Batal</button>
+                    <button class="modal-btn confirm" id="applyCashbackBtn" onclick="applyCashbackToPayment()" style="background: #10b981;">Gunakan</button>
                 </div>
             </div>
         </div>
 
-        <!-- Modal Google Email (for first time users) -->
+        <!-- Modal Google Email -->
         <div class="modal-overlay" id="googleEmailModal">
             <div class="modal-box">
                 <h3>🔐 Verifikasi Gmail</h3>
@@ -1398,75 +1344,12 @@
             </div>
         </div>
 
-        <!-- Modal Login (for returning users) -->
-        <div class="modal-overlay" id="loginModal">
-            <div class="modal-box" style="max-width: 350px;">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
-                                border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
-                        <i class="ri-google-fill" style="font-size: 40px; color: white;"></i>
-                    </div>
-                    <h3 style="color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 5px;">Selamat Datang</h3>
-                    <p style="color: #9ca3af; font-size: 13px;">Masuk dengan Gmail Anda untuk melanjutkan</p>
-                </div>
-                
-                <div style="background: #1e1e1e; border-radius: 16px; padding: 20px; margin-bottom: 20px;">
-                    <div style="margin-bottom: 15px;">
-                        <label style="color: #9ca3af; font-size: 12px; margin-bottom: 5px; display: block;">Email Gmail</label>
-                        <input type="email" id="loginEmailInput" class="modal-input" placeholder="contoh@gmail.com" 
-                               style="background: #2a2a2a; border: 1px solid #444; color: #fff; width: 100%; padding: 14px; 
-                                      border-radius: 12px; font-size: 15px;">
-                    </div>
-                    <p style="color: #fbbf24; font-size: 11px; text-align: center;">
-                        <i class="ri-information-line"></i> 1 AKUN PER IP - DILARANG MULTIPLE AKUN
-                    </p>
-                </div>
-                
-                <div class="modal-buttons">
-                    <button class="modal-btn cancel" onclick="closeLoginModal()" style="flex: 1;">Batal</button>
-                    <button class="modal-btn confirm" onclick="loginUser()" style="flex: 1; background: #ea4335;">Masuk</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Logout Confirmation -->
-        <div class="modal-overlay" id="logoutModal">
-            <div class="modal-box" style="max-width: 320px;">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <i class="ri-logout-box-r-line" style="font-size: 48px; color: #ef4444; margin-bottom: 10px; display: block;"></i>
-                    <h3 style="color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 8px;">Keluar Akun</h3>
-                    <p style="color: #9ca3af; font-size: 14px;">Apakah Anda yakin ingin keluar?</p>
-                </div>
-                <div class="modal-buttons">
-                    <button class="modal-btn cancel" onclick="closeLogoutModal()" style="flex: 1;">Batal</button>
-                    <button class="modal-btn confirm" onclick="logoutUser()" style="flex: 1; background: #ef4444;">Keluar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Banned Users (Admin Only) - IMPROVED VERSION -->
+        <!-- Modal Banned Users (Admin Only) -->
         <div class="modal-overlay" id="bannedUsersModal">
             <div class="modal-box" style="max-width: 400px; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
-                    <h3 style="color: #fff; font-size: 18px; font-weight: 700;">🚫 User Terblokir</h3>
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="debugBannedData()" style="background: #f59e0b; border: none; color: white; width: 36px; height: 36px; border-radius: 8px; cursor: pointer;" title="Debug">
-                            <i class="ri-bug-line"></i>
-                        </button>
-                        <button onclick="refreshBannedUsers()" style="background: #2563eb; border: none; color: white; width: 36px; height: 36px; border-radius: 8px; cursor: pointer;" title="Refresh">
-                            <i class="ri-refresh-line"></i>
-                        </button>
-                    </div>
-                </div>
-                <div id="bannedUsersList" class="cashback-history">
-                    <p style="color: #888; text-align: center; padding: 20px;">Memuat data...</p>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="flex: 1;">Tutup</button>
-                    <button class="modal-btn danger" onclick="if(confirm('Hapus SEMUA blokir?\nIP admin akan tetap aman.')) { clearAllBanned(); }" style="flex: 1; background: #ef4444;">
-                        <i class="ri-delete-bin-line"></i> Hapus Semua
-                    </button>
-                </div>
+                <h3>🚫 User Terblokir</h3>
+                <div id="bannedUsersList" class="cashback-history"></div>
+                <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="width: 100%; margin-top: 15px;">Tutup</button>
             </div>
         </div>
 
@@ -1484,53 +1367,12 @@
     </div>
 
     <script>
-        // --- EMERGENCY UNBLOCK SYSTEM (via URL) ---
-        (function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('admin_unblock') === 'jhon123') {
-                // Hapus semua data blokir
-                localStorage.removeItem('bannedIPs');
-                localStorage.removeItem('blockReports');
-                
-                // Hapus specific IP jika ada
-                const ipToUnblock = urlParams.get('ip');
-                if (ipToUnblock) {
-                    localStorage.removeItem('blockedEmail_' + ipToUnblock);
-                    
-                    // Hapus dari bannedIPs juga
-                    let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-                    bannedIPs = bannedIPs.filter(ip => ip !== ipToUnblock);
-                    localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
-                    
-                    // Hapus dari blockReports
-                    let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-                    blockReports = blockReports.filter(report => report.ip !== ipToUnblock);
-                    localStorage.setItem('blockReports', JSON.stringify(blockReports));
-                }
-                
-                console.log('%c✅ BLOKIR DIBUKA!', 'color: green; font-size: 16px');
-                alert('✅ Blokir telah dibuka! Halaman akan di-refresh.');
-                
-                // Hapus parameter dari URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                // Refresh setelah 1 detik
-                setTimeout(() => location.reload(), 1000);
-            }
-        })();
-
-        // --- KONFIGURASI APLIKASI DENGAN WHITELIST IP ---
+        // --- KONFIGURASI APLIKASI ---
         const config = {
             qrisImageUrl: 'qr8.jpg',
             whatsappNumber: '6285894955362',
             adminName: 'Admin JHON',
-            adminPassword: 'jhon123',
-            // Daftar IP yang dikecualikan dari blokir (admin)
-            whitelistedIPs: [
-                '114.10.43.99',  // IP admin
-                '127.0.0.1',      // localhost
-                '::1'             // localhost IPv6
-            ]
+            adminPassword: 'jhon123'
         };
 
         // --- DATA PAYMENT DENGAN PAYPAL DI SEMUA MENU ---
@@ -1564,7 +1406,6 @@
         let selectedCashbackUse = '';
         let cashbackUseAmount = 50000;
         let userIP = '';
-        let isLoggedIn = false;
 
         // --- CASHBACK SYSTEM ---
         let cashbackBalance = 0;
@@ -1577,12 +1418,6 @@
                 const data = await response.json();
                 userIP = data.ip;
                 document.getElementById('displayIP').innerText = userIP;
-                
-                // Log untuk admin (cek apakah IP di whitelist)
-                if (config.whitelistedIPs.includes(userIP)) {
-                    console.log('🛡️ IP Admin terdeteksi:', userIP);
-                }
-                
                 return userIP;
             } catch (error) {
                 console.error('Gagal mendeteksi IP:', error);
@@ -1592,34 +1427,23 @@
             }
         }
 
-        // --- BLOCK SYSTEM DENGAN WHITELIST (IMPROVED) ---
+        // --- BLOCK SYSTEM ---
         function checkIfBanned(ip) {
-            // Cek apakah IP ini masuk whitelist (admin)
-            if (config.whitelistedIPs.includes(ip)) {
-                return false; // IP admin tidak pernah diblokir
-            }
-            
             const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             return bannedIPs.includes(ip);
         }
 
         function blockUser(ip, email, reason = 'Mencoba membuat multiple akun') {
-            // Jangan blokir IP yang masuk whitelist
-            if (config.whitelistedIPs.includes(ip)) {
-                console.log('🛡️ IP admin dilindungi:', ip);
-                return;
-            }
-            
             const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
             if (!bannedIPs.includes(ip)) {
                 bannedIPs.push(ip);
                 localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
                 
-                // Simpan laporan pemblokiran dengan LENGKAP
+                // Simpan laporan pemblokiran
                 const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
                 blockReports.unshift({
                     ip: ip,
-                    email: email || 'Unknown',
+                    email: email,
                     reason: reason,
                     date: new Date().toISOString(),
                     reportedBy: 'system'
@@ -1627,17 +1451,7 @@
                 localStorage.setItem('blockReports', JSON.stringify(blockReports));
                 
                 // Simpan email yang diblokir untuk referensi
-                localStorage.setItem('blockedEmail_' + ip, email || 'Unknown');
-                
-                console.log(`🚫 User diblokir: ${email} (${ip}) - ${reason}`);
-                
-                // Tampilkan notifikasi ke user
-                showToast(`⚠️ Akun diblokir karena ${reason}`, true);
-                
-                // Refresh halaman setelah 2 detik untuk menampilkan halaman blokir
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                localStorage.setItem('blockedEmail_' + ip, email);
             }
         }
 
@@ -1657,348 +1471,43 @@
             const details = document.getElementById('blockedDetails');
             details.innerHTML = `
                 <p><i class="ri-computer-line"></i> IP: ${ip}</p>
-                <p><i class="ri-google-fill"></i> Email: ${email || 'Unknown'}</p>
+                <p><i class="ri-google-fill"></i> Email: ${email}</p>
                 <p><i class="ri-time-line"></i> Waktu: ${new Date().toLocaleString('id-ID')}</p>
             `;
         }
 
-        // --- BANNED USERS ADMIN (IMPROVED VERSION) ---
-        function showBannedUsers() {
-            playTick();
-            
-            // Ambil data dari localStorage
-            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-            
-            console.log('📋 Data Banned IPs:', bannedIPs);
-            console.log('📋 Data Block Reports:', blockReports);
-            
-            const list = document.getElementById('bannedUsersList');
-            if (!list) return;
-            
-            if (bannedIPs.length === 0 && blockReports.length === 0) {
-                list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada user terblokir</p>';
-            } else {
-                let html = '';
-                const processedIPs = new Set(); // Untuk tracking IP yang sudah ditampilkan
-                
-                // Tampilkan dari blockReports dulu (lebih lengkap)
-                if (blockReports.length > 0) {
-                    blockReports.forEach((report, index) => {
-                        const date = new Date(report.date).toLocaleString('id-ID');
-                        processedIPs.add(report.ip);
-                        html += `
-                            <div class="banned-user-item">
-                                <div class="header">
-                                    <span class="email"><i class="ri-google-fill"></i> ${report.email || 'Unknown'}</span>
-                                    <button class="unblock-btn" onclick="adminUnblockUser('${report.ip}', '${report.email || 'Unknown'}')">
-                                        <i class="ri-lock-unlock-line"></i> Buka
-                                    </button>
-                                </div>
-                                <div class="ip"><i class="ri-computer-line"></i> IP: ${report.ip}</div>
-                                <div class="reason"><i class="ri-alert-line"></i> Alasan: ${report.reason || 'Multiple akun'}</div>
-                                <div class="date"><i class="ri-time-line"></i> ${date}</div>
-                            </div>
-                        `;
-                    });
-                }
-                
-                // Tampilkan dari bannedIPs yang mungkin tidak ada di reports
-                bannedIPs.forEach(ip => {
-                    if (!processedIPs.has(ip)) {
-                        const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
-                        html += `
-                            <div class="banned-user-item">
-                                <div class="header">
-                                    <span class="email"><i class="ri-google-fill"></i> ${blockedEmail}</span>
-                                    <button class="unblock-btn" onclick="adminUnblockUser('${ip}', '${blockedEmail}')">
-                                        <i class="ri-lock-unlock-line"></i> Buka
-                                    </button>
-                                </div>
-                                <div class="ip"><i class="ri-computer-line"></i> IP: ${ip}</div>
-                                <div class="reason"><i class="ri-alert-line"></i> Alasan: Multiple akun (otomatis)</div>
-                                <div class="date"><i class="ri-time-line"></i> ${new Date().toLocaleString('id-ID')}</div>
-                            </div>
-                        `;
-                    }
-                });
-                
-                list.innerHTML = html;
-            }
-            
-            document.getElementById('bannedUsersModal').classList.add('active');
-        }
-
-        // --- ADMIN UNBLOCK USER (IMPROVED) ---
-        function adminUnblockUser(ip, email) {
-            playTick();
-            
-            if (confirm(`Yakin ingin membuka blokir untuk ${email} (IP: ${ip})?`)) {
-                // Hapus dari bannedIPs
-                let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-                bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
-                localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
-                
-                // Hapus dari blockReports
-                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-                blockReports = blockReports.filter(report => report.ip !== ip);
-                localStorage.setItem('blockReports', JSON.stringify(blockReports));
-                
-                // Hapus email referensi
-                localStorage.removeItem('blockedEmail_' + ip);
-                
-                showToast(`✅ Blokir untuk ${email} (IP: ${ip}) dibuka!`, false);
-                addLog(`Admin membuka blokir ${email} (${ip})`);
-                
-                // Refresh daftar
-                showBannedUsers();
-            }
-        }
-
-        // --- REFRESH BANNED USERS ---
-        function refreshBannedUsers() {
-            playTick();
-            showBannedUsers(); // Panggil ulang fungsi showBannedUsers
-        }
-
-        // --- DEBUG BANNED DATA ---
-        function debugBannedData() {
-            console.log('=== DEBUG DATA BLOKIR ===');
-            console.log('bannedIPs:', JSON.parse(localStorage.getItem('bannedIPs') || '[]'));
-            console.log('blockReports:', JSON.parse(localStorage.getItem('blockReports') || '[]'));
-            
-            // Cek semua key di localStorage
-            const allKeys = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('blockedEmail_')) {
-                    allKeys.push({ key, value: localStorage.getItem(key) });
-                }
-            }
-            console.log('blockedEmail keys:', allKeys);
-            
-            alert('Data blokir telah dicetak di console (F12)');
-        }
-
-        // --- CLEAR ALL BANNED ---
-        function clearAllBanned() {
-            // Hapus semua data blokir tapi pertahankan whitelist admin
-            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
-            const filteredIPs = bannedIPs.filter(ip => config.whitelistedIPs.includes(ip));
-            localStorage.setItem('bannedIPs', JSON.stringify(filteredIPs));
-            
-            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-            const filteredReports = blockReports.filter(report => config.whitelistedIPs.includes(report.ip));
-            localStorage.setItem('blockReports', JSON.stringify(filteredReports));
-            
-            // Hapus semua blockedEmail kecuali admin
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('blockedEmail_')) {
-                    const ip = key.replace('blockedEmail_', '');
-                    if (!config.whitelistedIPs.includes(ip)) {
-                        localStorage.removeItem(key);
-                    }
-                }
-            }
-            
-            showToast('✅ Semua data blokir telah dihapus!', false);
-            refreshBannedUsers();
-        }
-
-        // --- LOGIN/LOGOUT SYSTEM ---
-        function checkLoginStatus() {
-            const savedSession = localStorage.getItem('userSession');
-            if (savedSession) {
-                const session = JSON.parse(savedSession);
-                const ip = session.ip;
-                const email = session.email;
-                
-                // Cek apakah IP ini diblokir (dengan whitelist)
-                if (checkIfBanned(ip)) {
-                    showBlockedPage(ip, email);
-                    return false;
-                }
-                
-                // Cek apakah session masih valid
-                const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
-                const validSession = registeredIPs.find(entry => entry.ip === ip && entry.email === email);
-                
-                if (validSession) {
-                    isLoggedIn = true;
-                    document.getElementById('displayGoogleEmail').innerText = email;
-                    document.getElementById('displayUsername').innerText = email.split('@')[0];
-                    document.getElementById('displayIP').innerText = ip;
-                    document.getElementById('btnLogout').style.display = 'flex';
-                    loadUserCashback(email);
-                    return true;
-                }
-            }
-            
-            // Tidak ada session valid
-            isLoggedIn = false;
-            document.getElementById('displayGoogleEmail').innerText = 'Belum login';
-            document.getElementById('displayUsername').innerText = 'Guest';
-            document.getElementById('btnLogout').style.display = 'none';
-            document.getElementById('cashbackBalanceContainer').style.display = 'none';
-            
-            return false;
-        }
-
-        function showLoginModal() {
-            playTick();
-            const modal = document.getElementById('loginModal');
-            if (modal) {
-                modal.classList.add('active');
-                setTimeout(() => document.getElementById('loginEmailInput').focus(), 100);
-            }
-        }
-
-        function closeLoginModal() {
-            playTick();
-            document.getElementById('loginModal').classList.remove('active');
-        }
-
-        async function loginUser() {
-            const email = document.getElementById('loginEmailInput').value.trim();
-            const emailRegex = /^[^\s@]+@gmail\.com$/;
-            
-            if (!email) {
-                showToast('Email tidak boleh kosong', true);
-                return;
-            }
-            
-            if (!emailRegex.test(email)) {
-                showToast('Harus menggunakan email @gmail.com', true);
-                return;
-            }
-            
+        // --- USER VERIFICATION ---
+        async function checkUserVerification() {
             const ip = await detectIP();
             
-            // Cek apakah IP ini diblokir (dengan whitelist)
+            // Cek apakah IP ini diblokir
             if (checkIfBanned(ip)) {
-                showBlockedPage(ip, email);
-                return;
+                const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
+                showBlockedPage(ip, blockedEmail);
+                return false;
             }
             
-            // Cek apakah email ini sudah terdaftar di IP lain
+            // Cek apakah sudah ada user dengan IP ini
             const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
-            const emailExists = registeredIPs.find(entry => entry.email === email);
+            const existingUser = registeredIPs.find(entry => entry.ip === ip);
             
-            if (emailExists && emailExists.ip !== ip) {
-                // Email sudah terdaftar di IP berbeda - ini pelanggaran!
-                showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
-                
-                // Blokir IP ini (kecuali admin)
-                blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
-                return;
-            }
-            
-            // Cek apakah IP ini sudah memiliki akun dengan email berbeda
-            const ipExists = registeredIPs.find(entry => entry.ip === ip);
-            
-            if (ipExists && ipExists.email !== email) {
-                // IP sudah memiliki akun dengan email berbeda - ini pelanggaran!
-                showToast('⚠️ IP ini sudah memiliki akun dengan email berbeda!', true);
-                
-                // Blokir IP ini (kecuali admin)
-                blockUser(ip, email, 'Mencoba login dengan email berbeda');
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
-                return;
-            }
-            
-            // Jika user baru (belum terdaftar)
-            if (!ipExists) {
-                registeredIPs.push({ 
-                    ip: ip, 
-                    email: email, 
-                    username: email.split('@')[0],
-                    date: new Date().toISOString() 
-                });
-                localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
-            }
-            
-            // Simpan session
-            const session = {
-                ip: ip,
-                email: email,
-                loginTime: new Date().toISOString()
-            };
-            localStorage.setItem('userSession', JSON.stringify(session));
-            
-            // Update tampilan
-            document.getElementById('displayGoogleEmail').innerText = email;
-            document.getElementById('displayUsername').innerText = email.split('@')[0];
-            document.getElementById('displayIP').innerText = ip;
-            document.getElementById('btnLogout').style.display = 'flex';
-            
-            closeLoginModal();
-            showToast(`✅ Selamat datang ${email.split('@')[0]}!`, false);
-            
-            // Load cashback user
-            loadUserCashback(email);
-            
-            // Log aktivitas
-            addLog(`User login: ${email} (IP: ${ip})`);
-        }
-
-        function showLogoutConfirm() {
-            playTick();
-            document.getElementById('logoutModal').classList.add('active');
-        }
-
-        function closeLogoutModal() {
-            playTick();
-            document.getElementById('logoutModal').classList.remove('active');
-        }
-
-        function logoutUser() {
-            playTick();
-            
-            // Hapus session
-            localStorage.removeItem('userSession');
-            
-            // Update tampilan
-            isLoggedIn = false;
-            document.getElementById('displayGoogleEmail').innerText = 'Belum login';
-            document.getElementById('displayUsername').innerText = 'Guest';
-            document.getElementById('btnLogout').style.display = 'none';
-            document.getElementById('cashbackBalanceContainer').style.display = 'none';
-            
-            closeLogoutModal();
-            showToast('✅ Anda telah keluar', false);
-            
-            // Tampilkan modal login setelah 1 detik
-            setTimeout(() => {
-                showLoginModal();
-            }, 1000);
-            
-            addLog('User logout');
-        }
-
-        // Override fungsi checkUserVerification yang lama
-        async function checkUserVerification() {
-            // Cek status login dulu
-            if (checkLoginStatus()) {
+            if (existingUser) {
+                // User sudah terdaftar, load data
+                document.getElementById('displayGoogleEmail').innerText = existingUser.email;
+                document.getElementById('displayUsername').innerText = existingUser.email.split('@')[0];
+                loadUserCashback(existingUser.email);
                 return true;
             }
             
-            // Tampilkan modal login untuk guest
+            // Belum terdaftar, tampilkan modal verifikasi
             setTimeout(() => {
-                showLoginModal();
+                showGoogleEmailModal();
             }, 1000);
             
             return false;
         }
 
-        // --- GOOGLE EMAIL SYSTEM (untuk first time users) ---
+        // --- GOOGLE EMAIL SYSTEM ---
         function showGoogleEmailModal() {
             playTick();
             const modal = document.getElementById('googleEmailModal');
@@ -2027,12 +1536,6 @@
             
             const ip = await detectIP();
             
-            // Cek apakah IP ini diblokir (dengan whitelist)
-            if (checkIfBanned(ip)) {
-                showBlockedPage(ip, email);
-                return;
-            }
-            
             // Cek apakah email ini sudah terdaftar di IP lain
             const registeredIPs = JSON.parse(localStorage.getItem('registeredIPs') || '[]');
             const emailExists = registeredIPs.find(entry => entry.email === email);
@@ -2041,9 +1544,10 @@
                 // Email sudah terdaftar di IP berbeda - ini pelanggaran!
                 showToast('⚠️ Email sudah terdaftar di perangkat lain!', true);
                 
-                // Blokir IP ini (kecuali admin)
+                // Blokir IP ini
                 blockUser(ip, email, 'Mencoba menggunakan email yang sudah terdaftar');
                 
+                // Tampilkan halaman blokir
                 setTimeout(() => {
                     location.reload();
                 }, 2000);
@@ -2057,9 +1561,10 @@
                 // IP sudah memiliki akun - ini pelanggaran!
                 showToast('⚠️ IP ini sudah memiliki akun! Dilarang membuat multiple akun!', true);
                 
-                // Blokir IP ini (kecuali admin)
+                // Blokir IP ini
                 blockUser(ip, email, 'Mencoba membuat multiple akun');
                 
+                // Tampilkan halaman blokir
                 setTimeout(() => {
                     location.reload();
                 }, 2000);
@@ -2074,19 +1579,10 @@
                 date: new Date().toISOString() 
             });
             localStorage.setItem('registeredIPs', JSON.stringify(registeredIPs));
-            
-            // Simpan session
-            const session = {
-                ip: ip,
-                email: email,
-                loginTime: new Date().toISOString()
-            };
-            localStorage.setItem('userSession', JSON.stringify(session));
+            localStorage.setItem('userEmail_' + ip, email);
             
             document.getElementById('displayGoogleEmail').innerText = email;
             document.getElementById('displayUsername').innerText = email.split('@')[0];
-            document.getElementById('displayIP').innerText = ip;
-            document.getElementById('btnLogout').style.display = 'flex';
             
             closeGoogleEmailModal();
             showToast(`✅ Selamat datang ${email.split('@')[0]}!`, false);
@@ -2196,12 +1692,6 @@
                 return;
             }
             
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             playTick();
             
             selectedCashbackUse = '';
@@ -2295,12 +1785,6 @@
             playTick();
             menuOverlay.classList.remove('active');
             
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             const historyList = document.getElementById('cashbackHistoryList');
             if (!historyList) return;
             
@@ -2340,59 +1824,59 @@
             document.getElementById('cashbackHistoryModal').classList.remove('active');
         }
 
-        // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
-        let emergencyTapCount = 0;
-        let emergencyTimer;
-
-        function setupEmergencyReset() {
-            const logo = document.getElementById('logoJhonPay');
-            if (logo) {
-                logo.addEventListener('click', function() {
-                    emergencyTapCount++;
-                    
-                    clearTimeout(emergencyTimer);
-                    emergencyTimer = setTimeout(() => {
-                        emergencyTapCount = 0;
-                    }, 1000);
-                    
-                    if (emergencyTapCount === 10) {
-                        emergencyTapCount = 0;
-                        if (confirm('⚠️ RESET DARURAT?\nSemua data akan dihapus!')) {
-                            localStorage.clear();
-                            location.reload();
-                        }
-                    }
+        // --- BANNED USERS ADMIN ---
+        function showBannedUsers() {
+            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            const list = document.getElementById('bannedUsersList');
+            
+            if (blockReports.length === 0) {
+                list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada user terblokir</p>';
+            } else {
+                let html = '';
+                blockReports.forEach((report, index) => {
+                    const date = new Date(report.date).toLocaleString('id-ID');
+                    html += `
+                        <div class="banned-user-item">
+                            <div class="header">
+                                <span class="email"><i class="ri-google-fill"></i> ${report.email}</span>
+                                <button class="unblock-btn" onclick="adminUnblockUser('${report.ip}', '${report.email}')">
+                                    <i class="ri-lock-unlock-line"></i> Buka
+                                </button>
+                            </div>
+                            <div class="ip"><i class="ri-computer-line"></i> ${report.ip}</div>
+                            <div class="reason"><i class="ri-alert-line"></i> ${report.reason}</div>
+                            <div class="date"><i class="ri-time-line"></i> ${date}</div>
+                        </div>
+                    `;
                 });
+                list.innerHTML = html;
             }
+            
+            document.getElementById('bannedUsersModal').classList.add('active');
         }
 
-        // --- ADMIN RESET PROMO (DENGAN RESET SALDO CASHBACK) ---
-        function adminResetPromo() {
-            const email = prompt('Masukkan Gmail user untuk reset promo:', 'user@gmail.com');
-            if (!email) return;
+        function closeBannedUsersModal() {
+            playTick();
+            document.getElementById('bannedUsersModal').classList.remove('active');
+        }
+
+        function adminUnblockUser(ip, email) {
+            playTick();
             
-            // Reset status promo
-            localStorage.removeItem('promoQRIS_used_' + email);
-            localStorage.removeItem('promoQRIS_date_' + email);
-            
-            // Reset saldo cashback user
-            const userCashback = {
-                balance: 0,
-                history: []
-            };
-            localStorage.setItem('userCashback_' + email, JSON.stringify(userCashback));
-            
-            // Jika user ini sedang login, update tampilan
-            const currentEmail = document.getElementById('displayGoogleEmail').innerText;
-            if (currentEmail === email) {
-                cashbackBalance = 0;
-                cashbackHistory = [];
-                updateCashbackDisplay();
-                checkPromoStatus();
+            if (confirm(`Yakin ingin membuka blokir untuk ${email}?`)) {
+                unblockUser(ip);
+                
+                // Hapus dari laporan
+                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                blockReports = blockReports.filter(report => report.ip !== ip);
+                localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                showToast(`✅ Blokir untuk ${email} dibuka!`, false);
+                addLog(`Admin membuka blokir ${email} (${ip})`);
+                
+                // Refresh daftar
+                showBannedUsers();
             }
-            
-            showToast(`✅ Promo dan cashback untuk ${email} berhasil direset!`, false);
-            addLog(`Admin reset promo dan cashback untuk ${email}`);
         }
 
         // --- HELPER FUNCTIONS ---
@@ -2516,7 +2000,7 @@
                             <i class="ri-computer-line"></i>
                             <span id="displayIP">${userIP}</span>
                         </div>
-                        <p><span class="status-dot"></span> Online</p>
+                        <p><span class="status-dot"></span> Online & Verified</p>
                         <div class="social-bar">
                             <a href="https://instagram.com/cpm_jhon" target="_blank" class="soc-icon ripple" onclick="playTick()">
                                 <i class="ri-instagram-fill"></i>
@@ -2538,8 +2022,8 @@
                         <div style="display: flex; gap: 12px; margin-bottom: 15px;">
                             <div style="width: 24px; height: 24px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; flex-shrink: 0;">1</div>
                             <div>
-                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Login dengan Gmail</h5>
-                                <p style="font-size: 12px; color: var(--text-muted);">Masuk menggunakan email @gmail.com. 1 IP hanya untuk 1 akun.</p>
+                                <h5 style="font-size: 14px; font-weight: 700; color: var(--text-on-dark); margin-bottom: 4px;">Verifikasi Gmail</h5>
+                                <p style="font-size: 12px; color: var(--text-muted);">Masukkan Gmail Anda untuk verifikasi. 1 IP hanya untuk 1 akun.</p>
                             </div>
                         </div>
                         
@@ -2615,7 +2099,7 @@
             if (!promoBanner) return;
             
             const email = document.getElementById('displayGoogleEmail').innerText;
-            if (email === 'Belum login') return;
+            if (email === 'Memuat...' || email === 'Belum terhubung') return;
             
             const promoUsed = localStorage.getItem('promoQRIS_used_' + email);
             
@@ -2636,7 +2120,7 @@
 
         function isPromoAvailable() {
             const email = document.getElementById('displayGoogleEmail').innerText;
-            if (email === 'Belum login') return false;
+            if (email === 'Memuat...' || email === 'Belum terhubung') return false;
             return localStorage.getItem('promoQRIS_used_' + email) !== 'true';
         }
 
@@ -2650,17 +2134,16 @@
             checkPromoStatus();
         }
 
-        // --- OPEN PROMO QRIS (dengan tombol Nanti Saja) ---
         function openPromoQRIS() {
             playTick();
             
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
+            const email = document.getElementById('displayGoogleEmail').innerText;
+            if (email === 'Memuat...' || email === 'Belum terhubung') {
+                showToast('Harap verifikasi Gmail terlebih dahulu', true);
+                showGoogleEmailModal();
                 return;
             }
             
-            const email = document.getElementById('displayGoogleEmail').innerText;
             if (!isPromoAvailable()) {
                 const usedDate = localStorage.getItem('promoQRIS_date_' + email);
                 const formattedDate = usedDate ? new Date(usedDate).toLocaleDateString('id-ID') : 'sebelumnya';
@@ -2711,10 +2194,7 @@
                         </p>
                     </div>
                     
-                    <div class="modal-buttons">
-                        <button class="modal-btn cancel" onclick="closePromoModal()">Nanti Saja</button>
-                        <button class="modal-btn confirm" id="applyPromoBtn" style="background: #10b981;">Gunakan Promo</button>
-                    </div>
+                    <button class="modal-btn confirm" id="applyPromoBtn" style="background: #10b981; width: 100%;">Gunakan Promo</button>
                 </div>
             `;
             
@@ -2797,12 +2277,6 @@
         }
 
         function openPaymentModal(methodKey, methodName) {
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             playTick();
             selectedPaymentMethod = methodKey;
             selectedPaymentName = methodName;
@@ -2896,12 +2370,6 @@
 
         // --- GENERATE QRIS ---
         async function generateAndDownloadQRIS() {
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             const amountInput = document.getElementById('qrisAmount');
             const amount = parseInt(amountInput.value);
             
@@ -3111,12 +2579,6 @@
 
         // --- OPEN SHEET DENGAN PAYPAL DI SEMUA MENU ---
         window.openSheet = (mode) => {
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             playTick();
             let html = '';
             let logName = '';
@@ -3217,12 +2679,6 @@
         };
 
         window.copyIt = (id, label) => {
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             playTick();
             const txt = document.getElementById(id).innerText;
             if(txt.includes('Hubungi')) return;
@@ -3240,12 +2696,6 @@
         const bodyC = document.getElementById('chatBody');
 
         fab.onclick = () => { 
-            if (!isLoggedIn) {
-                showToast('Silakan login terlebih dahulu', true);
-                showLoginModal();
-                return;
-            }
-            
             playTick(); 
             win.classList.add('active'); 
             fab.style.transform = 'scale(0)'; 
@@ -3401,7 +2851,7 @@
                             <i class="ri-shield-cross-line"></i> Kelola Blokir (${JSON.parse(localStorage.getItem('bannedIPs') || '[]').length})
                         </button>
                         <button onclick="adminResetPromo()" style="width: 100%; padding: 15px; background: #f59e0b; color: white; border: none; border-radius: 12px; margin-bottom: 10px; font-weight: 600; cursor: pointer;">
-                            <i class="ri-refresh-line"></i> Reset Promo & Cashback User
+                            <i class="ri-refresh-line"></i> Reset Promo User
                         </button>
                         <button onclick="clearAllData()" style="width: 100%; padding: 15px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">
                             <i class="ri-delete-bin-line"></i> Hapus Semua Data
@@ -3454,6 +2904,21 @@
             alert(message);
         }
 
+        function adminResetPromo() {
+            const email = prompt('Masukkan Gmail user untuk reset promo:', 'user@gmail.com');
+            if (!email) return;
+            
+            localStorage.removeItem('promoQRIS_used_' + email);
+            localStorage.removeItem('promoQRIS_date_' + email);
+            
+            if (email === document.getElementById('displayGoogleEmail').innerText) {
+                checkPromoStatus();
+            }
+            
+            showToast(`✅ Promo untuk ${email} berhasil direset!`, false);
+            addLog(`Admin reset promo untuk ${email}`);
+        }
+
         function clearAllData() {
             if (confirm('⚠️ PERINGATAN: Semua data akan dihapus permanen!\n\nYakin ingin melanjutkan?')) {
                 localStorage.clear();
@@ -3467,10 +2932,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             originalContent = document.querySelector('.content-area').innerHTML;
             
-            // Setup emergency reset (tap 10x)
-            setupEmergencyReset();
-            
-            // Cek blokir dengan whitelist
+            // Cek blokir
             const ip = await detectIP();
             if (checkIfBanned(ip)) {
                 const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
@@ -3478,7 +2940,7 @@
                 return;
             }
             
-            // Cek status login
+            // Cek verifikasi user
             await checkUserVerification();
             
             setupAdminAccess();
@@ -3506,12 +2968,6 @@
         window.showGoogleEmailModal = showGoogleEmailModal;
         window.closeGoogleEmailModal = closeGoogleEmailModal;
         window.saveGoogleEmail = saveGoogleEmail;
-        window.showLoginModal = showLoginModal;
-        window.closeLoginModal = closeLoginModal;
-        window.loginUser = loginUser;
-        window.showLogoutConfirm = showLogoutConfirm;
-        window.closeLogoutModal = closeLogoutModal;
-        window.logoutUser = logoutUser;
         window.showAdminPasswordModal = showAdminPasswordModal;
         window.closeAdminModal = closeAdminModal;
         window.checkAdminPassword = checkAdminPassword;
@@ -3520,18 +2976,11 @@
         window.showBannedUsers = showBannedUsers;
         window.closeBannedUsersModal = closeBannedUsersModal;
         window.adminUnblockUser = adminUnblockUser;
-        window.refreshBannedUsers = refreshBannedUsers;
-        window.debugBannedData = debugBannedData;
-        window.clearAllBanned = clearAllBanned;
         window.adminResetPromo = adminResetPromo;
         window.closeAdminMenu = closeAdminMenu;
         window.clearAllData = clearAllData;
 
-        console.log('✅ JHON Payment System Ready!');
-        console.log('🛡️ Whitelist IP:', config.whitelistedIPs);
-        console.log('🔐 Emergency Unblock: ?admin_unblock=jhon123');
-        console.log('🔄 Emergency Reset: Tap logo 10x');
-        console.log('📋 Debug Blokir: debugBannedData()');
+        console.log('JHON Payment System Ready!');
     </script>
 </body>
 </html>
