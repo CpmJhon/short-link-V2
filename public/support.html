@@ -940,7 +940,7 @@
             outline: none;
         }
 
-        /* Banned Users List */
+        /* Banned Users List - Improved */
         .banned-user-item {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid var(--danger);
@@ -953,14 +953,20 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .banned-user-item .email {
             color: var(--danger);
             font-weight: 600;
+            font-size: 14px;
+            word-break: break-all;
         }
         .banned-user-item .ip {
             color: var(--text-muted);
-            font-size: 11px;
+            font-size: 12px;
+            margin: 5px 0;
+            word-break: break-all;
         }
         .banned-user-item .reason {
             color: var(--text-on-dark);
@@ -969,7 +975,7 @@
         }
         .banned-user-item .date {
             color: var(--text-muted);
-            font-size: 10px;
+            font-size: 11px;
         }
         .unblock-btn {
             background: var(--success);
@@ -981,6 +987,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            white-space: nowrap;
         }
         .unblock-btn:hover {
             transform: scale(0.95);
@@ -1437,12 +1444,29 @@
             </div>
         </div>
 
-        <!-- Modal Banned Users (Admin Only) -->
+        <!-- Modal Banned Users (Admin Only) - IMPROVED VERSION -->
         <div class="modal-overlay" id="bannedUsersModal">
             <div class="modal-box" style="max-width: 400px; max-height: 80vh; overflow-y: auto;">
-                <h3>🚫 User Terblokir</h3>
-                <div id="bannedUsersList" class="cashback-history"></div>
-                <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="width: 100%; margin-top: 15px;">Tutup</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
+                    <h3 style="color: #fff; font-size: 18px; font-weight: 700;">🚫 User Terblokir</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="debugBannedData()" style="background: #f59e0b; border: none; color: white; width: 36px; height: 36px; border-radius: 8px; cursor: pointer;" title="Debug">
+                            <i class="ri-bug-line"></i>
+                        </button>
+                        <button onclick="refreshBannedUsers()" style="background: #2563eb; border: none; color: white; width: 36px; height: 36px; border-radius: 8px; cursor: pointer;" title="Refresh">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="bannedUsersList" class="cashback-history">
+                    <p style="color: #888; text-align: center; padding: 20px;">Memuat data...</p>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="modal-btn cancel" onclick="closeBannedUsersModal()" style="flex: 1;">Tutup</button>
+                    <button class="modal-btn danger" onclick="if(confirm('Hapus SEMUA blokir?\nIP admin akan tetap aman.')) { clearAllBanned(); }" style="flex: 1; background: #ef4444;">
+                        <i class="ri-delete-bin-line"></i> Hapus Semua
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1472,6 +1496,16 @@
                 const ipToUnblock = urlParams.get('ip');
                 if (ipToUnblock) {
                     localStorage.removeItem('blockedEmail_' + ipToUnblock);
+                    
+                    // Hapus dari bannedIPs juga
+                    let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+                    bannedIPs = bannedIPs.filter(ip => ip !== ipToUnblock);
+                    localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+                    
+                    // Hapus dari blockReports
+                    let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                    blockReports = blockReports.filter(report => report.ip !== ipToUnblock);
+                    localStorage.setItem('blockReports', JSON.stringify(blockReports));
                 }
                 
                 console.log('%c✅ BLOKIR DIBUKA!', 'color: green; font-size: 16px');
@@ -1493,7 +1527,7 @@
             adminPassword: 'jhon123',
             // Daftar IP yang dikecualikan dari blokir (admin)
             whitelistedIPs: [
-                '114.10.43.99',  // GANTI DENGAN IP ADMIN ANDA
+                '114.10.43.99',  // IP admin
                 '127.0.0.1',      // localhost
                 '::1'             // localhost IPv6
             ]
@@ -1558,7 +1592,7 @@
             }
         }
 
-        // --- BLOCK SYSTEM DENGAN WHITELIST ---
+        // --- BLOCK SYSTEM DENGAN WHITELIST (IMPROVED) ---
         function checkIfBanned(ip) {
             // Cek apakah IP ini masuk whitelist (admin)
             if (config.whitelistedIPs.includes(ip)) {
@@ -1581,11 +1615,11 @@
                 bannedIPs.push(ip);
                 localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
                 
-                // Simpan laporan pemblokiran
+                // Simpan laporan pemblokiran dengan LENGKAP
                 const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
                 blockReports.unshift({
                     ip: ip,
-                    email: email,
+                    email: email || 'Unknown',
                     reason: reason,
                     date: new Date().toISOString(),
                     reportedBy: 'system'
@@ -1593,9 +1627,17 @@
                 localStorage.setItem('blockReports', JSON.stringify(blockReports));
                 
                 // Simpan email yang diblokir untuk referensi
-                localStorage.setItem('blockedEmail_' + ip, email);
+                localStorage.setItem('blockedEmail_' + ip, email || 'Unknown');
                 
-                console.log(`User diblokir: ${email} (${ip}) - ${reason}`);
+                console.log(`🚫 User diblokir: ${email} (${ip}) - ${reason}`);
+                
+                // Tampilkan notifikasi ke user
+                showToast(`⚠️ Akun diblokir karena ${reason}`, true);
+                
+                // Refresh halaman setelah 2 detik untuk menampilkan halaman blokir
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
             }
         }
 
@@ -1615,9 +1657,153 @@
             const details = document.getElementById('blockedDetails');
             details.innerHTML = `
                 <p><i class="ri-computer-line"></i> IP: ${ip}</p>
-                <p><i class="ri-google-fill"></i> Email: ${email}</p>
+                <p><i class="ri-google-fill"></i> Email: ${email || 'Unknown'}</p>
                 <p><i class="ri-time-line"></i> Waktu: ${new Date().toLocaleString('id-ID')}</p>
             `;
+        }
+
+        // --- BANNED USERS ADMIN (IMPROVED VERSION) ---
+        function showBannedUsers() {
+            playTick();
+            
+            // Ambil data dari localStorage
+            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            
+            console.log('📋 Data Banned IPs:', bannedIPs);
+            console.log('📋 Data Block Reports:', blockReports);
+            
+            const list = document.getElementById('bannedUsersList');
+            if (!list) return;
+            
+            if (bannedIPs.length === 0 && blockReports.length === 0) {
+                list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada user terblokir</p>';
+            } else {
+                let html = '';
+                const processedIPs = new Set(); // Untuk tracking IP yang sudah ditampilkan
+                
+                // Tampilkan dari blockReports dulu (lebih lengkap)
+                if (blockReports.length > 0) {
+                    blockReports.forEach((report, index) => {
+                        const date = new Date(report.date).toLocaleString('id-ID');
+                        processedIPs.add(report.ip);
+                        html += `
+                            <div class="banned-user-item">
+                                <div class="header">
+                                    <span class="email"><i class="ri-google-fill"></i> ${report.email || 'Unknown'}</span>
+                                    <button class="unblock-btn" onclick="adminUnblockUser('${report.ip}', '${report.email || 'Unknown'}')">
+                                        <i class="ri-lock-unlock-line"></i> Buka
+                                    </button>
+                                </div>
+                                <div class="ip"><i class="ri-computer-line"></i> IP: ${report.ip}</div>
+                                <div class="reason"><i class="ri-alert-line"></i> Alasan: ${report.reason || 'Multiple akun'}</div>
+                                <div class="date"><i class="ri-time-line"></i> ${date}</div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Tampilkan dari bannedIPs yang mungkin tidak ada di reports
+                bannedIPs.forEach(ip => {
+                    if (!processedIPs.has(ip)) {
+                        const blockedEmail = localStorage.getItem('blockedEmail_' + ip) || 'Unknown';
+                        html += `
+                            <div class="banned-user-item">
+                                <div class="header">
+                                    <span class="email"><i class="ri-google-fill"></i> ${blockedEmail}</span>
+                                    <button class="unblock-btn" onclick="adminUnblockUser('${ip}', '${blockedEmail}')">
+                                        <i class="ri-lock-unlock-line"></i> Buka
+                                    </button>
+                                </div>
+                                <div class="ip"><i class="ri-computer-line"></i> IP: ${ip}</div>
+                                <div class="reason"><i class="ri-alert-line"></i> Alasan: Multiple akun (otomatis)</div>
+                                <div class="date"><i class="ri-time-line"></i> ${new Date().toLocaleString('id-ID')}</div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                list.innerHTML = html;
+            }
+            
+            document.getElementById('bannedUsersModal').classList.add('active');
+        }
+
+        // --- ADMIN UNBLOCK USER (IMPROVED) ---
+        function adminUnblockUser(ip, email) {
+            playTick();
+            
+            if (confirm(`Yakin ingin membuka blokir untuk ${email} (IP: ${ip})?`)) {
+                // Hapus dari bannedIPs
+                let bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+                bannedIPs = bannedIPs.filter(bannedIP => bannedIP !== ip);
+                localStorage.setItem('bannedIPs', JSON.stringify(bannedIPs));
+                
+                // Hapus dari blockReports
+                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+                blockReports = blockReports.filter(report => report.ip !== ip);
+                localStorage.setItem('blockReports', JSON.stringify(blockReports));
+                
+                // Hapus email referensi
+                localStorage.removeItem('blockedEmail_' + ip);
+                
+                showToast(`✅ Blokir untuk ${email} (IP: ${ip}) dibuka!`, false);
+                addLog(`Admin membuka blokir ${email} (${ip})`);
+                
+                // Refresh daftar
+                showBannedUsers();
+            }
+        }
+
+        // --- REFRESH BANNED USERS ---
+        function refreshBannedUsers() {
+            playTick();
+            showBannedUsers(); // Panggil ulang fungsi showBannedUsers
+        }
+
+        // --- DEBUG BANNED DATA ---
+        function debugBannedData() {
+            console.log('=== DEBUG DATA BLOKIR ===');
+            console.log('bannedIPs:', JSON.parse(localStorage.getItem('bannedIPs') || '[]'));
+            console.log('blockReports:', JSON.parse(localStorage.getItem('blockReports') || '[]'));
+            
+            // Cek semua key di localStorage
+            const allKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('blockedEmail_')) {
+                    allKeys.push({ key, value: localStorage.getItem(key) });
+                }
+            }
+            console.log('blockedEmail keys:', allKeys);
+            
+            alert('Data blokir telah dicetak di console (F12)');
+        }
+
+        // --- CLEAR ALL BANNED ---
+        function clearAllBanned() {
+            // Hapus semua data blokir tapi pertahankan whitelist admin
+            const bannedIPs = JSON.parse(localStorage.getItem('bannedIPs') || '[]');
+            const filteredIPs = bannedIPs.filter(ip => config.whitelistedIPs.includes(ip));
+            localStorage.setItem('bannedIPs', JSON.stringify(filteredIPs));
+            
+            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
+            const filteredReports = blockReports.filter(report => config.whitelistedIPs.includes(report.ip));
+            localStorage.setItem('blockReports', JSON.stringify(filteredReports));
+            
+            // Hapus semua blockedEmail kecuali admin
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('blockedEmail_')) {
+                    const ip = key.replace('blockedEmail_', '');
+                    if (!config.whitelistedIPs.includes(ip)) {
+                        localStorage.removeItem(key);
+                    }
+                }
+            }
+            
+            showToast('✅ Semua data blokir telah dihapus!', false);
+            refreshBannedUsers();
         }
 
         // --- LOGIN/LOGOUT SYSTEM ---
@@ -2154,58 +2340,29 @@
             document.getElementById('cashbackHistoryModal').classList.remove('active');
         }
 
-        // --- BANNED USERS ADMIN ---
-        function showBannedUsers() {
-            const blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-            const list = document.getElementById('bannedUsersList');
-            
-            if (blockReports.length === 0) {
-                list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Belum ada user terblokir</p>';
-            } else {
-                let html = '';
-                blockReports.forEach((report, index) => {
-                    const date = new Date(report.date).toLocaleString('id-ID');
-                    html += `
-                        <div class="banned-user-item">
-                            <div class="header">
-                                <span class="email"><i class="ri-google-fill"></i> ${report.email}</span>
-                                <button class="unblock-btn" onclick="adminUnblockUser('${report.ip}', '${report.email}')">
-                                    <i class="ri-lock-unlock-line"></i> Buka
-                                </button>
-                            </div>
-                            <div class="ip"><i class="ri-computer-line"></i> ${report.ip}</div>
-                            <div class="reason"><i class="ri-alert-line"></i> ${report.reason}</div>
-                            <div class="date"><i class="ri-time-line"></i> ${date}</div>
-                        </div>
-                    `;
+        // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
+        let emergencyTapCount = 0;
+        let emergencyTimer;
+
+        function setupEmergencyReset() {
+            const logo = document.getElementById('logoJhonPay');
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    emergencyTapCount++;
+                    
+                    clearTimeout(emergencyTimer);
+                    emergencyTimer = setTimeout(() => {
+                        emergencyTapCount = 0;
+                    }, 1000);
+                    
+                    if (emergencyTapCount === 10) {
+                        emergencyTapCount = 0;
+                        if (confirm('⚠️ RESET DARURAT?\nSemua data akan dihapus!')) {
+                            localStorage.clear();
+                            location.reload();
+                        }
+                    }
                 });
-                list.innerHTML = html;
-            }
-            
-            document.getElementById('bannedUsersModal').classList.add('active');
-        }
-
-        function closeBannedUsersModal() {
-            playTick();
-            document.getElementById('bannedUsersModal').classList.remove('active');
-        }
-
-        function adminUnblockUser(ip, email) {
-            playTick();
-            
-            if (confirm(`Yakin ingin membuka blokir untuk ${email}?`)) {
-                unblockUser(ip);
-                
-                // Hapus dari laporan
-                let blockReports = JSON.parse(localStorage.getItem('blockReports') || '[]');
-                blockReports = blockReports.filter(report => report.ip !== ip);
-                localStorage.setItem('blockReports', JSON.stringify(blockReports));
-                
-                showToast(`✅ Blokir untuk ${email} dibuka!`, false);
-                addLog(`Admin membuka blokir ${email} (${ip})`);
-                
-                // Refresh daftar
-                showBannedUsers();
             }
         }
 
@@ -2236,32 +2393,6 @@
             
             showToast(`✅ Promo dan cashback untuk ${email} berhasil direset!`, false);
             addLog(`Admin reset promo dan cashback untuk ${email}`);
-        }
-
-        // --- EMERGENCY RESET (TAP 10 KALI DI LOGO) ---
-        let emergencyTapCount = 0;
-        let emergencyTimer;
-
-        function setupEmergencyReset() {
-            const logo = document.getElementById('logoJhonPay');
-            if (logo) {
-                logo.addEventListener('click', function() {
-                    emergencyTapCount++;
-                    
-                    clearTimeout(emergencyTimer);
-                    emergencyTimer = setTimeout(() => {
-                        emergencyTapCount = 0;
-                    }, 1000);
-                    
-                    if (emergencyTapCount === 10) {
-                        emergencyTapCount = 0;
-                        if (confirm('⚠️ RESET DARURAT?\nSemua data akan dihapus!')) {
-                            localStorage.clear();
-                            location.reload();
-                        }
-                    }
-                });
-            }
         }
 
         // --- HELPER FUNCTIONS ---
@@ -3389,6 +3520,9 @@
         window.showBannedUsers = showBannedUsers;
         window.closeBannedUsersModal = closeBannedUsersModal;
         window.adminUnblockUser = adminUnblockUser;
+        window.refreshBannedUsers = refreshBannedUsers;
+        window.debugBannedData = debugBannedData;
+        window.clearAllBanned = clearAllBanned;
         window.adminResetPromo = adminResetPromo;
         window.closeAdminMenu = closeAdminMenu;
         window.clearAllData = clearAllData;
@@ -3397,6 +3531,7 @@
         console.log('🛡️ Whitelist IP:', config.whitelistedIPs);
         console.log('🔐 Emergency Unblock: ?admin_unblock=jhon123');
         console.log('🔄 Emergency Reset: Tap logo 10x');
+        console.log('📋 Debug Blokir: debugBannedData()');
     </script>
 </body>
 </html>
